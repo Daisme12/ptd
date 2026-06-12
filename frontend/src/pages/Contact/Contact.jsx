@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -11,11 +11,54 @@ import {
 } from "react-icons/fa";
 
 import { Download } from "lucide-react";
+import { toast } from "sonner";
 import bgContact from '../../assets/imgs/bgContact.png';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { createContact } from "../../services/contactService";
 
 const ContactPage = () => {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    service: "suat-an-truong-hoc",
+    note: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      setIsSubmitting(true);
+
+      await createContact({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        service: form.service,
+        note: form.note,
+        requestType: "contact",
+        source: "contact_page",
+      });
+
+      toast.success("Đã gửi thông tin liên hệ.");
+      setForm({
+        name: "",
+        phone: "",
+        email: "",
+        service: "suat-an-truong-hoc",
+        note: "",
+      });
+    } catch (error) {
+      console.error("Lỗi gửi thông tin liên hệ:", error);
+      toast.error("Không thể gửi thông tin. Vui lòng thử lại.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -117,17 +160,21 @@ const ContactPage = () => {
                 Phản hồi của bạn là động lực để chúng tôi hoàn thiện mỗi ngày.
               </p>
 
-              <form className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid md:grid-cols-2 gap-4">
                   <input
                     type="text"
                     placeholder="Họ và tên"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className="border rounded-lg px-4 py-3 w-full"
                   />
 
                   <input
                     type="text"
                     placeholder="Số điện thoại"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     className="border rounded-lg px-4 py-3 w-full"
                   />
                 </div>
@@ -135,27 +182,36 @@ const ContactPage = () => {
                 <input
                   type="email"
                   placeholder="Email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="border rounded-lg px-4 py-3 w-full"
                 />
 
-                <select className="border rounded-lg px-4 py-3 w-full">
-                  <option>Suất ăn trường học</option>
-                  <option>Suất ăn công nghiệp</option>
-                  <option>Dịch vụ canteen</option>
-                  <option>Khác</option>
+                <select
+                  value={form.service}
+                  onChange={(e) => setForm({ ...form, service: e.target.value })}
+                  className="border rounded-lg px-4 py-3 w-full"
+                >
+                  <option value="suat-an-truong-hoc">Suất ăn trường học</option>
+                  <option value="suat-an-cong-nghiep">Suất ăn công nghiệp</option>
+                  <option value="dich-vu-canteen">Dịch vụ canteen</option>
+                  <option value="khac">Khác</option>
                 </select>
 
                 <textarea
                   rows="6"
                   placeholder="Nội dung liên hệ"
+                  value={form.note}
+                  onChange={(e) => setForm({ ...form, note: e.target.value })}
                   className="border rounded-lg px-4 py-3 w-full"
                 ></textarea>
 
                 <button
                   type="submit"
-                  className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg transition"
+                  disabled={isSubmitting}
+                  className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg transition disabled:opacity-60"
                 >
-                  Gửi Thông Tin
+                  {isSubmitting ? "Đang gửi..." : "Gửi Thông Tin"}
                 </button>
               </form>
             </div>

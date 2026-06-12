@@ -104,6 +104,20 @@ Content-Type: application/json
     "message": "Nội dung lời nhắn"
 }
 
+### Tạo yêu cầu nhận tư vấn đối tác
+POST {{baseUrl}}/contacts
+Content-Type: application/json
+
+{
+    "name": "Nguyễn Văn A",
+    "phone": "0123456789",
+    "email": "nguyenvana@example.com",
+    "service": "sieu-thi",
+    "note": "Tôi muốn nhận tư vấn hợp tác phân phối sản phẩm.",
+    "requestType": "partner_consultation",
+    "source": "products_page"
+}
+
 ### Xoá liên hệ
 DELETE {{baseUrl}}/contacts/REPLACE_WITH_CONTACT_ID
 

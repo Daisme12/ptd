@@ -1,53 +1,131 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import bgContact from '../../assets/imgs/bgContact.png';
+import { getProducts, getProductById } from "../../services/productService";
+import { getCategories } from "../../services/categoryService";
+import { createContact } from "../../services/contactService";
+import { toast } from "sonner";
 
-const ProductPage = () => {
-  const [products] = useState([
-    {
-      id: 1,
-      name: "Cơm Nắm Cá Ngừ",
-      image:
-        "https://images.unsplash.com/photo-1579871494447-9811cf80d66c",
-      desc: "Nhân cá ngừ đậm đà, phù hợp cho bữa ăn nhanh.",
-    },
-    {
-      id: 2,
-      name: "Cơm Nắm Thịt Kho",
-      image:
-        "https://images.unsplash.com/photo-1553621042-f6e147245754",
-      desc: "Hương vị truyền thống được nhiều khách hàng yêu thích.",
-    },
-    {
-      id: 3,
-      name: "Cơm Nắm Cá Hồi",
-      image:
-        "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f",
-      desc: "Nguyên liệu tươi ngon và giàu dinh dưỡng.",
-    },
-    {
-      id: 4,
-      name: "Cơm Cuộn Xúc Xích",
-      image:
-        "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351",
-      desc: "Món ăn tiện lợi cho học sinh và nhân viên văn phòng.",
-    },
-    {
-      id: 5,
-      name: "Cơm Nắm Kim Chi",
-      image:
-        "https://images.unsplash.com/photo-1607301405390-d831c242f59b",
-      desc: "Hương vị Hàn Quốc hấp dẫn.",
-    },
-    {
-      id: 6,
-      name: "Cơm Nắm Trứng Muối",
-      image:
-        "https://images.unsplash.com/photo-1512058564366-18510be2db19",
-      desc: "Béo ngậy và đậm vị.",
-    },
-  ]);
+  const ProductPage = () => {
+    const [products, setProducts] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [keyword, setKeyword] = useState("");
+    const [sort, setSort] = useState("default");
+    const [partnerForm, setPartnerForm] = useState({
+      name: "",
+      phone: "",
+      email: "",
+      service: "suat-an-truong-hoc",
+      note: "",
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const location = useLocation();
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 9;
+
+    const selectedCategory = new URLSearchParams(
+      location.search
+    ).get("category");
+
+    useEffect(() => {
+      getCategories()
+        .then((data) => {
+          console.log(data);
+          setCategory(data);
+        })
+        .catch((error) => {
+          console.error("Lỗi lấy danh mục:", error);
+        });
+
+
+      getProducts()
+        .then((data) => {
+          setProducts(data);
+        })
+        .catch((error) => {
+          console.error("Lỗi lấy sản phẩm:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, []);
+
+    const filteredProducts = products.filter((item) => {
+      const matchCategory = selectedCategory
+        ? item.category?.slug === selectedCategory
+        : true;
+
+      const matchKeyword = item.name
+        .toLowerCase()
+        .includes(keyword.toLowerCase());
+
+      return matchCategory && matchKeyword;
+    });
+    const finalProducts = [...filteredProducts];
+
+    if (sort === "az") {
+      finalProducts.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    if (sort === "za") {
+      finalProducts.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    const totalPages = Math.ceil(
+      finalProducts.length / productsPerPage
+    );
+
+    const startIndex = (currentPage - 1) * productsPerPage;
+
+    const currentProducts =
+      finalProducts.slice(
+        startIndex,
+        startIndex + productsPerPage
+      );
+    useEffect(() => {
+      setCurrentPage(1);
+      setKeyword("");
+    }, [selectedCategory]);
+
+    if (loading) {
+      return <p>Đang tải...</p>;
+    }
+
+    const handlePartnerSubmit = async (event) => {
+      event.preventDefault();
+
+      try {
+        setIsSubmitting(true);
+
+        await createContact({
+          name: partnerForm.name,
+          phone: partnerForm.phone,
+          email: partnerForm.email,
+          service: partnerForm.service,
+          note: partnerForm.note,
+          requestType: "partner_consultation",
+          source: "products_page",
+        });
+
+        toast.success("Đã gửi yêu cầu tư vấn đối tác.");
+        setPartnerForm({
+          name: "",
+          phone: "",
+          email: "",
+          service: "suat-an-truong-hoc",
+          note: "",
+        });
+      } catch (error) {
+        console.error("Lỗi gửi yêu cầu tư vấn đối tác:", error);
+        toast.error("Không thể gửi yêu cầu. Vui lòng thử lại.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
 
   return (
     <>
@@ -81,37 +159,95 @@ const ProductPage = () => {
       </section>
 
       {/* Product Area */}
-      <section className="bg-gray-50 py-10">
-        <div className="container mx-auto px-4">
+      <section className=" p-[20px] md:px-[100px] md:py-[40px] max-w-[1410px] mx-auto">
+        <div className="mx-auto px-4">
+          <div className="bg-white rounded-2xl md:mb-[30px]  shadow-sm border border-gray-100 p-4 mb-6">
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+              <input
+                type="text"
+                placeholder="🔍 Tìm kiếm sản phẩm..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                className="
+                  w-full lg:w-220
+                  border border-gray-200
+                  rounded-xl
+                  px-4 py-3
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-red-200
+                  focus:border-red-500
+                "
+              />
+
+              <div className="flex items-center gap-4">
+                <span className="text-gray-500 text-sm">
+                  {finalProducts.length} sản phẩm
+                </span>
+
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="
+                    border border-gray-200
+                    rounded-xl
+                    px-4 py-3
+                    bg-white
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-red-200
+                    focus:border-red-500
+                    text-red-500  
+                  "
+                >
+                  <option value="newest">Mới nhất</option>
+                    <option value="az">Tên A-Z</option>
+                    <option value="za">Tên Z-A</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div className="grid lg:grid-cols-[260px_1fr] gap-8">
 
             {/* Sidebar */}
             <aside>
-              <div className="bg-white rounded-xl shadow p-5">
-                <h3 className="font-bold mb-4">
-                  Danh Mục
+              <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
+                <h3 className="font-bold text-lg text-gray-800 mb-4 pb-3 border-b">
+                  Danh Mục Sản Phẩm
                 </h3>
 
-                <div className="space-y-2">
-                  <button className="w-full text-left px-4 py-3 bg-red-600 text-white rounded">
-                    Cơm Nắm Việt
-                  </button>
+              <div className="space-y-2">
+                <Link
+                  to="/products"
+                  className={`block w-full px-4 py-3 rounded-xl transition
+                    ${
+                      !selectedCategory
+                        ? "bg-red-600 text-white"
+                        : "hover:bg-red-50"
+                    }`}
+                >
+                  Tất cả sản phẩm
+                </Link>
 
-                  <button className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded">
-                    Cơm Cuộn
-                  </button>
-
-                  <button className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded">
-                    Sandwich
-                  </button>
-
-                  <button className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded">
-                    Trà Sữa
-                  </button>
-                </div>
+                {category.map((category) => (
+                  <Link
+                    key={category._id}
+                    to={`/products?category=${category.slug}`}
+                    className={`block w-full px-4 py-3 rounded-xl transition
+                      ${
+                        selectedCategory === category.slug
+                          ? "bg-red-600 text-white"
+                          : "hover:bg-red-50"
+                      }`}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
               </div>
 
               <div className="bg-white rounded-xl shadow p-5 mt-6">
+
                 <h4 className="font-semibold text-red-600 mb-3">
                   Cam Kết ISO 22000
                 </h4>
@@ -124,26 +260,23 @@ const ProductPage = () => {
 
             {/* Products */}
             <div>
-              <div className="flex justify-between items-center mb-6">
-                <p className="text-sm text-gray-500">
-                  Hiển thị 12 sản phẩm
-                </p>
-
-                <select className="border rounded px-3 py-2">
-                  <option>Mặc định</option>
-                  <option>Mới nhất</option>
-                  <option>Tên A-Z</option>
-                </select>
-              </div>
-
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {products.map((item) => (
+                {currentProducts.map((item) => (
                   <div
-                    key={item.id}
-                    className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+                    key={item._id}
+                    className="  bg-white
+                          border border-gray-200
+                          hover:border-red-600
+                          rounded-xl
+                          overflow-hidden
+                          shadow-sm
+                          hover:shadow-xl
+                          hover:-translate-y-1
+                          transition-all
+                          duration-300"
                   >
                     <img
-                      src={item.image}
+                      src={item.imageUrl}
                       alt={item.name}
                       className="h-52 w-full object-cover"
                     />
@@ -154,12 +287,16 @@ const ProductPage = () => {
                       </h3>
 
                       <p className="text-sm text-gray-600 mb-4">
-                        {item.desc}
+                        {item.description}
                       </p>
 
-                      <button className="w-full border border-red-600 text-red-600 py-2 rounded hover:bg-red-600 hover:text-white transition">
+                      <Link to={`/products/${item.slug}`} 
+                      className="w-full btn border border-red-600 
+                      text-red-600 py-2 
+                      rounded hover:bg-red-600 
+                      hover:text-white transition">
                         Xem chi tiết
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}
@@ -167,16 +304,43 @@ const ProductPage = () => {
 
               {/* Pagination */}
               <div className="flex justify-center gap-2 mt-10">
-                <button className="w-10 h-10 border rounded">
-                  1
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() =>
+                    setCurrentPage((prev) => prev - 1)
+                  }
+                  className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                  ←
                 </button>
 
-                <button className="w-10 h-10 border rounded">
-                  2
-                </button>
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1;
 
-                <button className="w-10 h-10 border rounded">
-                  3
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-10 h-10 rounded border transition
+                        ${
+                          currentPage === page
+                            ? "bg-red-600 text-white border-red-600"
+                            : "hover:bg-gray-100"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setCurrentPage((prev) => prev + 1)
+                  }
+                  className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                  →
                 </button>
               </div>
             </div>
@@ -195,33 +359,56 @@ const ProductPage = () => {
                 Nhận Tư Vấn Đối Tác
               </h2>
 
-              <form className="space-y-4">
+              <form onSubmit={handlePartnerSubmit} className="space-y-4">
                 <input
                   type="text"
                   placeholder="Họ và tên"
+                  value={partnerForm.name}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, name: e.target.value })}
                   className="w-full border rounded-lg p-3"
                 />
 
                 <input
                   type="text"
                   placeholder="Số điện thoại"
+                  value={partnerForm.phone}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, phone: e.target.value })}
                   className="w-full border rounded-lg p-3"
                 />
 
                 <input
                   type="email"
                   placeholder="Email"
+                  value={partnerForm.email}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, email: e.target.value })}
                   className="w-full border rounded-lg p-3"
                 />
+
+                <select
+                  value={partnerForm.service}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, service: e.target.value })}
+                  className="border rounded-lg px-4 py-3 w-full"
+                >
+                  <option value="suat-an-truong-hoc">Suất ăn trường học</option>
+                  <option value="suat-an-cong-nghiep">Suất ăn công nghiệp</option>
+                  <option value="dich-vu-canteen">Dịch vụ canteen</option>
+                  <option value="khac">Khác</option>
+                </select>
 
                 <textarea
                   rows="5"
                   placeholder="Nội dung"
+                  value={partnerForm.note}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, note: e.target.value })}
                   className="w-full border rounded-lg p-3"
                 />
 
-                <button className="w-full bg-red-600 text-white py-3 rounded-lg">
-                  Gửi Yêu Cầu
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-red-600 text-white py-3 rounded-lg disabled:opacity-60"
+                >
+                  {isSubmitting ? "Đang gửi..." : "Gửi Yêu Cầu"}
                 </button>
               </form>
             </div>

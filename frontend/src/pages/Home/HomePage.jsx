@@ -10,6 +10,7 @@ import Intro from "../../assets/imgs/Intro.png"
 import { Award, ShieldPlus, Handshake, Lightbulb,BookOpen, Cpu, Tag, Truck, HeartHandshake 
   ,School, ShoppingBag, Store, Phone, Mail, MapPin
  } from "lucide-react";
+import { toast } from "sonner";
 
 
 import "../../assets/styles/Home.css"
@@ -17,6 +18,7 @@ import "../../assets/styles/Home.css"
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ProductCategory from "./ProductCategory";
+import { createContact } from "../../services/contactService";
 
 const PRODUCT_IMGS = [
     "/logos/hong-anh.png",
@@ -88,9 +90,36 @@ const HomePage = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const [checked, setChecked] = useState([]);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", policy: "", note: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", service: "", policy: "", note: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
+
+  const handleSubmitConsultation = async (event) => {
+    event.preventDefault();
+
+    try {
+      setIsSubmitting(true);
+
+      await createContact({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        service: form.service,
+        note: form.note,
+        requestType: "partner_consultation",
+        source: "home_consultation_form",
+      });
+
+      toast.success("Đã gửi yêu cầu tư vấn.");
+      setForm({ name: "", phone: "", email: "", service: "", policy: "", note: "" });
+    } catch (error) {
+      console.error("Lỗi gửi yêu cầu tư vấn:", error);
+      toast.error("Không thể gửi yêu cầu. Vui lòng thử lại.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div>
@@ -412,7 +441,7 @@ const HomePage = () => {
         </div>
 
         {/* Right - form */}
-        <div className="flex-1 p-8 flex flex-col gap-4">
+        <form onSubmit={handleSubmitConsultation} className="flex-1 p-8 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-xs font-medium text-gray-600">Họ và tên</label>
@@ -470,12 +499,13 @@ const HomePage = () => {
           </div>
 
           <button
-            onClick={() => alert('Đã gửi!')}
+            type="submit"
+            disabled={isSubmitting}
             className="w-full bg-red-700 hover:bg-red-800 active:scale-[0.98] transition-all text-white font-bold text-sm py-4 rounded-xl mt-1"
           >
-            Gửi yêu cầu ngay
+            {isSubmitting ? "Đang gửi..." : "Gửi yêu cầu ngay"}
           </button>
-        </div>
+        </form>
 
       </div>
       </section>

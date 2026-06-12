@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getCategories } from "../../services/categoryService";
+
 
 import COMNAM from "../../assets/imgs/comNam.png";
 import SANDWICH from "../../assets/imgs/sandwich.png";
@@ -7,16 +9,12 @@ import KIMBAP from "../../assets/imgs/KIMBAP.png";
 import TRASUA from "../../assets/imgs/traSua.png";
 
 const ProductCategory = () => {
-    const [products] = useState([
-        { id: 1, name: "Cơm nắm", image: COMNAM, desc: "Dòng sản phẩm chủ lực với nhiều hương vị đặc trưng." },
-        { id: 2, name: "Cơm cuộn", image: KIMBAP, desc: "Sự kết hợp hào giữa cơm và các loại nhân tươi." },
-        { id: 3, name: "Sandwich", image: SANDWICH, desc: "Bánh mì kẹp nhân đa dạng, tiện lợi cho bữa sáng và giải lao." },
-        { id: 4, name: "Trà sữa", image: TRASUA, desc: "Thức uống giải nhiệt yêu thích của giới trẻ và học sinh." },
-    ]);
+    const [category, setCategory] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const [current, setCurrent] = useState(0);
 
-    const len = products.length;
+    const len = category.length;
     const left = (current - 1 + len) % len;
     const right = (current + 1) % len;
 
@@ -28,11 +26,28 @@ const ProductCategory = () => {
         setCurrent((prev) => (prev - 1 + len) % len);
     };
 
+        useEffect(() => {
+          getCategories()
+            .then((data) => {
+              console.log(data);
+              setCategory(data);
+            })
+            .catch((error) => {
+              console.error("Lỗi lấy danh mục:", error);
+            })
+            .finally(() => {
+                setLoading(false);
+        });
+    }, []);
+        if (loading) {
+      return <p>Đang tải...</p>;
+    }
+
     return (
         <div className="text-center">
             {/* Tabs */}
             <div className="hidden md:flex mb-10 flex-wrap justify-center gap-4">
-                {products.map((p, i) => (
+                {category.map((p, i) => (
                     <button
                         key={i}
                         onClick={() => setCurrent(i)}
@@ -53,14 +68,14 @@ const ProductCategory = () => {
             <div className="relative">
                 {/* Mobile */}
                 <div className="md:hidden grid grid-cols-1 gap-4">
-                    {products.map((product) => (
+                    {category.map((product) => (
                         <div
-                            key={product.id}
+                            key={product._id}
                             className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group"
                         >
                             <div className="overflow-hidden h-52">
                                 <img
-                                    src={product.image}
+                                    src={product.imageUrl}
                                     alt={product.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
@@ -72,11 +87,11 @@ const ProductCategory = () => {
                                 </p>
 
                                 <p className="text-sm text-gray-500 mb-3 leading-relaxed">
-                                    {product.desc}
+                                    {product.description}
                                 </p>
 
                                 <Link
-                                    to={`/products/${product.id}`}
+                                    to={`/products?category=${product.slug}`}
                                     className="text-sm font-medium text-red-600 hover:underline"
                                 >
                                     Xem chi tiết
@@ -99,23 +114,23 @@ const ProductCategory = () => {
                     <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
                         <div className="overflow-hidden h-48">
                             <img
-                                src={products[left].image}
-                                alt={products[left].name}
+                                src={category[left].imageUrl}
+                                alt={category[left].name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
 
                         <div className="p-5 text-left">
                             <p className="font-semibold text-gray-800 mb-1">
-                                {products[left].name}
+                                {category[left].name}
                             </p>
 
                             <p className="text-sm text-gray-500 mb-3 leading-relaxed">
-                                {products[left].desc}
+                                {category[left].description}
                             </p>
 
                             <Link
-                                to={`/products/${products[left].id}`}
+                                to={`/products?category=${category[left].slug}`}
                                 className="text-sm font-medium text-red-600 hover:underline"
                             >
                                 Xem chi tiết
@@ -133,23 +148,23 @@ const ProductCategory = () => {
                     >
                         <div className="overflow-hidden h-56">
                             <img
-                                src={products[current].image}
-                                alt={products[current].name}
+                                src={category[current].imageUrl}
+                                alt={category[current].name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
 
                         <div className="p-5 text-left">
                             <p className="font-semibold text-gray-800 mb-1">
-                                {products[current].name}
+                                {category[current].name}
                             </p>
 
                             <p className="text-sm text-gray-500 mb-3 leading-relaxed">
-                                {products[current].desc}
+                                {category[current].description}
                             </p>
 
                             <Link
-                                to={`/products/${products[current].id}`}
+                                to={`/products?category=${category[current].slug}`}
                                 className="text-sm font-medium text-red-600 hover:underline"
                             >
                                 Xem chi tiết
@@ -161,23 +176,23 @@ const ProductCategory = () => {
                     <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
                         <div className="overflow-hidden h-56">
                             <img
-                                src={products[right].image}
-                                alt={products[right].name}
+                                src={category[right].imageUrl}
+                                alt={category[right].name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
 
                         <div className="p-5 text-left">
                             <p className="font-semibold text-gray-800 mb-1">
-                                {products[right].name}
+                                {category[right].name}
                             </p>
 
                             <p className="text-sm text-gray-500 mb-3 leading-relaxed">
-                                {products[right].desc}
+                                {category[right].description}
                             </p>
 
                             <Link
-                                to={`/products/${products[right].id}`}
+                                to={`/products?category=${category[right].slug}`}
                                 className="text-sm font-medium text-red-600 hover:underline"
                             >
                                 Xem chi tiết

@@ -229,7 +229,7 @@ export default function Intro() {
                     font-medium
                     rounded-xl
                     shadow-md
-                    hover:bg-red-50
+                    hover:bg-red-100
                     transition-all
                     "
                 >
@@ -243,11 +243,13 @@ export default function Intro() {
                     className="
                     inline-flex items-center gap-2
                     px-6 py-3
-                    bg-red-600 text-white
+                    text-white
                     font-medium
                     rounded-xl
                     shadow-md
-                    hover:bg-red-700
+                    border-2
+                    border-white
+                    hover:border-2 hover:border-gray-700
                     transition-all
                     "
                 >

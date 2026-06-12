@@ -1,4 +1,6 @@
 import React, { useState, useEffect,useRef } from "react";
+import { getCategories } from "../services/categoryService";
+
 import { Link, useLocation } from "react-router-dom";
 import { Phone, ChevronDown, Menu, X } from "lucide-react";
 import logo from "../assets/imgs/Logo.png";
@@ -11,15 +13,28 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const menuRef = useRef(null);
 
   const location = useLocation();
 
-  const categories = [
-    { name: "Cơm Nắm", link: "/products?category=com-nam" },
-    { name: "Bánh Mì", link: "/products?category=banh-mi" },
-    { name: "Kim Bap", link: "/products?category=kim-bap" },
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
   const handleClickOutside = (event) => {
     if (
@@ -41,13 +56,10 @@ const Header = () => {
 
   const isActive = (path) => location.pathname === path;
 
-
   useEffect(() => {
   let lastScrollY = window.scrollY;
-
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
-
     setScrolled(currentScrollY > 50);
 
     if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -66,6 +78,9 @@ const Header = () => {
     window.removeEventListener("scroll", handleScroll);
   };
 }, []);
+    const selectedCategory = new URLSearchParams(
+      location.search
+    ).get("category");
 
   return (
     <div
@@ -133,10 +148,16 @@ const Header = () => {
                 <div className="dropdown-menu">
                   {categories.map((item) => (
                     <Link
-                      key={item.link}
-                      to={item.link}
-                      className="dropdown-item "
-                    >
+                      key={item._id}
+                      to={`/products?category=${item.slug}`}
+                      className={`dropdown-item 
+                        ${
+                        selectedCategory === item.slug
+                          ? "bg-red-300 text-white"
+                          : "hover:bg-red-100 text-gray-700" 
+                      }`
+                      }                    
+                      >
                       {item.name}
                     </Link>
                   ))}

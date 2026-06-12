@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import createSlug from "../utils/slugify.js";
 
 const productSchema = new mongoose.Schema(
 {
@@ -12,6 +13,14 @@ const productSchema = new mongoose.Schema(
         type: String,
         required: true,
         trim: true
+    },
+
+    slug: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        sparse: true
     },
 
     description: {
@@ -35,5 +44,27 @@ const productSchema = new mongoose.Schema(
     timestamps: true
 }
 );
+
+productSchema.pre("validate", function () {
+    if (!this.slug && this.name) {
+        this.slug = createSlug(this.name);
+    }
+});
+
+productSchema.pre("findOneAndUpdate", function (next) {
+    const update = this.getUpdate();
+    const name = update?.name || update?.$set?.name;
+    const slug = update?.slug || update?.$set?.slug;
+
+    if (name && !slug) {
+        if (update.$set) {
+            update.$set.slug = createSlug(name);
+        } else {
+            update.slug = createSlug(name);
+        }
+    }
+
+    next();
+});
 
 export default mongoose.model("Product", productSchema);
