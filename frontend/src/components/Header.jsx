@@ -2,7 +2,7 @@ import React, { useState, useEffect,useRef } from "react";
 import { getCategories } from "../services/categoryService";
 
 import { Link, useLocation } from "react-router-dom";
-import { Phone, ChevronDown, Menu, X } from "lucide-react";
+import { Phone, ChevronDown, Menu, X,LoaderCircle } from "lucide-react";
 import logo from "../assets/imgs/Logo.png";
 
 import '../assets/styles/Header.css'
@@ -15,6 +15,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  
   const menuRef = useRef(null);
 
   const location = useLocation();
@@ -82,6 +83,7 @@ const Header = () => {
       location.search
     ).get("category");
 
+
   return (
     <div
     ref={menuRef}
@@ -91,7 +93,7 @@ const Header = () => {
     ${
       scrolled
         ? "bg-white text-black shadow-lg"
-        : " md:bg-transparent max-sm:bg-white max-sm:text-black md:text-white"
+        : " md:bg-transparent bg-white text-black md:text-white"
     }
     `}>
       <div className="container-app group hover:bg-white 
@@ -113,7 +115,7 @@ const Header = () => {
               md:static md:w-auto md:shadow-none
               flex flex-col gap-4 p-4
               md:flex-row md:items-center md:gap-10 md:p-0
-              ${menuOpen ? "max-sm:flex md:hidden bg-white max-sm:text-black" : "max-sm:hidden sm:hidden md:flex"}
+              ${menuOpen ? "flex md:hidden bg-white text-black" : "hidden md:flex"}
               ${scrolled ? "text-black" : "text-white md:group-hover:text-black"}
             `}
           >

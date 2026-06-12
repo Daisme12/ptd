@@ -141,7 +141,7 @@ const HomePage = () => {
         <div className="max-w-6xl text-center">
           {/* Brand */}
           <div className="py-4 w-fit mx-auto border-y border-white/40">
-            <p className="text-sm md:text-base max-sm:text-[12px] text-white/80 tracking-[0.2em] uppercase">
+            <p className="text-[12px] md:text-base text-white/80 tracking-[0.2em] uppercase">
               <span className="font-bold">
                 THỊNH PHONG ĐỖ
               </span>
@@ -151,9 +151,9 @@ const HomePage = () => {
 
           {/* Title */}
           <h1
-            className="mx-auto mt-[50px] md:mb-[30px] max-sm:mb-[10px] 
-            max-sm:text-2xl md:text-[42px] lg:text-[45px]
-          font-bold text-white uppercase  mb-8"
+            className="mx-auto mt-[50px] mb-[10px] md:mb-[30px] 
+            text-2xl md:text-[45px]
+          font-bold text-white uppercase mb-8"
           >
             CHUYÊN CUNG CẤP SUẤT ĂN & DỊCH VỤ CANTEEN
             CHO TRƯỜNG HỌC VÀ CHUỖI SIÊU THỊ
@@ -161,9 +161,9 @@ const HomePage = () => {
 
           {/* Description */}
           <p
-            className="md:my-[20px] max-w-3xl max-sm:text-[12px] 
-            mx-auto text-white/85 text-base max-sm:mb-[10px]
-            md:text-lg leading-relaxed mb-14"
+            className="md:my-[20px] max-w-3xl text-[12px] 
+            mx-auto text-white/85 mb-[10px]
+            md:text-lg leading-relaxed md:mb-14"
           >
             THỊNH PHONG ĐỖ cung cấp suất ăn, thực phẩm chế biến sẵn và
             dịch vụ canteen với quy trình sản xuất đạt tiêu chuẩn
@@ -179,25 +179,25 @@ const HomePage = () => {
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
               <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={QR} alt="QR sản phẩm" />
               <div className='flex flex-col items-start text-white'>
-                <p className="md:text-[16px] max-sm:text-[14px]  font-bold">Truy xuất nguồn gốc</p>
-                <span className="md:text-[14px] max-sm:text-[10px]">Minh bạch, dễ kiểm tra</span>
+                <p className="text-[14px] md:text-[16px] font-bold">Truy xuất nguồn gốc</p>
+                <span className="text-[10px] md:text-[14px]">Minh bạch, dễ kiểm tra</span>
               </div>
             </div>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
               <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={ISO} alt="ISO" />
               <div className='flex flex-col items-start text-white'>
                 <div className='flex items-center w-[160px] h-[30px] overflow-hidden gap-[10px]'>
-                  <p className="md:text-[16px] max-sm:text-[14px] font-bold">ISO</p>
+                  <p className="text-[14px] md:text-[16px] font-bold">ISO</p>
                   <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Star} alt="Star" />
                 </div>
-                <span className="md:text-[14px] max-sm:text-[10px]">Tiêu chuẩn ISO 22000:2018</span>
+                <span className="text-[10px] md:text-[14px]">Tiêu chuẩn ISO 22000:2018</span>
               </div>
             </div>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
               <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Profile} alt="Profile" />
               <div className='flex flex-col items-start text-white' >
-                <p className="md:text-[16px] max-sm:text-[14px] font-bold">Hồ sơ sản phẩm đầy đủ</p>
-                <span className="md:text-[14px] max-sm:text-[10px]">Pháp lý & Kiểm định chất lượng</span>
+                <p className="text-[14px] md:text-[16px] font-bold">Hồ sơ sản phẩm đầy đủ</p>
+                <span className="text-[10px] md:text-[14px]">Pháp lý & Kiểm định chất lượng</span>
               </div>
             </div>
           </div>
@@ -205,7 +205,7 @@ const HomePage = () => {
           {/* CTA */}
           <button
             onClick={() => navigate("/contact")}
-            className="btn btn-primary max-sm:text-[12px]  rounded-md md:mt-3 p-4 text-white uppercase tracking-widest"
+            className="btn btn-primary text-[12px] md:text-base rounded-md md:mt-3 p-4 text-white uppercase tracking-widest"
           >
             Nhận tư vấn & báo giá
           </button>
@@ -214,7 +214,7 @@ const HomePage = () => {
 
       <section className="container mx-auto">
         {/* Slogan */}
-        <div className="mb-15 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mb-15 mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
           {cards.map(({ icon: Icon, title, desc }, idx) => (
             <div
               key={idx}
@@ -239,7 +239,7 @@ const HomePage = () => {
         </div>
 
         {/* Intro */}
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <img
               src={Intro}

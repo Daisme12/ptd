@@ -90,7 +90,7 @@ const ContactPage = () => {
       {/* Contact */}
       <section className="bg-gray-100">
         <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
 
             {/* Left */}
             <div className="space-y-6">

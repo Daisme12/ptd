@@ -7,11 +7,15 @@ import { getProducts, getProductById } from "../../services/productService";
 import { getCategories } from "../../services/categoryService";
 import { createContact } from "../../services/contactService";
 import { toast } from "sonner";
+import { LoaderCircle } from "lucide-react";
+
 
   const ProductPage = () => {
     const [products, setProducts] = useState([]);
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
     const [keyword, setKeyword] = useState("");
     const [sort, setSort] = useState("default");
     const [partnerForm, setPartnerForm] = useState({
@@ -39,6 +43,7 @@ import { toast } from "sonner";
         })
         .catch((error) => {
           console.error("Lỗi lấy danh mục:", error);
+          setError("Không thể kết nối tới máy chủ");
         });
 
 
@@ -48,6 +53,7 @@ import { toast } from "sonner";
         })
         .catch((error) => {
           console.error("Lỗi lấy sản phẩm:", error);
+          setError("Không thể kết nối tới máy chủ");
         })
         .finally(() => {
           setLoading(false);
@@ -91,9 +97,29 @@ import { toast } from "sonner";
       setKeyword("");
     }, [selectedCategory]);
 
-    if (loading) {
-      return <p>Đang tải...</p>;
+ if (loading) {
+        return (
+            <div className="flex justify-center items-center py-20">
+            <LoaderCircle className="w-10 h-10 text-red-600 animate-spin" />
+            </div>
+        );
     }
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+            <p className="text-red-600 font-semibold">
+                {error}
+            </p>
+
+            <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
+            >
+                Thử lại
+            </button>
+            </div>
+        );
+        }
 
     const handlePartnerSubmit = async (event) => {
       event.preventDefault();
@@ -162,14 +188,14 @@ import { toast } from "sonner";
       <section className=" p-[20px] md:px-[100px] md:py-[40px] max-w-[1410px] mx-auto">
         <div className="mx-auto px-4">
           <div className="bg-white rounded-2xl md:mb-[30px]  shadow-sm border border-gray-100 p-4 mb-6">
-            <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+            <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
               <input
                 type="text"
                 placeholder="🔍 Tìm kiếm sản phẩm..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 className="
-                  w-full lg:w-220
+                  w-full md:w-220
                   border border-gray-200
                   rounded-xl
                   px-4 py-3
@@ -207,7 +233,7 @@ import { toast } from "sonner";
               </div>
             </div>
           </div>
-          <div className="grid lg:grid-cols-[260px_1fr] gap-8">
+          <div className="grid md:grid-cols-[260px_1fr] gap-8">
 
             {/* Sidebar */}
             <aside>
@@ -351,7 +377,7 @@ import { toast } from "sonner";
       {/* Bottom Section */}
       <section className="bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
 
             {/* Form */}
             <div className="bg-white shadow-xl rounded-2xl p-8">

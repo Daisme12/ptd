@@ -98,10 +98,10 @@ export default function Intro() {
                     Tầm Nhìn
                 </h2>
 
-                <div className="relative lg:min-h-[480px]">
+                <div className="relative md:min-h-[480px]">
 
                     {/* Box trên */}
-                    <div className="w-full lg:w-[60%] border-2 border-red-500 rounded-[30px] p-10">
+                    <div className="w-full md:w-[60%] border-2 border-red-500 rounded-[30px] p-10">
                         <p className="text-xl leading-relaxed text-gray-800">
                             Thịnh Phong Đỗ hướng đến trở thành đơn vị dẫn đầu trong cung ứng
                             suất ăn công nghiệp sạch, an toàn, nói không với chất bảo quản,
@@ -112,8 +112,8 @@ export default function Intro() {
                     {/* Ảnh */}
                     <div
                         className="
-                            mt-10 flex justify-center lg:mt-0
-                            lg:absolute lg:right-0 lg:top-[-50px] lg:z-20
+                            mt-10 flex justify-center md:mt-0
+                            md:absolute md:right-0 md:top-[-50px] md:z-20
                         "
                     >
                         <div className="relative">
@@ -131,13 +131,13 @@ export default function Intro() {
                                     py-3
                                     rounded-md text-center
                                     min-w-[200px]
-                                    lg:min-w-[350px]
+                                    md:min-w-[350px]
                                 "
                             >
-                                <p className="text-base lg:text-lg font-bold uppercase">
+                                <p className="text-base md:text-lg font-bold uppercase">
                                     Phó Giám Đốc
                                 </p>
-                                <p className="text-xl lg:text-2xl font-extrabold uppercase">
+                                <p className="text-xl md:text-2xl font-extrabold uppercase">
                                     Trần Khánh Ly
                                 </p>
                             </div>
@@ -148,12 +148,12 @@ export default function Intro() {
                     <div
                         className="
                             mt-10 border-2 border-red-500 rounded-[30px] p-8
-                            lg:absolute lg:left-0 lg:top-[210px]
-                            lg:w-[80%] lg:p-12
-                            lg:z-10
+                            md:absolute md:left-0 md:top-[210px]
+                            md:w-[80%] md:p-12
+                            md:z-10
                         "
                     >
-                        <p className="text-lg lg:text-xl italic leading-relaxed text-gray-700 lg:w-[67%]">
+                        <p className="text-lg md:text-xl italic leading-relaxed text-gray-700 md:w-[67%]">
                             "Với 15 năm kinh nghiệm trong ngành F&B, chúng tôi không ngừng
                             đổi mới và áp dụng công nghệ 5.0 vào quy trình sản xuất nhằm
                             nâng cao chất lượng suất ăn công nghiệp."
@@ -169,7 +169,7 @@ export default function Intro() {
                         Thịnh Phong Đỗ ra đời với sứ mệnh mang đến những sản phẩm chất lượng cao với giá thành hợp lý,
                         phục vụ nhu cầu thực phẩm của người Việt.
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                         {[
                             { title: 'Với Khách Hàng', desc: 'Cung cấp thực phẩm an toàn - chất lượng - dinh dưỡng, đáp ứng nhu cầu tiêu dùng hiện đại.' },
                             { title: 'Với Đối Tác Phân Phối', desc: 'Hợp tác bền vững, đảm bảo lợi ích hài hòa, mở rộng mạng lưới phân phối.' },

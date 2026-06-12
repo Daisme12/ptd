@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCategories } from "../../services/categoryService";
-
+import { LoaderCircle } from "lucide-react";
 
 import COMNAM from "../../assets/imgs/comNam.png";
 import SANDWICH from "../../assets/imgs/sandwich.png";
@@ -11,6 +11,7 @@ import TRASUA from "../../assets/imgs/traSua.png";
 const ProductCategory = () => {
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const [current, setCurrent] = useState(0);
 
@@ -34,14 +35,35 @@ const ProductCategory = () => {
             })
             .catch((error) => {
               console.error("Lỗi lấy danh mục:", error);
+              setError("Không thể kết nối tới máy chủ");
             })
             .finally(() => {
                 setLoading(false);
         });
     }, []);
-        if (loading) {
-      return <p>Đang tải...</p>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-20">
+            <LoaderCircle className="w-10 h-10 text-red-600 animate-spin" />
+            </div>
+        );
     }
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+            <p className="text-red-600 font-semibold">
+                {error}
+            </p>
+
+            <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
+            >
+                Thử lại
+            </button>
+            </div>
+        );
+        }
 
     return (
         <div className="text-center">
