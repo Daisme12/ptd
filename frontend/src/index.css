@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: #e31837;
+  --color-primary-light: #ff4d6d;
+  --color-primary-dark: #c1122f;
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #ffbf00;
+  --color-secondary-foreground: #111827;
+
+  --color-accent: #111827;
+  --color-accent-foreground: #ffffff;
+
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #6b7280;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #111827;
+
+  --color-border: #e5e7eb;
+  --color-input: #e5e7eb;
+  --color-ring: #e31837;
+
+  --color-success: #22c55e;
+  --color-info: #3b82f6;
+  --color-destructive: #ef4444;
+
+  /* Radius */
+  --radius: 1rem;
+}
+
+:root {
+  --background: #f8fafc;
+  --foreground: #111827;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+  --gradient-primary: linear-gradient(
+    135deg,
+    #e31837,
+    #ff4d6d
+  );
+
+  --transition-smooth: all 0.3s ease;
+}
+
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+* {
+  box-sizing: border-box;
+ font-family: 'Be Vietnam Pro', sans-serif;}
+
+  body {
+    margin: 0;
+  }
+
+  .container {
+    padding: 50px 20px;
+  }
+  .container-app {
+    padding: 20px 20px;
+  }
+
+  @media (min-width: 768px) {
+    .container-app {
+      padding: 20px 20px;
+    }
+    .container {
+        max-width: 1410px;
+      padding: 30px 20px;
+      margin:0 auto;
+  }
+  }
+  @media (min-width: 1024px) {
+    .container-app {
+      padding: 20px 100px;
+    }
+    .container {
+        max-width: 1410px;
+      padding: 80px 100px;
+      margin:0 auto !important;
+  }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-primary {
+    background: #e31837;
+  }
+
+  .btn-primary:hover {
+    background:#b51830;
+  }
+  img {
+  display: block;
+  max-width: 100%;
+}

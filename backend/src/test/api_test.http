@@ -1,0 +1,122 @@
+### FILE TEST API (Sử dụng với extension REST Client trong VSCode)
+### Hoặc bạn có thể xem file này như tài liệu hướng dẫn các trường cần truyền lên Server
+
+@baseUrl = http://localhost:5001/api
+
+### ==========================================
+### 1. CATEGORIES (Danh mục)
+### ==========================================
+
+### Lấy toàn bộ danh mục
+GET {{baseUrl}}/categories
+
+### Tạo mới danh mục (Bắt buộc: name)
+POST {{baseUrl}}/categories
+Content-Type: application/json
+
+{
+    "name": "Tên danh mục mới",
+    "description": "Mô tả danh mục (không bắt buộc)"
+}
+
+### Cập nhật danh mục
+PUT {{baseUrl}}/categories/REPLACE_WITH_CATEGORY_ID
+Content-Type: application/json
+
+{
+    "name": "Tên danh mục đã sửa",
+    "description": "Mô tả đã sửa"
+}
+
+### ==========================================
+### 2. PRODUCTS (Sản phẩm)
+### ==========================================
+
+### Lấy toàn bộ sản phẩm
+GET {{baseUrl}}/products
+
+### Tạo mới sản phẩm (Bắt buộc: category (ID), name)
+POST {{baseUrl}}/products
+Content-Type: application/json
+
+{
+    "category": "REPLACE_WITH_CATEGORY_ID", 
+    "name": "Tên sản phẩm mới",
+    "description": "Mô tả sản phẩm (không bắt buộc)",
+    "imageUrl": "Link ảnh sản phẩm (không bắt buộc)",
+    "price": 100000,
+    "status": true
+}
+
+### Cập nhật sản phẩm
+PUT {{baseUrl}}/products/REPLACE_WITH_PRODUCT_ID
+Content-Type: application/json
+
+{
+    "price": 150000,
+    "status": false
+}
+
+### ==========================================
+### 3. CERTIFICATES (Chứng chỉ)
+### ==========================================
+
+### Lấy toàn bộ chứng chỉ
+GET {{baseUrl}}/certificates
+
+### Tạo mới chứng chỉ (Bắt buộc: title, fileUrl)
+POST {{baseUrl}}/certificates
+Content-Type: application/json
+
+{
+    "title": "Chứng chỉ vệ sinh an toàn thực phẩm",
+    "certificateType": "Loại chứng chỉ (không bắt buộc)",
+    "fileUrl": "https://link-anh-chung-chi.jpg",
+    "issueDate": "2024-01-01",
+    "expiryDate": "2025-01-01",
+    "description": "Mô tả chi tiết (không bắt buộc)",
+    "products": ["REPLACE_WITH_PRODUCT_ID_1", "REPLACE_WITH_PRODUCT_ID_2"]
+}
+
+### Cập nhật chứng chỉ
+PUT {{baseUrl}}/certificates/REPLACE_WITH_CERTIFICATE_ID
+Content-Type: application/json
+
+{
+    "title": "Tên chứng chỉ cập nhật"
+}
+
+### ==========================================
+### 4. CONTACTS (Liên hệ)
+### ==========================================
+
+### Lấy toàn bộ liên hệ
+GET {{baseUrl}}/contacts
+
+### Tạo mới liên hệ (Bắt buộc: fullName, message)
+POST {{baseUrl}}/contacts
+Content-Type: application/json
+
+{
+    "fullName": "Nguyễn Văn A",
+    "phone": "0123456789 (không bắt buộc)",
+    "email": "nguyenvana@example.com (không bắt buộc)",
+    "message": "Nội dung lời nhắn"
+}
+
+### Xoá liên hệ
+DELETE {{baseUrl}}/contacts/REPLACE_WITH_CONTACT_ID
+
+Cách test trên Postman:
+Tạo chứng chỉ kèm file PDF:
+
+Method: POST
+URL: http://localhost:5001/api/certificates
+Tab Body → chọn form-data
+Điền các trường như sau:
+Key	Type	Value
+title	Text	Chứng chỉ VSATTP
+certificateType	Text	An toàn thực phẩm
+description	Text	Mô tả gì đó
+file	File	Chọn file PDF hoặc ảnh từ máy
+Lưu ý: Ở cột Key chữ file, bạn nhớ bấm vào ô nhỏ bên phải chuyển từ Text sang File nhé, giống như bạn đã làm với image lúc nãy.
