@@ -168,6 +168,17 @@ const Header = () => {
             </div>
 
             <Link
+              to="/certificate"
+              className={`hover:text-primary hover:underline 
+                ${isActive("/certificate")
+                  ? "font-bold text-primary"
+                  : "font-medium"
+                }`}
+            >
+              Chứng chỉ
+            </Link>
+
+            <Link
               to="/about"
               className={`hover:text-primary hover:underline 
                 ${isActive("/about")

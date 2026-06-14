@@ -2,7 +2,7 @@ import React, { useState,useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import bgContact from '../../assets/imgs/bgContact.png';
+import bgContact from '../../assets/imgs/bgProduct.png';
 import { getProducts, getProductById } from "../../services/productService";
 import { getCategories } from "../../services/categoryService";
 import { createContact } from "../../services/contactService";

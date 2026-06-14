@@ -5,7 +5,7 @@ import logoAvatar from '../assets/imgs/logoAvatar.png'
 export default function Footer() {
   return (
     <div>
-      <div className="bg-[#E1E3E4] mt-5 flex flex-col md:flex-row justify-between px-5 md:px-24 py-10 md:py-16 gap-10 text-[#5D3F3E]">
+      <div className="bg-gray-800 mt-5 flex flex-col md:flex-row justify-between px-5 md:px-24 py-10 md:py-16 gap-10 text-white">
 
         {/* Left */}
         <div className="flex flex-col items-start gap-3">
@@ -22,9 +22,9 @@ export default function Footer() {
           <h2 className="text-lg font-bold uppercase text-red-600 mt-0 md:mt-6 mb-5">Chính sách</h2>
           <ul className="flex flex-col gap-3">
             {[
-              { label: "Đại lý phân phối", to: "/dai-ly" },
-              { label: "Chính sách đổi trả", to: "/doi-tra" },
-              { label: "Chính sách giao hàng", to: "/giao-hang" },
+              { label: "Đại lý phân phối", to: "/policy/distributor" },
+              { label: "Chính sách đổi trả", to: "/policy/return" },
+              { label: "Chính sách giao hàng", to: "/policy/shipping" },
             ].map(({ label, to }) => (
               <li key={to} className="text-sm cursor-pointer transition-all duration-300 hover:text-red-600 hover:translate-x-2">
                 <Link to={to}>{label}</Link>
@@ -54,7 +54,7 @@ export default function Footer() {
       </div>
 
       {/* Copyright */}
-      <div className="bg-[#E1E3E4] border-t border-[#5D3F3E]/20 py-5 text-center text-red-600 font-semibold text-sm">
+      <div className="bg-gray-900 border-t border-gray-600 py-5 text-center text-white font-semibold text-sm">
         Copyright © 2026 Công Ty TNHH Phong Thịnh Đỗ
       </div>
     </div>

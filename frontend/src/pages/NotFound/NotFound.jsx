@@ -5,7 +5,8 @@ import Footer from "../../components/Footer";
 
 const NotFound = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900">
+    <div className="flex flex-col min-h-screen 
+    bg-gray-900">
 
       {/* Background cho Header */}
       <div className=" bg-gray-900">
@@ -45,6 +46,8 @@ const NotFound = () => {
           </div>
         </div>
       </main>
+
+      <Footer/>
     </div>
   );
 };
