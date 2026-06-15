@@ -3,11 +3,6 @@ import { Link } from "react-router-dom";
 import { getCategories } from "../../services/categoryService";
 import { LoaderCircle } from "lucide-react";
 
-import COMNAM from "../../assets/imgs/comNam.png";
-import SANDWICH from "../../assets/imgs/sandwich.png";
-import KIMBAP from "../../assets/imgs/KIMBAP.png";
-import TRASUA from "../../assets/imgs/traSua.png";
-
 const ProductCategory = () => {
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);

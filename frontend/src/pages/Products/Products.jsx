@@ -2,7 +2,7 @@ import React, { useState,useEffect,useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import bgContact from '../../assets/imgs/bgProduct.png';
+import bgProduct from '../../assets/imgs/bgProduct.webp';
 import { getProducts, getProductById } from "../../services/productService";
 import { getCategories } from "../../services/categoryService";
 import { createContact } from "../../services/contactService";
@@ -173,7 +173,7 @@ import { LoaderCircle } from "lucide-react";
       <section data-aos="fade" className="relative h-[460px]"
               style={{
                 backgroundImage:
-                  `url(${bgContact})`,
+                  `url(${bgProduct})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}>

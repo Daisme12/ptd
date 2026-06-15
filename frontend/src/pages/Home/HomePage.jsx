@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import backgroundHome from "../../assets/imgs/background.png"
-import ISO from "../../assets/imgs/ISO.png"
-import Profile from "../../assets/imgs/Profile.png"
-import QR from "../../assets/imgs/QR.png"
-import Star from "../../assets/imgs/Star.png"
-import Intro from "../../assets/imgs/Intro.png"
+import backgroundHome from "../../assets/imgs/background.webp"
+import ISO from "../../assets/imgs/ISO.webp"
+import Profile from "../../assets/imgs/Profile.webp"
+import QR from "../../assets/imgs/QR.webp"
+import Star from "../../assets/imgs/Star.webp"
+import Intro from "../../assets/imgs/Intro.webp"
 import { Award, ShieldPlus, Handshake, Lightbulb,BookOpen, Cpu, Tag, Truck, HeartHandshake 
   ,School, ShoppingBag, Store, Phone, Mail, MapPin
  } from "lucide-react";
@@ -21,11 +21,11 @@ import ProductCategory from "./ProductCategory";
 import { createContact } from "../../services/contactService";
 
 const PRODUCT_IMGS = [
-    "/logos/hong-anh.png",
-    "/logos/5s.png",
-    "/logos/ubofood.jpg",
-    "/logos/bach-khoa.png",
-    "/logos/gtvt.jpg",
+    "/logos/hong-anh.webp",
+    "/logos/5s.webp",
+    "/logos/ubofood.webp",
+    "/logos/bach-khoa.webp",
+    "/logos/gtvt.webp",
 ];
 
 const cards = [

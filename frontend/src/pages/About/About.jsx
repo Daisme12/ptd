@@ -5,11 +5,11 @@ import Footer from "../../components/Footer";
 
 import bannerVideo from '../../assets/banner_intro.mp4'
 import video_intro from '../../assets/video_intro.mp4'
-import chatLuong from '../../assets/imgs/chatluong.png';
-import chatSong from '../../assets/imgs/chatSong.png';
-import chatRieng from '../../assets/imgs/chatRieng.png';
-import ly from '../../assets/imgs/ly.png';
-import GiayTo from '../../assets/imgs/GiayKinhDoanh.png';
+import chatLuong from '../../assets/imgs/chatluong.webp';
+import chatSong from '../../assets/imgs/chatSong.webp';
+import chatRieng from '../../assets/imgs/chatRieng.webp';
+import ly from '../../assets/imgs/ly.webp';
+import GiayTo from '../../assets/imgs/GiayKinhDoanh.webp';
 import profilePdf from "/Profile.pdf";
 
 import { Download,ExternalLink } from "lucide-react";

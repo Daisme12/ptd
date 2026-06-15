@@ -3,10 +3,10 @@ import React, { useState,useEffect } from "react";
 import { ShieldCheck, Award, Clock,Download, BadgeCheck, FileText, Globe, Leaf, X } from 'lucide-react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import bgCertificate from '../../assets/imgs/bgCertificate.png';
+import bgCertificate from '../../assets/imgs/bgCertificate.webp';
 
-import chungChi from '../../assets/imgs/dongGoi.png';
-import soChe from '../../assets/imgs/soChe.png';
+import chungChi from '../../assets/imgs/dongGoi.webp';
+import soChe from '../../assets/imgs/soChe.webp';
 
 export default function QualityPage() {
     const [open, setOpen] = useState(false);

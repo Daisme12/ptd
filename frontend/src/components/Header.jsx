@@ -3,7 +3,7 @@ import { getCategories } from "../services/categoryService";
 
 import { Link, useLocation } from "react-router-dom";
 import { Phone, ChevronDown, Menu, X,LoaderCircle } from "lucide-react";
-import logo from "../assets/imgs/Logo.png";
+import logo from "../assets/imgs/Logo.webp";
 
 import '../assets/styles/Header.css'
 

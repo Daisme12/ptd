@@ -3,6 +3,9 @@
 
 @baseUrl = http://localhost:5001/api
 
+### Health check (dùng cho UptimeRobot / Vercel cron keep-alive)
+GET {{baseUrl}}/health
+
 ### ==========================================
 ### 1. CATEGORIES (Danh mục)
 ### ==========================================

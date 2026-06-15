@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import logo from '../assets/imgs/Logo.png'
-import logoAvatar from '../assets/imgs/logoAvatar.png'
+import logo from '../assets/imgs/Logo.webp'
 
 export default function Footer() {
   return (
@@ -37,7 +36,7 @@ export default function Footer() {
         <div className="w-[360px] h-[150px] relative rounded-md overflow-hidden shadow-md cursor-pointer bg-gray-400 shrink-0">
           <div className="absolute inset-0 bg-black/35 text-white flex flex-col justify-between p-3">
             <div className="flex items-start gap-3">
-              <img src={logoAvatar} alt="avatar" className="w-14 h-14 rounded" />
+              <img src="/logoAvatar.webp" alt="avatar" className="w-14 h-14 rounded" />
               <h4 className="font-bold text-base pt-2 w-44 text-left">Chickenly - Ăn Vặt Vân Vân</h4>
             </div>
             <div className="flex gap-2">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Toaster } from 'sonner';
 import { BrowserRouter, Routes, Route } from 'react-router';
 
@@ -6,6 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import ScrollToTop from "./components/ScrollToTop";
+import { startBackendKeepAlive } from "./services/keepAlive";
 
 import HomePage from './pages/Home/HomePage';
 import About from './pages/About/About';
@@ -30,6 +31,11 @@ function App() {
       duration: 800,
       once: true,
     });
+  }, []);
+
+  useEffect(() => {
+    const intervalId = startBackendKeepAlive();
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

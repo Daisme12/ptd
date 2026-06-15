@@ -12,7 +12,7 @@ import {
 
 import { Download } from "lucide-react";
 import { toast } from "sonner";
-import bgContact from '../../assets/imgs/bgContact.png';
+import bgContact from '../../assets/imgs/bgContact.webp';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { createContact } from "../../services/contactService";
