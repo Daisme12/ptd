@@ -225,6 +225,7 @@ const HomePage = () => {
               "
               
             >
+              
               {/* Icon box */}
               <div className="w-12 h-12 rounded-xl md:bg-red-50 bg-red-600  md:group-hover:bg-red-600 flex items-center justify-center">
                 <Icon size={22} className="md:text-red-600 text-white md:group-hover:text-white" strokeWidth={1.5} />
