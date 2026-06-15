@@ -219,15 +219,15 @@ const HomePage = () => {
               key={idx}
               data-aos="fade-up"
               data-aos-delay={idx * 100}
-              className="flex flex-col border-b-4 border-b-red-200 hover:border-b-red-600 
+              className="flex flex-col border-b-4 border-b-red-600 md:border-b-red-200 md:hover:border-b-red-600 
               gap-4 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm group
               transition-all duration-300
               "
               
             >
               {/* Icon box */}
-              <div className="w-12 h-12 rounded-xl bg-red-50 group-hover:bg-red-600 flex items-center justify-center">
-                <Icon size={22} className="text-red-600 group-hover:text-white" strokeWidth={1.5} />
+              <div className="w-12 h-12 rounded-xl md:bg-red-50 bg-red-600  md:group-hover:bg-red-600 flex items-center justify-center">
+                <Icon size={22} className="md:text-red-600 text-white md:group-hover:text-white" strokeWidth={1.5} />
               </div>
 
               {/* Text */}
