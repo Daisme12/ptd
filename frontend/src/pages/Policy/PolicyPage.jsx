@@ -22,7 +22,7 @@ const PolicyPage = () => {
       <div>
         <Header />
       </div>
-      <div className="flex-1 mt-[120px] max-w-4xl mx-auto w-full px-6 py-10 bg-white shadow-sm rounded-lg mb-10 border border-gray-100">
+      <div data-aos="fade-up" className="flex-1 mt-[120px] max-w-4xl mx-auto w-full px-6 py-10 bg-white shadow-sm rounded-lg mb-10 border border-gray-100">
         <h1 className="text-2xl md:text-3xl font-bold text-red-700 mb-6 uppercase border-b pb-4">
           {policy.title}
         </h1>

@@ -31,6 +31,21 @@ const productSchema = new mongoose.Schema(
         type: String
     },
 
+    documents: [
+        {
+            title: {
+                type: String,
+                required: true
+            },
+
+            fileUrl: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+
+
     price: {
         type: Number
     },
@@ -51,7 +66,7 @@ productSchema.pre("validate", function () {
     }
 });
 
-productSchema.pre("findOneAndUpdate", function (next) {
+productSchema.pre("findOneAndUpdate", function () {
     const update = this.getUpdate();
     const name = update?.name || update?.$set?.name;
     const slug = update?.slug || update?.$set?.slug;
@@ -63,8 +78,6 @@ productSchema.pre("findOneAndUpdate", function (next) {
             update.slug = createSlug(name);
         }
     }
-
-    next();
 });
 
 export default mongoose.model("Product", productSchema);

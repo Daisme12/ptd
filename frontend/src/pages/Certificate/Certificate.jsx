@@ -5,15 +5,18 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import bgCertificate from '../../assets/imgs/bgCertificate.png';
 
+import chungChi from '../../assets/imgs/dongGoi.png';
+import soChe from '../../assets/imgs/soChe.png';
+
 export default function QualityPage() {
     const [open, setOpen] = useState(false);
     const [selectedPdf, setSelectedPdf] = useState("");
 
   return (
     <div>
-        <Header />
+    <Header solid />
       {/* Banner */}
-      <div className="relative w-full h-72 md:h-[460px] overflow-hidden">
+      <div data-aos="fade" className="relative w-full h-72 md:h-[460px] overflow-hidden">
         <img
           src={bgCertificate}
           alt="banner"
@@ -38,8 +41,8 @@ export default function QualityPage() {
             { icon: Award,       value: '05+',  label: 'Chứng chỉ quốc tế' },
             { icon: Clock,       value: '24/7', label: 'Kiểm soát quy trình' },
             { icon: BadgeCheck,  value: 'ISO',  label: 'Đạt chuẩn 22000' },
-          ].map(({ icon: Icon, value, label }) => (
-            <div key={label} className="flex flex-col items-center gap-2">
+          ].map(({ icon: Icon, value, label }, index) => (
+            <div data-aos="fade-up" data-aos-delay={index * 100} key={label} className="flex flex-col items-center gap-2">
               <Icon size={28} className="text-red-600" strokeWidth={1.5} />
               <p className="text-2xl font-bold text-red-600">{value}</p>
               <p className="text-sm text-gray-500">{label}</p>
@@ -51,7 +54,7 @@ export default function QualityPage() {
       {/* Chứng nhận quốc tế */}
       <div className="bg-gray-50 py-16 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
+          <div data-aos="fade-up" className="text-center mb-10">
             <h2 className="text-2xl font-bold uppercase tracking-wide">Chứng Nhận Quốc Tế</h2>
             <div className="w-12 h-1 bg-red-600 mx-auto mt-2" />
           </div>
@@ -59,20 +62,20 @@ export default function QualityPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
                 {
-                img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=200&q=80',
+                img: soChe,
                 title: 'ISO 22000:2018 - Chế Biến Thực Phẩm',
                 desc: 'Chứng nhận hệ thống quản lý an toàn thực phẩm đối với hoạt động sản xuất bánh mì, bánh mì nhân, bánh hamburger, bánh phô mai, các sản phẩm từ bột bánh mì và chế biến các món ăn từ cơm.',                
                 pdf: '/ISO_Chếbiến.pdf'
                 },
                 {
-                img: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=200&q=80',
+                img: chungChi,
                 title: 'ISO 22000:2018 - Bảo Quản & Đóng Gói',
                 desc: 'Chứng nhận hệ thống quản lý an toàn thực phẩm đối với hoạt động bảo quản, san lẻ, đóng gói, sơ chế và nấu chín thực phẩm, đảm bảo kiểm soát chất lượng trong toàn bộ quá trình cung ứng.',
                 pdf: '/ISO_Sơchế.pdf'
                 }
-            ].map(({ img, title, desc, pdf }) => (
-              <div key={title} className="bg-white rounded-2xl p-5 flex gap-4 shadow-sm border-l-4 border-red-600">
-                <img src={img} alt={title} className="w-20 h-20 object-cover rounded-xl shrink-0" />
+            ].map(({ img, title, desc, pdf }, index) => (
+              <div data-aos="zoom-in" data-aos-delay={index * 100} key={title} className="bg-white rounded-2xl p-5 flex gap-4 shadow-sm border-l-4 border-red-600">
+                <img src={img} alt={title} className="w-20 h-30 object-cover  shrink-0" />
                 <div>
                   <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed mb-3">{desc}</p>
@@ -95,7 +98,7 @@ export default function QualityPage() {
       {/* Chứng nhận cơ sở & nội địa */}
       <div className="bg-white py-16 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
+          <div data-aos="fade-up" className="text-center mb-10">
             <h2 className="text-2xl font-bold uppercase tracking-wide">Chứng Nhận Cơ Sở & Nội Địa</h2>
             <div className="w-12 h-1 bg-red-600 mx-auto mt-2" />
           </div>
@@ -117,9 +120,9 @@ export default function QualityPage() {
                 title: 'Kiểm Soát Chất Lượng',
                 desc: 'Quy trình sản xuất, sơ chế, đóng gói và bảo quản được kiểm soát chặt chẽ nhằm đảm bảo chất lượng đồng nhất cho từng sản phẩm.'
                 }
-            ].map(({ icon: Icon, title, desc }) => (
+            ].map(({ icon: Icon, title, desc }, index) => (
               <div
-            data-aos="fade-up" 
+            data-aos="fade-up" data-aos-delay={index * 100}
               key={title} 
               className="bg-white border border-gray-100 hover:border-red-200 hover:shadow-xl transition-all duration-300 rounded-2xl group p-6 flex flex-col items-center text-center gap-3">
                 <div className="w-14 h-14 rounded-xl bg-white shadow-sm group-hover:bg-red-600 transition-all duration-300 flex items-center justify-center">
@@ -138,7 +141,7 @@ export default function QualityPage() {
       </div>
 
       {/* CTA banner */}
-      <div className="bg-gradient-to-r from-red-700 to-red-500 py-16 px-4 text-center">
+      <div data-aos="fade-up" className="bg-gradient-to-r from-red-700 to-red-500 py-16 px-4 text-center">
         <h2 className="text-white text-2xl md:text-4xl font-bold mb-8">
           Tin Tưởng Vào Sự Chuyên Nghiệp Của Chúng Tôi
         </h2>

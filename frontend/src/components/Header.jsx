@@ -8,7 +8,7 @@ import logo from "../assets/imgs/Logo.png";
 import '../assets/styles/Header.css'
 
 
-const Header = () => {
+const Header = ({ solid = false }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
@@ -83,18 +83,20 @@ const Header = () => {
       location.search
     ).get("category");
 
+    const headerClasses =
+  solid || scrolled
+    ? "bg-white text-black shadow-lg"
+    : "md:bg-transparent bg-white text-black md:text-white";
+
 
   return (
     <div
     ref={menuRef}
-    className={`fixed top-0 left-0 w-full z-50
-    transition-all duration-300
-    ${showHeader ? "translate-y-0" : "-translate-y-full"}
-    ${
-      scrolled
-        ? "bg-white text-black shadow-lg"
-        : " md:bg-transparent bg-white text-black md:text-white"
-    }
+    className={`
+      fixed top-0 left-0 w-full z-50
+      transition-all duration-300
+      ${showHeader ? "translate-y-0" : "-translate-y-full"}
+      ${headerClasses}
     `}>
       <div className="container-app group hover:bg-white 
       md:transition-colors duration-100">
@@ -113,10 +115,18 @@ const Header = () => {
             className={`
               absolute top-full left-0 w-full
               md:static md:w-auto md:shadow-none
-              flex flex-col gap-4 p-4
-              md:flex-row md:items-center md:gap-10 md:p-0
-              ${menuOpen ? "flex md:hidden bg-white text-black" : "hidden md:flex"}
-              ${scrolled ? "text-black" : "text-white md:group-hover:text-black"}
+              md:flex md:flex-row md:items-center md:gap-10
+
+              ${menuOpen ? "flex" : "hidden"}
+              md:flex
+              flex-col gap-4 p-4 md:p-0
+              bg-white md:bg-transparent
+
+              ${
+                solid || scrolled
+                  ? "text-black"
+                  : "text-black md:text-white md:group-hover:text-black"
+              }
             `}
           >
             <Link
@@ -205,12 +215,13 @@ const Header = () => {
 
           <div className="flex items-center gap-4">
             <div className="hidden md:block">
-              <button
+              <Link
+              to="/contact"
                 className="btn btn-primary px-3 py-2 text-white flex items-center gap-2 hover:bg-primary-dark transition-colors duration-300"
               >
                 <Phone size={16} />
                 <span>TƯ VẤN NGAY</span>
-              </button>
+              </Link>
             </div>
 
             <button

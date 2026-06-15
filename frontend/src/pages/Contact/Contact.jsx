@@ -64,6 +64,7 @@ const ContactPage = () => {
       <Header />
       {/* Hero */}
       <section
+        data-aos="fade"
         className="relative h-[460px] flex items-center justify-center text-center"
         style={{
           backgroundImage:
@@ -94,7 +95,7 @@ const ContactPage = () => {
 
             {/* Left */}
             <div className="space-y-6">
-              <div className="bg-white rounded-xl p-8 shadow">
+              <div data-aos="fade-right" className="bg-white rounded-xl p-8 shadow">
                 <h2 className="text-2xl font-bold text-red-600 mb-8">
                   Thông Tin Liên Hệ
                 </h2>
@@ -141,7 +142,7 @@ const ContactPage = () => {
               </div>
 
               {/* Map */}
-              <div className="bg-white rounded-xl overflow-hidden shadow">
+              <div data-aos="zoom-in" className="bg-white rounded-xl overflow-hidden shadow">
                 <iframe
                   title="Google Map"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1995.418515300421!2d105.87342056567527!3d21.04938896178182!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abd4e14e8b1f%3A0xb223380368e5986a!2zMjE1IE5nLiAyNjQgxJAuIE5n4buNYyBUaOG7pXksIELhu5MgxJDhu4EsIEjDoCBO4buZaSwgVmlldG5hbQ!5e0!3m2!1sen!2snl!4v1781198027362!5m2!1sen!2snl" 
@@ -151,7 +152,7 @@ const ContactPage = () => {
             </div>
 
             {/* Right */}
-            <div className="bg-white rounded-xl p-8 shadow">
+            <div data-aos="zoom-in" className="bg-white rounded-xl p-8 shadow">
               <h2 className="text-2xl font-bold mb-2">
                 Gửi Tin Nhắn Cho Chúng Tôi
               </h2>
@@ -222,27 +223,27 @@ const ContactPage = () => {
       {/* Quality */}
       <section className="bg-white">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center text-red-600 mb-12">
+          <h2 data-aos="fade-up" className="text-3xl font-bold text-center text-red-600 mb-12">
             Cam Kết Chất Lượng
           </h2>
 
           <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
+            <div data-aos="fade-up" data-aos-delay="0" className="text-center">
               <FaShieldAlt className="mx-auto text-4xl text-red-600 mb-4" />
               <h3 className="font-semibold">ISO 22000</h3>
             </div>
 
-            <div className="text-center">
+            <div data-aos="fade-up" data-aos-delay="100" className="text-center">
               <FaClipboardCheck className="mx-auto text-4xl text-red-600 mb-4" />
               <h3 className="font-semibold">ATTP</h3>
             </div>
 
-            <div className="text-center">
+            <div data-aos="fade-up" data-aos-delay="200" className="text-center">
               <FaTruck className="mx-auto text-4xl text-red-600 mb-4" />
               <h3 className="font-semibold">Nguồn Gốc Rõ Ràng</h3>
             </div>
 
-            <div className="text-center">
+            <div data-aos="fade-up" data-aos-delay="300" className="text-center">
               <FaLeaf className="mx-auto text-4xl text-red-600 mb-4" />
               <h3 className="font-semibold">Thân Thiện Môi Trường</h3>
             </div>
@@ -251,7 +252,7 @@ const ContactPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="bg-red-700 text-center text-white">
+      <section data-aos="fade-up" className="bg-red-700 text-center text-white">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold mb-4">
             Sẵn Sàng Hợp Tác Cùng Chúng Tôi?

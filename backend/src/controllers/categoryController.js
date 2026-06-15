@@ -1,4 +1,5 @@
 import Category from "../models/Category.js";
+import { uploadImageToCloudinary } from "../utils/uploadHelpers.js";
 
 // GET ALL
 const getAllCategories = async (req, res) => {
@@ -35,7 +36,16 @@ const getCategoryById = async (req, res) => {
 // CREATE
 const createCategory = async (req, res) => {
     try {
-        const category = await Category.create(req.body);
+        let imageUrl = req.body.imageUrl || '';
+        
+        if (req.file) {
+            imageUrl = await uploadImageToCloudinary(req.file.buffer, 'ptd_project/categories');
+        }
+
+        const category = await Category.create({
+            ...req.body,
+            imageUrl
+        });
 
         res.status(201).json(category);
     } catch (error) {
@@ -48,9 +58,15 @@ const createCategory = async (req, res) => {
 // UPDATE
 const updateCategory = async (req, res) => {
     try {
+        const updateData = { ...req.body };
+
+        if (req.file) {
+            updateData.imageUrl = await uploadImageToCloudinary(req.file.buffer, 'ptd_project/categories');
+        }
+
         const category = await Category.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            updateData,
             {
                 new: true,
                 runValidators: true

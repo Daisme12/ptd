@@ -27,19 +27,19 @@ const ProductCategory = () => {
         setCurrent((prev) => (prev - 1 + len) % len);
     };
 
-        useEffect(() => {
-          getCategories()
-            .then((data) => {
-              console.log(data);
-              setCategory(data);
-            })
-            .catch((error) => {
-              console.error("Lỗi lấy danh mục:", error);
-              setError("Không thể kết nối tới máy chủ");
-            })
-            .finally(() => {
-                setLoading(false);
-        });
+    useEffect(() => {
+        getCategories()
+        .then((data) => {
+            console.log(data);
+            setCategory(data);
+        })
+        .catch((error) => {
+            console.error("Lỗi lấy danh mục:", error);
+            setError("Không thể kết nối tới máy chủ");
+        })
+        .finally(() => {
+            setLoading(false);
+    });
     }, []);
     if (loading) {
         return (
@@ -90,9 +90,11 @@ const ProductCategory = () => {
             <div className="relative">
                 {/* Mobile */}
                 <div className="md:hidden grid grid-cols-1 gap-4">
-                    {category.map((product) => (
+                    {category.map((product, idx) => (
                         <div
                             key={product._id}
+                            data-aos="fade-up"
+                            data-aos-delay={idx * 100}
                             className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group"
                         >
                             <div className="overflow-hidden h-52">
@@ -127,18 +129,20 @@ const ProductCategory = () => {
                 <div className="hidden md:flex items-center justify-center gap-8">
                     <button
                         onClick={handleBack}
-                        className="w-12 h-12 rounded-full border border-gray-200 hover:bg-red-600 hover:text-white transition"
+                        className="w-12 h-12 rounded-full border border-gray-200 
+                        hover:bg-red-600 hover:text-white transition"
                     >
                         ←
                     </button>
 
                     {/* Left */}
-                    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
-                        <div className="overflow-hidden h-48">
+                    <div data-aos="fade-up" data-aos-delay="0" className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
+                        <div className="overflow-hidden h-53">
                             <img
                                 src={category[left].imageUrl}
                                 alt={category[left].name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="w-full h-full object-cover 
+                                group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
 
@@ -162,6 +166,7 @@ const ProductCategory = () => {
 
                     {/* Center */}
                     <div
+                        data-aos="fade-up" data-aos-delay="100"
                         className="
                             bg-white rounded-2xl overflow-hidden
                             border border-gray-100 shadow-lg
@@ -195,12 +200,13 @@ const ProductCategory = () => {
                     </div>
 
                     {/* Right */}
-                    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
-                        <div className="overflow-hidden h-56">
+                    <div data-aos="fade-up" data-aos-delay="200" className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
+                        <div className="overflow-hidden h-53">
                             <img
                                 src={category[right].imageUrl}
                                 alt={category[right].name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="w-full h-full object-cover 
+                                group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
 

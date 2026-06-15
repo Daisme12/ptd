@@ -32,35 +32,123 @@ const categories = [
 
 const sampleImageUrl = "https://res.cloudinary.com/dzz1nibmx/image/upload/v1780914867/xl5cgkiahgwnl4njvvvv.png";
 
+// PDF mẫu trên Cloudinary (thay bằng URL thực nếu có)
+const sampleDeclarationPdf = "https://res.cloudinary.com/dzz1nibmx/image/upload/v1780914867/ptd_project/docs/sample_declaration.pdf";
+const sampleTestResultPdf = "https://res.cloudinary.com/dzz1nibmx/image/upload/v1780914867/ptd_project/docs/sample_test_result.pdf";
+
 const products = [
   // Cơm nắm
-  { code: "CNTGMV", name: "Cơm Nắm Mix Vị", categoryName: "Cơm nắm" },
-  { code: "CNTGVB", name: "Cơm Nắm Vị Bò BBQ", categoryName: "Cơm nắm" },
-  { code: "CNTGVCH", name: "Cơm Nắm Vị Cá Hồi", categoryName: "Cơm nắm" },
-  { code: "CNTGVG", name: "Cơm Nắm Vị Gà Kem Bơ", categoryName: "Cơm nắm" },
-  { code: "CNTGVGPM", name: "Cơm Nắm Vị Gà Phô Mai", categoryName: "Cơm nắm" },
-  { code: "CNTGVGT", name: "Cơm Nắm Vị Gà Teriyaki", categoryName: "Cơm nắm" },
-  { code: "CNTGVTC", name: "Cơm Nắm Vị Thanh Cua", categoryName: "Cơm nắm" },
-  { code: "CNTGVT", name: "Cơm Nắm Vị Tôm Kem Bơ", categoryName: "Cơm nắm" },
+  {
+    code: "CNTGMV", name: "Cơm Nắm Mix Vị", categoryName: "Cơm nắm",
+    description: "Cơm nắm tổng hợp nhiều vị trong một phần, phù hợp cho bữa ăn nhanh đa dạng.",
+    price: 25000
+  },
+  {
+    code: "CNTGVB", name: "Cơm Nắm Vị Bò BBQ", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân bò BBQ đậm đà, hương vị nướng quyến rũ.",
+    price: 28000
+  },
+  {
+    code: "CNTGVCH", name: "Cơm Nắm Vị Cá Hồi", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân cá hồi tươi ngon, giàu Omega-3 bổ dưỡng.",
+    price: 32000
+  },
+  {
+    code: "CNTGVG", name: "Cơm Nắm Vị Gà Kem Bơ", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân gà kem bơ béo ngậy, thơm ngon khó cưỡng.",
+    price: 27000
+  },
+  {
+    code: "CNTGVGPM", name: "Cơm Nắm Vị Gà Phô Mai", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân gà phô mai kéo sợi, yêu thích của học sinh.",
+    price: 28000
+  },
+  {
+    code: "CNTGVGT", name: "Cơm Nắm Vị Gà Teriyaki", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân gà sốt Teriyaki chuẩn Nhật, vị ngọt mặn hài hòa.",
+    price: 27000
+  },
+  {
+    code: "CNTGVTC", name: "Cơm Nắm Vị Thanh Cua", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân thanh cua mayo, vị biển tươi mát.",
+    price: 25000
+  },
+  {
+    code: "CNTGVT", name: "Cơm Nắm Vị Tôm Kem Bơ", categoryName: "Cơm nắm",
+    description: "Cơm nắm nhân tôm kem bơ thơm lừng, hấp dẫn từ miếng đầu tiên.",
+    price: 30000
+  },
 
-  // Sandwich & Hamburger (Gộp chung vào Sandwich do danh mục Bánh Mì đã được đổi tên)
-  { code: "ST-SWB", name: "Sandwich Bò BBQ Phô Mai", categoryName: "Sandwich" },
-  { code: "ST-SWG", name: "Sandwich Gà Tenders", categoryName: "Sandwich" },
-  { code: "ST-SWGT", name: "Sandwich Gà Teriyaki", categoryName: "Sandwich" },
-  { code: "ST-SWPMK", name: "Sandwich Phô Mai Kẹp", categoryName: "Sandwich" },
-  { code: "HB001", name: "Bánh Mỳ Chả Y", categoryName: "Sandwich" },
-  { code: "HB002", name: "Vỏ Bánh Hamburger", categoryName: "Sandwich" },
-  { code: "HB003", name: "Bánh Hamburger Thập Cẩm", categoryName: "Sandwich" },
+  // Sandwich & Hamburger
+  {
+    code: "ST-SWB", name: "Sandwich Bò BBQ Phô Mai", categoryName: "Sandwich",
+    description: "Sandwich nhân bò BBQ kết hợp phô mai tan chảy, đậm đà hương vị.",
+    price: 35000
+  },
+  {
+    code: "ST-SWG", name: "Sandwich Gà Tenders", categoryName: "Sandwich",
+    description: "Sandwich gà tenders giòn rụm, kèm rau tươi và sốt đặc biệt.",
+    price: 32000
+  },
+  {
+    code: "ST-SWGT", name: "Sandwich Gà Teriyaki", categoryName: "Sandwich",
+    description: "Sandwich gà Teriyaki ngọt mặn, kết hợp rau xanh tươi mát.",
+    price: 33000
+  },
+  {
+    code: "ST-SWPMK", name: "Sandwich Phô Mai Kẹp", categoryName: "Sandwich",
+    description: "Sandwich phô mai kẹp đơn giản nhưng hấp dẫn, phù hợp bữa sáng.",
+    price: 25000
+  },
+  {
+    code: "HB001", name: "Bánh Mỳ Chả Y", categoryName: "Sandwich",
+    description: "Bánh mỳ truyền thống kẹp chả lụa thơm ngon.",
+    price: 20000
+  },
+  {
+    code: "HB002", name: "Vỏ Bánh Hamburger", categoryName: "Sandwich",
+    description: "Vỏ bánh hamburger mềm xốp, sản xuất từ nguyên liệu sạch.",
+    price: 8000
+  },
+  {
+    code: "HB003", name: "Bánh Hamburger Thập Cẩm", categoryName: "Sandwich",
+    description: "Hamburger thập cẩm đầy đặn với thịt, rau và sốt đặc biệt.",
+    price: 38000
+  },
 
   // Cơm cuộn (Kim Bap)
-  { code: "KB001", name: "Kim Bap Chiên Thanh Cua", categoryName: "Cơm cuộn" },
-  { code: "KB002", name: "Kim Bap Chiên Thanh Gà Phô Mai", categoryName: "Cơm cuộn" },
-  { code: "KB003", name: "Kim Bap Thanh Cua", categoryName: "Cơm cuộn" },
-  { code: "KB004", name: "Kim Bap Thanh Gà Phô Mai", categoryName: "Cơm cuộn" },
+  {
+    code: "KB001", name: "Kim Bap Chiên Thanh Cua", categoryName: "Cơm cuộn",
+    description: "Kim bap chiên giòn nhân thanh cua, lớp vỏ giòn rụm bên ngoài.",
+    price: 30000
+  },
+  {
+    code: "KB002", name: "Kim Bap Chiên Thanh Gà Phô Mai", categoryName: "Cơm cuộn",
+    description: "Kim bap chiên nhân gà phô mai kéo sợi, ăn vặt tuyệt vời.",
+    price: 32000
+  },
+  {
+    code: "KB003", name: "Kim Bap Thanh Cua", categoryName: "Cơm cuộn",
+    description: "Kim bap cuộn thanh cua truyền thống kiểu Hàn Quốc.",
+    price: 28000
+  },
+  {
+    code: "KB004", name: "Kim Bap Thanh Gà Phô Mai", categoryName: "Cơm cuộn",
+    description: "Kim bap cuộn gà phô mai, nhân đầy đặn, vị béo ngậy.",
+    price: 30000
+  },
 
   // Trà sữa
-  { code: "TS001", name: "Trà sữa trân châu đường đen", categoryName: "Trà sữa" },
-  { code: "TS002", name: "Trà sữa Matcha", categoryName: "Trà sữa" }
+  {
+    code: "TS001", name: "Trà sữa trân châu đường đen", categoryName: "Trà sữa",
+    description: "Trà sữa trân châu đường đen thơm ngọt, trân châu dẻo dai.",
+    price: 25000
+  },
+  {
+    code: "TS002", name: "Trà sữa Matcha", categoryName: "Trà sữa",
+    description: "Trà sữa Matcha Nhật Bản, vị trà xanh thanh mát hòa quyện sữa béo.",
+    price: 28000
+  }
 ];
 
 const seedData = async () => {
@@ -99,17 +187,24 @@ const seedData = async () => {
             name: product.name,
             slug: createSlug(product.name),
             category: categoryMap[product.categoryName],
-            // Product schema doesn't have "code" in the model provided, so we'll store code in description if needed, or update model. 
-            // Looking back at Product.js, it has: category, name, description, imageUrl, price, status. 
-            // So we might skip "code" or put it in description. Let's put in description to not lose data.
-            description: `Mã sản phẩm: ${product.code}`,
+            description: product.description,
             imageUrl: sampleImageUrl,
-            price: 0
+            price: product.price,
+            documents: [
+                {
+                    title: "Bản công bố sản phẩm",
+                    fileUrl: sampleDeclarationPdf
+                },
+                {
+                    title: "Phiếu kết quả xét nghiệm",
+                    fileUrl: sampleTestResultPdf
+                }
+            ]
         }));
 
         // Thêm sản phẩm
         await Product.insertMany(formattedProducts);
-        console.log('Đã thêm dữ liệu Sản phẩm');
+        console.log('Đã thêm dữ liệu Sản phẩm (kèm documents PDF mẫu)');
 
         console.log('Seed dữ liệu thành công!');
         process.exit(0);

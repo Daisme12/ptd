@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -15,6 +15,7 @@ import { LoaderCircle } from "lucide-react";
     const [category, setCategory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const productGridRef = useRef(null);
     
     const [keyword, setKeyword] = useState("");
     const [sort, setSort] = useState("default");
@@ -36,29 +37,28 @@ import { LoaderCircle } from "lucide-react";
     ).get("category");
 
     useEffect(() => {
-      getCategories()
-        .then((data) => {
-          console.log(data);
-          setCategory(data);
-        })
-        .catch((error) => {
-          console.error("Lỗi lấy danh mục:", error);
-          setError("Không thể kết nối tới máy chủ");
-        });
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
+        const [categoriesData, productsData] =
+          await Promise.all([
+            getCategories(),
+            getProducts(),
+          ]);
 
-      getProducts()
-        .then((data) => {
-          setProducts(data);
-        })
-        .catch((error) => {
-          console.error("Lỗi lấy sản phẩm:", error);
-          setError("Không thể kết nối tới máy chủ");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }, []);
+        setCategory(categoriesData);
+        setProducts(productsData);
+      } catch (error) {
+        console.error(error);
+        setError("Không thể kết nối tới máy chủ");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
     const filteredProducts = products.filter((item) => {
       const matchCategory = selectedCategory
@@ -92,6 +92,7 @@ import { LoaderCircle } from "lucide-react";
         startIndex,
         startIndex + productsPerPage
       );
+
     useEffect(() => {
       setCurrentPage(1);
       setKeyword("");
@@ -152,13 +153,24 @@ import { LoaderCircle } from "lucide-react";
         setIsSubmitting(false);
       }
     };
+    const handlePageChange = (page) => {
+      setCurrentPage(page);
+
+      productGridRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    };
+    const currentCategory = category.find(
+      (c) => c.slug === selectedCategory
+    );
 
   return (
     <>
-      <Header />
+      <Header solid/>
 
       {/* Hero */}
-      <section className="relative h-[460px]"
+      <section data-aos="fade" className="relative h-[460px]"
               style={{
                 backgroundImage:
                   `url(${bgContact})`,
@@ -169,8 +181,8 @@ import { LoaderCircle } from "lucide-react";
          <div className="absolute inset-0 bg-black/60"></div>
 
         <div className="absolute bottom-0 container mx-auto px-4 ">
-          <p className="text-sm text-gray-200 mb-2">
-            TRANG CHỦ / DANH MỤC SẢN PHẨM
+          <p className="text-sm text-gray-200 uppercase mb-2">
+            TRANG CHỦ / DANH MỤC SẢN PHẨM / {currentCategory ? currentCategory.name : "Tất cả"}
           </p>
 
           <h1 className="text-4xl font-bold text-red-500 mb-4">
@@ -185,7 +197,9 @@ import { LoaderCircle } from "lucide-react";
       </section>
 
       {/* Product Area */}
-      <section className=" p-[20px] md:px-[100px] md:py-[40px] max-w-[1410px] mx-auto">
+      <section
+        ref={productGridRef}
+        className=" p-[20px] md:px-[100px] md:py-[40px] max-w-[1410px] mx-auto">
         <div className="mx-auto px-4">
           <div className="bg-white rounded-2xl md:mb-[30px]  shadow-sm border border-gray-100 p-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
@@ -236,7 +250,7 @@ import { LoaderCircle } from "lucide-react";
           <div className="grid md:grid-cols-[260px_1fr] gap-8">
 
             {/* Sidebar */}
-            <aside>
+            <aside data-aos="fade-right">
               <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                 <h3 className="font-bold text-lg text-gray-800 mb-4 pb-3 border-b">
                   Danh Mục Sản Phẩm
@@ -286,8 +300,10 @@ import { LoaderCircle } from "lucide-react";
 
             {/* Products */}
             <div>
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {currentProducts.map((item) => (
+              <div
+              data-aos="fade-up"
+              className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {currentProducts.map((item, index) => (
                   <div
                     key={item._id}
                     className="  bg-white
@@ -333,7 +349,7 @@ import { LoaderCircle } from "lucide-react";
                 <button
                   disabled={currentPage === 1}
                   onClick={() =>
-                    setCurrentPage((prev) => prev - 1)
+                    handlePageChange((prev) => prev - 1)
                   }
                   className="px-4 py-2 border rounded disabled:opacity-50"
                 >
@@ -346,7 +362,7 @@ import { LoaderCircle } from "lucide-react";
                   return (
                     <button
                       key={page}
-                      onClick={() => setCurrentPage(page)}
+                      onClick={() => handlePageChange(page)}
                       className={`w-10 h-10 rounded border transition
                         ${
                           currentPage === page
@@ -362,7 +378,7 @@ import { LoaderCircle } from "lucide-react";
                 <button
                   disabled={currentPage === totalPages}
                   onClick={() =>
-                    setCurrentPage((prev) => prev + 1)
+                    handlePageChange((prev) => prev + 1)
                   }
                   className="px-4 py-2 border rounded disabled:opacity-50"
                 >
@@ -380,7 +396,7 @@ import { LoaderCircle } from "lucide-react";
           <div className="grid md:grid-cols-2 gap-8">
 
             {/* Form */}
-            <div className="bg-white shadow-xl rounded-2xl p-8">
+            <div data-aos="zoom-in" className="bg-white shadow-xl rounded-2xl p-8">
               <h2 className="text-3xl font-bold text-red-600 mb-4">
                 Nhận Tư Vấn Đối Tác
               </h2>
@@ -440,7 +456,7 @@ import { LoaderCircle } from "lucide-react";
             </div>
 
             {/* Content */}
-            <div className="flex flex-col justify-center">
+            <div data-aos="fade-left" className="flex flex-col justify-center">
               <span className="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm mb-4 w-fit">
                 HỢP TÁC BỀN VỮNG
               </span>

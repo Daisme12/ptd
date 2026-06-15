@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import {
     getAllCategories,
     getCategoryById,
@@ -9,13 +10,15 @@ import {
 
 const router = express.Router();
 
+const upload = multer({ storage: multer.memoryStorage() });
+
 router.route("/")
     .get(getAllCategories)
-    .post(createCategory);
+    .post(upload.single('image'), createCategory);
 
 router.route("/:id")
     .get(getCategoryById)
-    .put(updateCategory)
+    .put(upload.single('image'), updateCategory)
     .delete(deleteCategory);
 
 export default router;

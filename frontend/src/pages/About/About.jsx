@@ -29,10 +29,10 @@ export default function Intro() {
 
     return (
         <div>
-            <Header />
+            <Header solid/>
 
             {/* Banner */}
-            <div className="relative w-full h-[460px] overflow-hidden">
+            <div data-aos="fade" className="relative w-full h-[460px] overflow-hidden">
                 <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
                     <source src={bannerVideo} type="video/mp4" />
                 </video>
@@ -47,8 +47,8 @@ export default function Intro() {
             </div>
 
             <section className="container">
-                <div className="text-left">
-                    <h1 className="text-3xl font-bold text-red-600 uppercase mb-6">
+                <div data-aos="fade-left" className="text-left">
+                    <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-6">
                         Giới thiệu
                     </h1>
 
@@ -68,7 +68,7 @@ export default function Intro() {
 
                 <div className="mt-10">
 
-                <h2 className="text-3xl font-bold text-red-600 uppercase mt-10">
+                <h2 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mt-10">
                     Với Slogan 3 Chất
                 </h2>
                 
@@ -79,8 +79,8 @@ export default function Intro() {
                         { title: 'Chất Lượng', desc: '"Tạo lên thương hiệu"', img: chatLuong },
                         { title: 'Chất Sống', desc: '"Tạo lên sự khác biệt trong sản phẩm"', highlight: true, img: chatSong },
                         { title: 'Chất Riêng', desc: '"Sống đúng với bản thân"', img: chatRieng },
-                    ].map(({ title, desc, highlight, img }) => (
-                        <div key={title} className={`
+                    ].map(({ title, desc, highlight, img }, index) => (
+                        <div data-aos="fade-up" data-aos-delay={index * 100} key={title} className={`
                             my-10 flex flex-col items-center 
                             text-center p-5 rounded-2xl  
                             ${highlight ? 'bg-red-600 text-white shadow-lg scale-105' : 'bg-gray-50'}`}>
@@ -94,14 +94,14 @@ export default function Intro() {
 
                 <div className="my-10">
                 {/* Tầm nhìn */}
-                <h2 className="text-3xl font-bold text-red-600 mb-12">
+                <h2 data-aos="fade-up" className="text-3xl font-bold text-red-600 mb-12">
                     Tầm Nhìn
                 </h2>
 
                 <div className="relative md:min-h-[480px]">
 
                     {/* Box trên */}
-                    <div className="w-full md:w-[60%] border-2 border-red-500 rounded-[30px] p-10">
+                    <div data-aos="fade-left" className="w-full md:w-[60%] border-2 border-red-500 rounded-[30px] p-10">
                         <p className="text-xl leading-relaxed text-gray-800">
                             Thịnh Phong Đỗ hướng đến trở thành đơn vị dẫn đầu trong cung ứng
                             suất ăn công nghiệp sạch, an toàn, nói không với chất bảo quản,
@@ -111,6 +111,7 @@ export default function Intro() {
 
                     {/* Ảnh */}
                     <div
+                        data-aos="fade-right"
                         className="
                             mt-10 flex justify-center md:mt-0
                             md:absolute md:right-0 md:top-[-50px] md:z-20
@@ -146,6 +147,7 @@ export default function Intro() {
 
                     {/* Box quote */}
                     <div
+                        data-aos="fade-left"
                         className="
                             mt-10 border-2 border-red-500 rounded-[30px] p-8
                             md:absolute md:left-0 md:top-[210px]
@@ -164,8 +166,8 @@ export default function Intro() {
 
                 {/* Sứ mệnh */}
                 <div className="py-15 border-t border-gray-100">
-                    <h1 className="text-3xl font-bold text-red-600 uppercase mb-4">Sứ Mệnh</h1>
-                    <p className="text-gray-600 mb-10 max-w-2xl">
+                    <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-4">Sứ Mệnh</h1>
+                    <p data-aos="fade-up" className="text-gray-600 mb-10 max-w-2xl">
                         Thịnh Phong Đỗ ra đời với sứ mệnh mang đến những sản phẩm chất lượng cao với giá thành hợp lý,
                         phục vụ nhu cầu thực phẩm của người Việt.
                     </p>
@@ -175,8 +177,8 @@ export default function Intro() {
                             { title: 'Với Đối Tác Phân Phối', desc: 'Hợp tác bền vững, đảm bảo lợi ích hài hòa, mở rộng mạng lưới phân phối.' },
                             { title: 'Với Người Lao Động', desc: 'Tạo môi trường làm việc chuyên nghiệp, nâng cao tay nghề, đảm bảo quyền lợi.' },
                             { title: 'Với Xã Hội', desc: 'Góp phần phát triển nền nông nghiệp sạch, tham gia các chương trình cộng đồng vì sức khỏe và môi trường.' },
-                        ].map(({ title, desc }) => (
-                            <div key={title} className="bg-white border-t-2 border-red-600 rounded-2xl p-6 shadow-sm">
+                        ].map(({ title, desc }, index) => (
+                            <div data-aos="fade-up" data-aos-delay={index * 100} key={title} className="bg-white border-t-2 border-red-600 rounded-2xl p-6 shadow-sm">
                                 <h4 className="font-bold text-red-600 uppercase text-sm mb-3">{title}</h4>
                                 <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
                             </div>
@@ -186,18 +188,18 @@ export default function Intro() {
 
                 {/* Video */}
                 <div className="py-15 border-t border-gray-100 text-center">
-                    <h1 className="text-3xl font-bold text-red-600 uppercase mb-8">Hành Trình Đến Tới Ước Mơ</h1>
-                    <video ref={videoRef} autoPlay controls muted playsInline loop className="w-full rounded-2xl shadow-md">
+                    <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-8">Hành Trình Đến Tới Ước Mơ</h1>
+                    <video data-aos="fade-up" ref={videoRef} autoPlay controls muted playsInline loop className="w-full rounded-2xl shadow-md">
                         <source src={video_intro} type="video/mp4" />
                     </video>
                 </div>
 
                 {/* Cơ sở pháp lý */}
                 <div className="py-15 border-t bg-red-700 border-gray-100 text-center">
-                    <h1 className="text-3xl font-bold text-white uppercase mb-8">Cơ Sở Pháp Lý</h1>
-                    <img src={GiayTo} alt="Giấy phép kinh doanh" className="mx-auto rounded-2xl shadow-md max-w-lg w-full" loading="lazy" />
+                    <h1 data-aos="fade-up" className="text-3xl font-bold text-white uppercase mb-8">Cơ Sở Pháp Lý</h1>
+                    <img data-aos="zoom-in" src={GiayTo} alt="Giấy phép kinh doanh" className="mx-auto rounded-2xl shadow-md max-w-lg w-full" loading="lazy" />
                 </div>
-            <div className="flex flex-col gap-4 items-center mt-20">
+            <div data-aos="fade-up" className="flex flex-col gap-4 items-center mt-20">
             <iframe
                 src="/Profile.pdf"
                 className="w-full h-[80vh]"
@@ -205,7 +207,7 @@ export default function Intro() {
             />
             </div>
             </section>
-        <section className="bg-red-700 container text-center text-white">
+        <section data-aos="fade-up" className="bg-red-700 container text-center text-white">
         <div className="mx-auto px-6">
           <h2 className="text-4xl font-bold mb-4">
            Tin Tưởng Vào Sự Chuyên Nghiệp Của Chúng Tôi

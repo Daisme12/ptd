@@ -84,7 +84,6 @@ const cards = [
         highlight: false,
       },
     ];
-
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState("Cơm nắm");
   const [scrolled, setScrolled] = useState(false);
@@ -122,14 +121,14 @@ const HomePage = () => {
   };
 
   return (
-    <div>
+    <>
       {/* Header */}
       <Header />
       {/* Hero */}
-      <section className="min-h-screen flex items-center justify-center px-4">
+      <section data-aos="fade" className="min-h-screen flex items-center justify-center px-4">
         {/* Background */}
         <div
-          className="absolute inset-0 -z-20 bg-cover bg-center bg-fixed"
+          className="absolute inset-0 -z-20 bg-cover bg-center md:bg-fixed"
           style={{
             backgroundImage: `url(${backgroundHome})`,
           }}
@@ -218,6 +217,8 @@ const HomePage = () => {
           {cards.map(({ icon: Icon, title, desc }, idx) => (
             <div
               key={idx}
+              data-aos="fade-up"
+              data-aos-delay={idx * 100}
               className="flex flex-col border-b-4 border-b-red-200 hover:border-b-red-600 
               gap-4 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm group
               transition-all duration-300
@@ -240,7 +241,7 @@ const HomePage = () => {
 
         {/* Intro */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="relative">
+          <div data-aos="fade-right" className="relative">
             <img
               src={Intro}
               alt="Giới thiệu công ty"
@@ -257,7 +258,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div>
+          <div data-aos="fade-left">
             <h1 className="text-3xl text-red-600 font-bold uppercase tracking-widest">
               Giới Thiệu Về Công Ty
             </h1>
@@ -288,7 +289,7 @@ const HomePage = () => {
       {/* ── Services ── */}
       <section className="container mx-auto bg-gray-900">
         {/* Heading */}
-        <div className="text-center mb-10 ">
+        <div data-aos="fade-up" className="text-center mb-10 ">
           <p className="text-2xl font-bold tracking-widest text-white uppercase mb-1">
             Dịch vụ của chúng tôi
           </p>
@@ -312,7 +313,7 @@ const HomePage = () => {
             const s = services.find((x) => x.highlight);
             const Icon = s.icon;
             return (
-              <div className="md:row-span-2 bg-red-600 rounded-2xl p-6 flex flex-col gap-4 text-white">
+              <div data-aos="fade-up" className="md:row-span-2 bg-red-600 rounded-2xl p-6 flex flex-col gap-4 text-white">
                 <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                   <Icon size={22} className="text-white" strokeWidth={1.5} />
                 </div>
@@ -342,7 +343,7 @@ const HomePage = () => {
       {/* ── List Products ── */}
       <section className="container mx-auto mb-20">
         {/* Heading */}
-        <div className="text-center mb-8">
+        <div data-aos="fade-up" className="text-center mb-8">
           <p className="text-2xl font-bold tracking-widest tracking-widest text-red-600 uppercase mb-1">
             Danh sách sản phẩm
           </p>
@@ -356,7 +357,7 @@ const HomePage = () => {
 
       {/* ── Achievement ── */}
       <section className="container bg-gray-900">
-        <div className="text-center mb-12">
+        <div data-aos="fade-up" className="text-center mb-12">
           <h2 className="text-2xl font-bold tracking-widest tracking-widest text-white uppercase mb-1">
             Thành tựu của chúng tôi
           </h2>
@@ -369,7 +370,7 @@ const HomePage = () => {
  
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 justify-items-center">
           {/* Stat 1 */}
-          <div className="flex items-center gap-5">
+          <div data-aos="fade-up" data-aos-delay="0" className="flex items-center gap-5">
             <School size={56} className="text-white/90" strokeWidth={1.5} />
             <div>
               <p className="text-3xl font-bold text-white/90 leading-none">168+</p>
@@ -378,7 +379,7 @@ const HomePage = () => {
           </div>
  
           {/* Stat 2 */}
-          <div className="flex items-center gap-5">
+          <div data-aos="fade-up" data-aos-delay="100" className="flex items-center gap-5">
             <ShoppingBag size={56} className="text-white/90" strokeWidth={1.5} />
             <div>
               <p className="text-3xl font-bold text-white/90 leading-none">100.000+</p>
@@ -388,7 +389,7 @@ const HomePage = () => {
  
  
           {/* Stat 3 */}
-          <div className="flex items-center gap-5">
+          <div data-aos="fade-up" data-aos-delay="200" className="flex items-center gap-5">
             <Store size={56} className="text-white/90" strokeWidth={1.5} />
 
             <div>
@@ -399,19 +400,23 @@ const HomePage = () => {
         </div>
  
         {/* Marquee */}
-        <div className="overflow-hidden mt-20 -mx-4">
-          <div className="flex gap-3 animate-marquee" style={{ width: "max-content" }}>
-            {[...PRODUCT_IMGS, ...PRODUCT_IMGS, ...PRODUCT_IMGS, ...PRODUCT_IMGS].map((src, i) => (
-              <img key={i} src={src} alt="Sản phẩm" className="w-36 h-20  object-contain bg-white/80 rounded-2xl shrink-0" />
+        <div className="w-full overflow-hidden mt-20">
+          <div className="animate-marquee flex gap-3 w-max">
+            {[...PRODUCT_IMGS, ...PRODUCT_IMGS].map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt="Sản phẩm"
+                className="w-36 h-20 object-contain bg-white/80 rounded-2xl shrink-0"
+              />
             ))}
           </div>
-          <style>{`@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}.animate-marquee{animation:marquee 30s linear infinite;}`}</style>
         </div>
       </section>
 
       {/* ── HOTLINE ── */}
       <section className="container">
-      <div className="max-w-full mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+      <div data-aos="zoom-in" className="max-w-full mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
 
         {/* Left - đỏ */}
         <div className="bg-red-700 text-white p-8 flex flex-col 
@@ -506,17 +511,16 @@ const HomePage = () => {
             {isSubmitting ? "Đang gửi..." : "Gửi yêu cầu ngay"}
           </button>
         </form>
-
       </div>
       </section>
       <Footer />
-    </div>
+    </>
   );
 }
 
 function ServiceCard({ Icon, title, desc }) {
   return (
-    <div className="bg-white border-red-100 rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-3">
+    <div data-aos="fade-up" className="bg-white border-red-100 rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col gap-3">
       <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
         <Icon size={20} className="text-red-700" strokeWidth={1.5} />
       </div>

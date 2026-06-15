@@ -35,7 +35,7 @@ categorySchema.pre("validate", function () {
     }
 });
 
-categorySchema.pre("findOneAndUpdate", function (next) {
+categorySchema.pre("findOneAndUpdate", function () {
     const update = this.getUpdate();
     const name = update?.name || update?.$set?.name;
     const slug = update?.slug || update?.$set?.slug;
@@ -47,8 +47,6 @@ categorySchema.pre("findOneAndUpdate", function (next) {
             update.slug = createSlug(name);
         }
     }
-
-    next();
 });
 
 export default mongoose.model("Category", categorySchema);

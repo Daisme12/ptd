@@ -49,19 +49,20 @@
   --transition-smooth: all 0.3s ease;
 }
 
-
-  html {
-    scroll-behavior: smooth;
-  }
-
 * {
   box-sizing: border-box;
  font-family: 'Be Vietnam Pro', sans-serif;}
 
+   html {
+    scroll-behavior: smooth;
+  }
   body {
     margin: 0;
   }
-
+html,
+body {
+  overflow-x: hidden;
+}
   .container {
     padding: 50px 20px;
   }
@@ -109,4 +110,18 @@
   img {
   display: block;
   max-width: 100%;
+}
+
+.animate-marquee {
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }

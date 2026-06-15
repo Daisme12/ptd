@@ -5,7 +5,7 @@ import logoAvatar from '../assets/imgs/logoAvatar.png'
 export default function Footer() {
   return (
     <div>
-      <div className="bg-gray-800 mt-5 flex flex-col md:flex-row justify-between px-5 md:px-24 py-10 md:py-16 gap-10 text-white">
+      <div data-aos="fade-up" className="bg-gray-800 mt-5 flex flex-col md:flex-row justify-between px-5 md:px-24 py-10 md:py-16 gap-10 text-white">
 
         {/* Left */}
         <div className="flex flex-col items-start gap-3">
