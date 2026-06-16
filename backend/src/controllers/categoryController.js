@@ -4,8 +4,12 @@ import { uploadImageToCloudinary } from "../utils/uploadHelpers.js";
 // GET ALL
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await Category.find();
+        const categories = await Category
+            .find()
+            .sort({ name: 1 })
+            .lean();
 
+        res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=300");
         res.status(200).json(categories);
     } catch (error) {
         res.status(500).json({
@@ -17,7 +21,7 @@ const getAllCategories = async (req, res) => {
 // GET BY ID
 const getCategoryById = async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id);
+        const category = await Category.findById(req.params.id).lean();
 
         if (!category) {
             return res.status(404).json({

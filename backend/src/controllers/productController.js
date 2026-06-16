@@ -2,17 +2,32 @@ import Product from "../models/Product.js";
 import { uploadImageToCloudinary, uploadPdfToSupabase } from "../utils/uploadHelpers.js";
 
 const getAllProducts = async (req, res) => {
-    const products = await Product.find()
-        .populate("category");
+    try {
+        const products = await Product.find()
+            .populate("category", "name slug imageUrl")
+            .lean();
 
-    res.json(products);
+        res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=120");
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 const getProductById = async (req, res) => {
-    const product = await Product.findById(req.params.id)
-        .populate("category");
+    try {
+        const product = await Product.findById(req.params.id)
+            .populate("category")
+            .lean();
 
-    res.json(product);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        res.json(product);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 const getProductBySlug = async (req, res) => {
@@ -20,7 +35,7 @@ const getProductBySlug = async (req, res) => {
         const product = await Product.findOne({
             slug: req.params.slug,
             status: true,
-        }).populate("category");
+        }).populate("category").lean();
 
         if (!product) {
             return res.status(404).json({
@@ -36,7 +51,8 @@ const getProductBySlug = async (req, res) => {
             status: true,
         })
             .limit(4)
-            .populate("category", "name slug");
+            .populate("category", "name slug")
+            .lean();
 
         // Nếu không đủ 4 sản phẩm thì lấy thêm sản phẩm khác
         if (relatedProducts.length < 4) {
@@ -51,7 +67,8 @@ const getProductBySlug = async (req, res) => {
             })
                 .sort({ createdAt: -1 })
                 .limit(4 - relatedProducts.length)
-                .populate("category", "name slug");
+                .populate("category", "name slug")
+                .lean();
 
             relatedProducts = [
                 ...relatedProducts,
@@ -59,6 +76,7 @@ const getProductBySlug = async (req, res) => {
             ];
         }
 
+        res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=120");
         res.status(200).json({
             success: true,
             data: product,
@@ -157,6 +175,10 @@ const updateProduct = async (req, res) => {
             }
         );
 
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
         res.json(product);
     } catch (error) {
         res.status(500).json({
@@ -166,11 +188,15 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-    await Product.findByIdAndDelete(req.params.id);
-
-    res.json({
-        message: "Deleted successfully"
-    });
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.json({ message: "Deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 export { getAllProducts, getProductById, getProductBySlug, createProduct, updateProduct, deleteProduct };

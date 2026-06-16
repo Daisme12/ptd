@@ -63,7 +63,7 @@ const ProductCategory = () => {
     return (
         <div className="text-center">
             {/* Tabs */}
-            <div className="hidden md:flex mb-10 flex-wrap justify-center gap-4">
+            <div className="hidden lg:flex mb-10 flex-wrap justify-center gap-4">
                 {category.map((p, i) => (
                     <button
                         key={i}
@@ -84,7 +84,7 @@ const ProductCategory = () => {
             {/* Slider */}
             <div className="relative">
                 {/* Mobile */}
-                <div className="md:hidden grid grid-cols-1 gap-4">
+                <div className="lg:hidden grid grid-cols-1 gap-4">
                     {category.map((product, idx) => (
                         <div
                             key={product._id}
@@ -121,7 +121,7 @@ const ProductCategory = () => {
                 </div>
 
                 {/* Desktop */}
-                <div className="hidden md:flex items-center justify-center gap-8">
+                <div className="hidden lg:flex items-center justify-center gap-8">
                     <button
                         onClick={handleBack}
                         className="w-12 h-12 rounded-full border border-gray-200 

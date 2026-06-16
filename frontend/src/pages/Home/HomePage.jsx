@@ -128,7 +128,7 @@ const HomePage = () => {
       <section data-aos="fade" className="min-h-screen flex items-center justify-center px-4">
         {/* Background */}
         <div
-          className="absolute inset-0 -z-20 bg-cover bg-center md:bg-fixed"
+          className="absolute inset-0 -z-20 bg-cover bg-center lg:bg-fixed"
           style={{
             backgroundImage: `url(${backgroundHome})`,
           }}
@@ -140,7 +140,7 @@ const HomePage = () => {
         <div className="max-w-6xl text-center">
           {/* Brand */}
           <div className="py-4 w-fit mx-auto border-y border-white/40">
-            <p className="text-[12px] md:text-base text-white/80 tracking-[0.2em] uppercase">
+            <p className="text-[12px] lg:text-base text-white/80 tracking-[0.2em] uppercase">
               <span className="font-bold">
                 THỊNH PHONG ĐỖ
               </span>
@@ -150,8 +150,8 @@ const HomePage = () => {
 
           {/* Title */}
           <h1
-            className="mx-auto mt-[50px] mb-[10px] md:mb-[30px] 
-            text-2xl md:text-[45px]
+            className="mx-auto mt-[50px] mb-[10px] lg:mb-[30px] 
+            text-2xl lg:text-[45px]
           font-bold text-white uppercase mb-8"
           >
             CHUYÊN CUNG CẤP SUẤT ĂN & DỊCH VỤ CANTEEN
@@ -160,9 +160,9 @@ const HomePage = () => {
 
           {/* Description */}
           <p
-            className="md:my-[20px] max-w-3xl text-[12px] 
+            className="lg:my-[20px] max-w-3xl text-[12px] 
             mx-auto text-white/85 mb-[10px]
-            md:text-lg leading-relaxed md:mb-14"
+            lg:text-lg leading-relaxed lg:mb-14"
           >
             THỊNH PHONG ĐỖ cung cấp suất ăn, thực phẩm chế biến sẵn và
             dịch vụ canteen với quy trình sản xuất đạt tiêu chuẩn
@@ -174,29 +174,29 @@ const HomePage = () => {
           </p>
 
           {/* Extra info */}
-          <div className='mx-auto my-[30px] flex md:gap-20 sm:gap-15 flex-wrap justify-center'>
+          <div className='mx-auto my-[30px] flex lg:gap-20 sm:gap-15 flex-wrap justify-center'>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
               <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={QR} alt="QR sản phẩm" />
               <div className='flex flex-col items-start text-white'>
-                <p className="text-[14px] md:text-[16px] font-bold">Truy xuất nguồn gốc</p>
-                <span className="text-[10px] md:text-[14px]">Minh bạch, dễ kiểm tra</span>
+                <p className="text-[14px] lg:text-[16px] font-bold">Truy xuất nguồn gốc</p>
+                <span className="text-[10px] lg:text-[14px]">Minh bạch, dễ kiểm tra</span>
               </div>
             </div>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
               <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={ISO} alt="ISO" />
               <div className='flex flex-col items-start text-white'>
                 <div className='flex items-center w-[160px] h-[30px] overflow-hidden gap-[10px]'>
-                  <p className="text-[14px] md:text-[16px] font-bold">ISO</p>
+                  <p className="text-[14px] lg:text-[16px] font-bold">ISO</p>
                   <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Star} alt="Star" />
                 </div>
-                <span className="text-[10px] md:text-[14px]">Tiêu chuẩn ISO 22000:2018</span>
+                <span className="text-[10px] lg:text-[14px]">Tiêu chuẩn ISO 22000:2018</span>
               </div>
             </div>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
               <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Profile} alt="Profile" />
               <div className='flex flex-col items-start text-white' >
-                <p className="text-[14px] md:text-[16px] font-bold">Hồ sơ sản phẩm đầy đủ</p>
-                <span className="text-[10px] md:text-[14px]">Pháp lý & Kiểm định chất lượng</span>
+                <p className="text-[14px] lg:text-[16px] font-bold">Hồ sơ sản phẩm đầy đủ</p>
+                <span className="text-[10px] lg:text-[14px]">Pháp lý & Kiểm định chất lượng</span>
               </div>
             </div>
           </div>
@@ -204,7 +204,7 @@ const HomePage = () => {
           {/* CTA */}
           <button
             onClick={() => navigate("/contact")}
-            className="btn btn-primary text-[12px] md:text-base rounded-md md:mt-3 p-4 text-white uppercase tracking-widest"
+            className="btn btn-primary text-[12px] lg:text-base rounded-md lg:mt-3 p-4 text-white uppercase tracking-widest"
           >
             Nhận tư vấn & báo giá
           </button>
@@ -213,13 +213,13 @@ const HomePage = () => {
 
       <section className="container mx-auto">
         {/* Slogan */}
-        <div className="mb-15 mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="mb-15 mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
           {cards.map(({ icon: Icon, title, desc }, idx) => (
             <div
               key={idx}
               data-aos="fade-up"
               data-aos-delay={idx * 100}
-              className="flex flex-col border-b-4 border-b-red-600 md:border-b-red-200 md:hover:border-b-red-600 
+              className="flex flex-col border-b-4 border-b-red-600 lg:border-b-red-200 lg:hover:border-b-red-600 
               gap-4 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm group
               transition-all duration-300
               "
@@ -227,8 +227,8 @@ const HomePage = () => {
             >
               
               {/* Icon box */}
-              <div className="w-12 h-12 rounded-xl md:bg-red-50 bg-red-600  md:group-hover:bg-red-600 flex items-center justify-center">
-                <Icon size={22} className="md:text-red-600 text-white md:group-hover:text-white" strokeWidth={1.5} />
+              <div className="w-12 h-12 rounded-xl lg:bg-red-50 bg-red-600  lg:group-hover:bg-red-600 flex items-center justify-center">
+                <Icon size={22} className="lg:text-red-600 text-white lg:group-hover:text-white" strokeWidth={1.5} />
               </div>
 
               {/* Text */}
@@ -241,7 +241,7 @@ const HomePage = () => {
         </div>
 
         {/* Intro */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div data-aos="fade-right" className="relative">
             <img
               src={Intro}
@@ -298,9 +298,9 @@ const HomePage = () => {
         </div>
  
         {/* Grid: 2 cột trên, 2 cột dưới + 1 card highlight bên phải chiếm 2 hàng */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Hàng 1 trái: Thực đơn + Công nghệ */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {services
               .filter((s) => !s.highlight)
               .slice(0, 2)
@@ -314,7 +314,7 @@ const HomePage = () => {
             const s = services.find((x) => x.highlight);
             const Icon = s.icon;
             return (
-              <div data-aos="fade-up" className="md:row-span-2 bg-red-600 rounded-2xl p-6 flex flex-col gap-4 text-white">
+              <div data-aos="fade-up" className="lg:row-span-2 bg-red-600 rounded-2xl p-6 flex flex-col gap-4 text-white">
                 <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                   <Icon size={22} className="text-white" strokeWidth={1.5} />
                 </div>
@@ -330,7 +330,7 @@ const HomePage = () => {
           })()}
  
           {/* Hàng 2 trái: Giao hàng + Phục vụ */}
-          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {services
               .filter((s) => !s.highlight)
               .slice(2, 4)
@@ -417,11 +417,11 @@ const HomePage = () => {
 
       {/* ── HOTLINE ── */}
       <section className="container">
-      <div data-aos="zoom-in" className="max-w-full mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+      <div data-aos="zoom-in" className="max-w-full mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col lg:flex-row">
 
         {/* Left - đỏ */}
         <div className="bg-red-700 text-white p-8 flex flex-col 
-        justify-between md:w-100 shrink-0">
+        justify-between lg:w-100 shrink-0">
           <div>
             <h2 className="text-2xl font-bold leading-snug mb-4">
               Liên hệ tư vấn giải pháp

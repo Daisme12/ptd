@@ -86,7 +86,7 @@ const Header = ({ solid = false }) => {
     const headerClasses =
   solid || scrolled
     ? "bg-white text-black shadow-lg"
-    : "md:bg-transparent bg-white text-black md:text-white";
+    : "lg:bg-transparent bg-white text-black lg:text-white";
 
 
   return (
@@ -99,7 +99,7 @@ const Header = ({ solid = false }) => {
       ${headerClasses}
     `}>
       <div className="container-app group hover:bg-white 
-      md:transition-colors duration-100">
+      lg:transition-colors duration-100">
         <div className="flex items-center justify-between w-full">
           <div>
             <Link to="/">
@@ -114,18 +114,18 @@ const Header = ({ solid = false }) => {
           <nav
             className={`
               absolute top-full left-0 w-full
-              md:static md:w-auto md:shadow-none
-              md:flex md:flex-row md:items-center md:gap-10
+              lg:static lg:w-auto lg:shadow-none
+              lg:flex lg:flex-row lg:items-center lg:gap-10
 
               ${menuOpen ? "flex" : "hidden"}
-              md:flex
-              flex-col gap-4 p-4 md:p-0
-              bg-white md:bg-transparent
+              lg:flex
+              flex-col gap-4 p-4 lg:p-0
+              bg-white lg:bg-transparent
 
               ${
                 solid || scrolled
                   ? "text-black"
-                  : "text-black md:text-white md:group-hover:text-black"
+                  : "text-black lg:text-white lg:group-hover:text-black"
               }
             `}
           >
@@ -214,7 +214,7 @@ const Header = ({ solid = false }) => {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <Link
               to="/contact"
                 className="btn btn-primary px-3 py-2 text-white flex items-center gap-2 hover:bg-primary-dark transition-colors duration-300"
@@ -225,7 +225,7 @@ const Header = ({ solid = false }) => {
             </div>
 
             <button
-              className="md:hidden text-primary"
+              className="lg:hidden text-primary"
               onClick={() => setMenuOpen(!menuOpen)}
             >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}

@@ -1,9 +1,12 @@
 import Contact from "../models/Contact.js";
 
 const getAllContacts = async (req,res)=>{
-    const contacts = await Contact.find().sort({ createdAt: -1 });
-
-    res.json(contacts);
+    try {
+        const contacts = await Contact.find().sort({ createdAt: -1 }).lean();
+        res.json(contacts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 const createContact = async (req,res)=>{
@@ -42,11 +45,15 @@ const createContact = async (req,res)=>{
 };
 
 const deleteContact = async (req,res)=>{
-    await Contact.findByIdAndDelete(req.params.id);
-
-    res.json({
-        message:"Deleted successfully"
-    });
+    try {
+        const contact = await Contact.findByIdAndDelete(req.params.id);
+        if (!contact) {
+            return res.status(404).json({ message: "Contact not found" });
+        }
+        res.json({ message:"Deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 export {getAllContacts, createContact, deleteContact};

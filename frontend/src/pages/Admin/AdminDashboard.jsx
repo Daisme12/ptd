@@ -68,7 +68,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           icon={Package} 
           title="Tổng sản phẩm" 
@@ -156,7 +156,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 p-6">
           <h3 className="text-lg font-bold text-red-900 mb-2">Thêm sản phẩm mới</h3>
           <p className="text-red-700 text-sm mb-4">Bổ sung sản phẩm vào hệ thống một cách nhanh chóng</p>

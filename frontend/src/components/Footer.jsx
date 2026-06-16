@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import logo from '../assets/imgs/Logo.webp'
+import bg from '../assets/imgs/background.webp'
 
 export default function Footer() {
   return (
     <div>
-      <div data-aos="fade-up" className="bg-gray-800 mt-5 flex flex-col md:flex-row justify-between px-5 md:px-24 py-10 md:py-16 gap-10 text-white">
+      <div data-aos="fade-up" className="bg-gray-800 mt-5 flex flex-col lg:flex-row justify-between px-5 lg:px-24 py-10 lg:py-16 gap-10 text-white">
 
         {/* Left */}
         <div className="flex flex-col items-start gap-3">
@@ -18,7 +19,7 @@ export default function Footer() {
 
         {/* Middle */}
         <div className="text-left">
-          <h2 className="text-lg font-bold uppercase text-red-600 mt-0 md:mt-6 mb-5">Chính sách</h2>
+          <h2 className="text-lg font-bold uppercase text-red-600 mt-0 lg:mt-6 mb-5">Chính sách</h2>
           <ul className="flex flex-col gap-3">
             {[
               { label: "Đại lý phân phối", to: "/policy/distributor" },
@@ -33,8 +34,17 @@ export default function Footer() {
         </div>
 
         {/* FB Card */}
-        <div className="w-[360px] h-[150px] relative rounded-md overflow-hidden shadow-md cursor-pointer bg-gray-400 shrink-0">
-          <div className="absolute inset-0 bg-black/35 text-white flex flex-col justify-between p-3">
+          <div
+            className="w-[360px] h-[150px] relative rounded-md overflow-hidden shadow-md cursor-pointer shrink-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${bg})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+            }}
+          >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70 text-white flex flex-col justify-between p-3">
+          </div>
+          <div className="absolute inset-0 text-white flex flex-col justify-between p-3">
             <div className="flex items-start gap-3">
               <img src="/logoAvatar.webp" alt="avatar" className="w-14 h-14 rounded" />
               <h4 className="font-bold text-base pt-2 w-44 text-left">Chickenly - Ăn Vặt Vân Vân</h4>

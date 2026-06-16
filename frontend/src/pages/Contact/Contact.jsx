@@ -77,7 +77,7 @@ const ContactPage = () => {
 
         <div className="relative z-10 text-white px-4">
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4">
             Liên Hệ Với Chúng Tôi
           </h1>
 
@@ -91,7 +91,7 @@ const ContactPage = () => {
       {/* Contact */}
       <section className="bg-gray-100">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-8">
 
             {/* Left */}
             <div className="space-y-6">
@@ -162,7 +162,7 @@ const ContactPage = () => {
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid lg:grid-cols-2 gap-4">
                   <input
                     type="text"
                     placeholder="Họ và tên"
@@ -227,7 +227,7 @@ const ContactPage = () => {
             Cam Kết Chất Lượng
           </h2>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid lg:grid-cols-4 gap-8">
             <div data-aos="fade-up" data-aos-delay="0" className="text-center">
               <FaShieldAlt className="mx-auto text-4xl text-red-600 mb-4" />
               <h3 className="font-semibold">ISO 22000</h3>

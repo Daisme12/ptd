@@ -80,4 +80,8 @@ productSchema.pre("findOneAndUpdate", function () {
     }
 });
 
+// Indexes cho tối ưu query
+productSchema.index({ category: 1, status: 1 });
+productSchema.index({ status: 1, createdAt: -1 });
+
 export default mongoose.model("Product", productSchema);

@@ -199,17 +199,17 @@ import { LoaderCircle } from "lucide-react";
       {/* Product Area */}
       <section
         ref={productGridRef}
-        className=" p-[20px] md:px-[100px] md:py-[40px] max-w-[1410px] mx-auto">
+        className=" p-[20px] lg:px-[100px] lg:py-[40px] max-w-[1410px] mx-auto">
         <div className="mx-auto px-4">
-          <div className="bg-white rounded-2xl md:mb-[30px]  shadow-sm border border-gray-100 p-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+          <div className="bg-white rounded-2xl lg:mb-[30px]  shadow-sm border border-gray-100 p-4 mb-6">
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
               <input
                 type="text"
                 placeholder="🔍 Tìm kiếm sản phẩm..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 className="
-                  w-full md:w-220
+                  w-full lg:w-220
                   border border-gray-200
                   rounded-xl
                   px-4 py-3
@@ -247,7 +247,7 @@ import { LoaderCircle } from "lucide-react";
               </div>
             </div>
           </div>
-          <div className="grid md:grid-cols-[260px_1fr] gap-8">
+          <div className="grid lg:grid-cols-[260px_1fr] gap-8">
 
             {/* Sidebar */}
             <aside data-aos="fade-right">
@@ -302,7 +302,7 @@ import { LoaderCircle } from "lucide-react";
             <div>
               <div
               data-aos="fade-up"
-              className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+              className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {currentProducts.map((item, index) => (
                   <div
                     key={item._id}
@@ -393,7 +393,7 @@ import { LoaderCircle } from "lucide-react";
       {/* Bottom Section */}
       <section className="bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-8">
 
             {/* Form */}
             <div data-aos="zoom-in" className="bg-white shadow-xl rounded-2xl p-8">

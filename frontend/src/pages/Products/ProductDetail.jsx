@@ -134,7 +134,7 @@ export default function ProductDetail() {
       </div>
       {/* Hero */}
       <div className="container-app mt-25">
-        <div className="flex flex-col md:flex-row gap-10 items-center">
+        <div className="flex flex-col lg:flex-row gap-10 items-center">
           <div data-aos="fade-right" className="flex-1">
             <span className="inline-block bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
               {productNow?.category?.name}
@@ -152,7 +152,7 @@ export default function ProductDetail() {
             <img
               src={productNow?.imageUrl}
               alt={productNow?.name}
-              className="w-full max-w-xs md:max-w-sm rounded-2xl object-cover shadow-lg"
+              className="w-full max-w-xs lg:max-w-sm rounded-2xl object-cover shadow-lg"
             />
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function ProductDetail() {
         {productNow?.documents && productNow.documents.length > 0 ? (
           <div className="space-y-6">
             {/* Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {productNow.documents.map((doc) => {
                 const config = getDocumentConfig(doc.title);
                 const Icon = config.icon;
@@ -229,8 +229,8 @@ export default function ProductDetail() {
             {/* PDF Viewer - Iframe hiển thị luôn */}
             {productNow.documents.some(doc => doc.fileUrl && doc.fileUrl.trim() !== '') && (
               <div className="mt-8 bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-lg">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 flex items-center justify-between gap-2">
-                  <h3 className="font-semibold text-gray-800 text-sm md:text-lg truncate">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-200 flex items-center justify-between gap-2">
+                  <h3 className="font-semibold text-gray-800 text-sm lg:text-lg truncate">
                     Xem tài liệu: {previewDoc && previewDoc.fileUrl ? previewDoc.title : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')?.title}
                   </h3>
                   <button
@@ -242,12 +242,12 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Tabs for switching documents */}
-                <div className="px-4 md:px-6 py-3 border-b border-gray-200 flex gap-2 flex-wrap bg-gray-50 overflow-x-auto">
+                <div className="px-4 lg:px-6 py-3 border-b border-gray-200 flex gap-2 flex-wrap bg-gray-50 overflow-x-auto">
                   {productNow.documents.filter(doc => doc.fileUrl && doc.fileUrl.trim() !== '').map((doc) => (
                     <button
                       key={doc._id}
                       onClick={() => setPreviewDoc(doc)}
-                      className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all flex-shrink-0 ${
+                      className={`px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all flex-shrink-0 ${
                         (previewDoc?._id === doc._id || (!previewDoc && productNow.documents.indexOf(doc) === 0))
                           ? 'bg-red-600 text-white shadow-md'
                           : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
@@ -259,24 +259,18 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Iframe Container */}
-                <div className="bg-gray-50 p-4 md:p-6">
+                <div className="bg-gray-50 p-4 lg:p-6">
                   <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner">
                     <iframe
                       src={`${(previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')).fileUrl}#toolbar=1`}
                       title={previewDoc?.title}
-                      className="w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px] border-none"
+                      className="w-full h-[400px] sm:h-[500px] lg:h-[600px] lg:h-[800px] border-none"
                     />
                   </div>
                 </div>
 
                 {/* Action Footer */}
-                <div className="px-4 md:px-6 py-3 md:py-4 border-t border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button
-                    onClick={() => setPreviewDoc(null)}
-                    className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium transition-colors text-sm"
-                  >
-                    Ẩn
-                  </button>
+                <div className="px-4 lg:px-6 py-3 lg:py-4 border-t border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
                   <button
                     onClick={() => {
                       const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
@@ -310,7 +304,7 @@ export default function ProductDetail() {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="max-w-4xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map(({ num, title, desc, highlight }, index) => (
             <div key={num}
               data-aos="fade-right"
@@ -333,7 +327,7 @@ export default function ProductDetail() {
           <Link to={`/products?category=${productNow.category.slug}`} className="text-red-600 text-sm font-medium hover:underline">Xem tất cả →</Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
           {relatedProducts.map((item, index) => (
             <Link
               to={`/products/${item.slug}`}
