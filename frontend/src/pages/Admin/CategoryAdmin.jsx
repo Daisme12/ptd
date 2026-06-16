@@ -188,7 +188,7 @@ const CategoryAdmin = () => {
                   <td className="px-6 py-4">
                     <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white">
                       {category.imageUrl ? (
-                        <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover" />
+                        <img loading="lazy" src={category.imageUrl} alt={category.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
                           <ImageIcon size={24} />
@@ -273,7 +273,7 @@ const CategoryAdmin = () => {
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 overflow-hidden relative group">
                     {previewImage ? (
-                      <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                      <img loading="lazy" src={previewImage} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
                       <ImageIcon className="text-gray-400" size={24} />
                     )}

@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Package, Grid, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, Grid, LogOut, Users } from 'lucide-react';
 
 const AdminLayout = () => {
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { name: 'Danh mục', path: '/admin/categories', icon: Grid },
     { name: 'Sản phẩm', path: '/admin/products', icon: Package },
+    { name: 'Khách hàng', path: '/admin/contacts', icon: Users },
   ];
 
   return (

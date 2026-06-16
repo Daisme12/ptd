@@ -317,8 +317,7 @@ import { LoaderCircle } from "lucide-react";
                           transition-all
                           duration-300"
                   >
-                    <img
-                      src={item.imageUrl}
+                    <img loading="lazy" src={item.imageUrl}
                       alt={item.name}
                       className="h-52 w-full object-cover"
                     />

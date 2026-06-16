@@ -236,7 +236,7 @@ const ProductAdmin = () => {
                   <td className="px-6 py-4">
                     <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white">
                       {product.imageUrl ? (
-                        <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+                        <img loading="lazy" src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
                           <ImageIcon size={24} />
@@ -388,7 +388,7 @@ const ProductAdmin = () => {
                     <div className="flex flex-col gap-4">
                       {previewImage ? (
                         <div className="w-full h-32 rounded-lg overflow-hidden border border-gray-300 relative">
-                          <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                          <img loading="lazy" src={previewImage} alt="Preview" className="w-full h-full object-cover" />
                         </div>
                       ) : (
                         <div className="w-full h-32 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-white text-gray-400">

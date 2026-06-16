@@ -119,8 +119,7 @@ const AdminDashboard = () => {
                 {/* Image */}
                 <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-white flex-shrink-0">
                   {product.imageUrl ? (
-                    <img 
-                      src={product.imageUrl} 
+                    <img loading="lazy" src={product.imageUrl} 
                       alt={product.name} 
                       className="w-full h-full object-cover"
                     />

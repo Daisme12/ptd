@@ -176,24 +176,24 @@ const HomePage = () => {
           {/* Extra info */}
           <div className='mx-auto my-[30px] flex lg:gap-20 sm:gap-15 flex-wrap justify-center'>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
-              <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={QR} alt="QR sản phẩm" />
+              <img loading="lazy" className="w-[70px] h-[70px] object-cover rounded-[20px]" src={QR} alt="QR sản phẩm" />
               <div className='flex flex-col items-start text-white'>
                 <p className="text-[14px] lg:text-[16px] font-bold">Truy xuất nguồn gốc</p>
                 <span className="text-[10px] lg:text-[14px]">Minh bạch, dễ kiểm tra</span>
               </div>
             </div>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
-              <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={ISO} alt="ISO" />
+              <img loading="lazy" className="w-[70px] h-[70px] object-cover rounded-[20px]" src={ISO} alt="ISO" />
               <div className='flex flex-col items-start text-white'>
                 <div className='flex items-center w-[160px] h-[30px] overflow-hidden gap-[10px]'>
                   <p className="text-[14px] lg:text-[16px] font-bold">ISO</p>
-                  <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Star} alt="Star" />
+                  <img loading="lazy" className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Star} alt="Star" />
                 </div>
                 <span className="text-[10px] lg:text-[14px]">Tiêu chuẩn ISO 22000:2018</span>
               </div>
             </div>
             <div className='flex items-center gap-[20px] flex align-items-center gap-10'>
-              <img className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Profile} alt="Profile" />
+              <img loading="lazy" className="w-[70px] h-[70px] object-cover rounded-[20px]" src={Profile} alt="Profile" />
               <div className='flex flex-col items-start text-white' >
                 <p className="text-[14px] lg:text-[16px] font-bold">Hồ sơ sản phẩm đầy đủ</p>
                 <span className="text-[10px] lg:text-[14px]">Pháp lý & Kiểm định chất lượng</span>
@@ -243,8 +243,7 @@ const HomePage = () => {
         {/* Intro */}
         <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div data-aos="fade-right" className="relative">
-            <img
-              src={Intro}
+            <img loading="lazy" src={Intro}
               alt="Giới thiệu công ty"
               className="w-full rounded-2xl object-cover"
             />
@@ -404,8 +403,7 @@ const HomePage = () => {
         <div className="w-full overflow-hidden mt-20">
           <div className="animate-marquee flex gap-3 w-max">
             {[...PRODUCT_IMGS, ...PRODUCT_IMGS].map((src, i) => (
-              <img
-                key={i}
+              <img loading="lazy" key={i}
                 src={src}
                 alt="Sản phẩm"
                 className="w-36 h-20 object-contain bg-white/80 rounded-2xl shrink-0"

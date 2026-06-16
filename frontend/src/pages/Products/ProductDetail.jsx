@@ -149,8 +149,7 @@ export default function ProductDetail() {
           </div>
 
           <div data-aos="fade-left" className="flex-1 flex justify-center">
-            <img
-              src={productNow?.imageUrl}
+            <img loading="lazy" src={productNow?.imageUrl}
               alt={productNow?.name}
               className="w-full max-w-xs lg:max-w-sm rounded-2xl object-cover shadow-lg"
             />
@@ -350,8 +349,7 @@ export default function ProductDetail() {
               "
             >
               <div className="overflow-hidden h-44">
-                <img
-                  src={item.imageUrl}
+                <img loading="lazy" src={item.imageUrl}
                   alt={item.name}
                   className="
                     w-full

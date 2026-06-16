@@ -9,7 +9,7 @@ export default function Footer() {
 
         {/* Left */}
         <div className="flex flex-col items-start gap-3">
-          <img src={logo} alt="logo" className="w-52 mb-2" />
+          <img loading="lazy" src={logo} alt="logo" className="w-52 mb-2" />
           <h2 className="font-bold text-base uppercase">Công Ty TNHH Phong Thịnh Đỗ</h2>
           <p className="text-sm"><strong>Địa chỉ:</strong> Số 215 ngõ 264 Ngọc Thuỵ, P.Bồ Đề, TP.Hà Nội</p>
           <p className="text-sm"><strong>Mã số thuế:</strong> 0110655263</p>
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
           <div className="absolute inset-0 text-white flex flex-col justify-between p-3">
             <div className="flex items-start gap-3">
-              <img src="/logoAvatar.webp" alt="avatar" className="w-14 h-14 rounded" />
+              <img loading="lazy" src="/logoAvatar.webp" alt="avatar" className="w-14 h-14 rounded" />
               <h4 className="font-bold text-base pt-2 w-44 text-left">Chickenly - Ăn Vặt Vân Vân</h4>
             </div>
             <div className="flex gap-2">

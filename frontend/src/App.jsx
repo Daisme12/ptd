@@ -25,6 +25,7 @@ const AdminLayout = lazy(() => import('./components/AdminLayout'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 const CategoryAdmin = lazy(() => import('./pages/Admin/CategoryAdmin'));
 const ProductAdmin = lazy(() => import('./pages/Admin/ProductAdmin'));
+const ContactAdmin = lazy(() => import('./pages/Admin/ContactAdmin'));
 
 // Loading fallback
 const PageLoader = () => (
@@ -84,6 +85,7 @@ function App() {
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="categories" element={<CategoryAdmin />} />
               <Route path="products" element={<ProductAdmin />} />
+              <Route path="contacts" element={<ContactAdmin />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

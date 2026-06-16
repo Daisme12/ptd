@@ -17,8 +17,7 @@ export default function QualityPage() {
     <Header solid />
       {/* Banner */}
       <div data-aos="fade" className="relative w-full h-72 lg:h-[460px] overflow-hidden">
-        <img
-          src={bgCertificate}
+        <img loading="lazy" src={bgCertificate}
           alt="banner"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -75,7 +74,7 @@ export default function QualityPage() {
                 }
             ].map(({ img, title, desc, pdf }, index) => (
               <div data-aos="zoom-in" data-aos-delay={index * 100} key={title} className="bg-white rounded-2xl p-5 flex gap-4 shadow-sm border-l-4 border-red-600">
-                <img src={img} alt={title} className="w-20 h-30 object-cover  shrink-0" />
+                <img loading="lazy" src={img} alt={title} className="w-20 h-30 object-cover  shrink-0" />
                 <div>
                   <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed mb-3">{desc}</p>

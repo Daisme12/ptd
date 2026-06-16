@@ -93,8 +93,7 @@ const ProductCategory = () => {
                             className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group"
                         >
                             <div className="overflow-hidden h-52">
-                                <img
-                                    src={product.imageUrl}
+                                <img loading="lazy" src={product.imageUrl}
                                     alt={product.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
@@ -133,8 +132,7 @@ const ProductCategory = () => {
                     {/* Left */}
                     <div data-aos="fade-up" data-aos-delay="0" className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
                         <div className="overflow-hidden h-53">
-                            <img
-                                src={category[left].imageUrl}
+                            <img loading="lazy" src={category[left].imageUrl}
                                 alt={category[left].name}
                                 className="w-full h-full object-cover 
                                 group-hover:scale-105 transition-transform duration-300"
@@ -169,8 +167,7 @@ const ProductCategory = () => {
                         "
                     >
                         <div className="overflow-hidden h-56">
-                            <img
-                                src={category[current].imageUrl}
+                            <img loading="lazy" src={category[current].imageUrl}
                                 alt={category[current].name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
@@ -197,8 +194,7 @@ const ProductCategory = () => {
                     {/* Right */}
                     <div data-aos="fade-up" data-aos-delay="200" className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group w-80 opacity-70">
                         <div className="overflow-hidden h-53">
-                            <img
-                                src={category[right].imageUrl}
+                            <img loading="lazy" src={category[right].imageUrl}
                                 alt={category[right].name}
                                 className="w-full h-full object-cover 
                                 group-hover:scale-105 transition-transform duration-300"

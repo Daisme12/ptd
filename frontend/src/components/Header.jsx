@@ -73,7 +73,7 @@ const Header = ({ solid = false }) => {
     lastScrollY = currentScrollY;
   };
 
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("scroll", handleScroll, { passive: true });
 
   return () => {
     window.removeEventListener("scroll", handleScroll);
@@ -103,8 +103,7 @@ const Header = ({ solid = false }) => {
         <div className="flex items-center justify-between w-full">
           <div>
             <Link to="/">
-              <img
-                src={logo}
+              <img loading="lazy" src={logo}
                 alt="logo"
                 className="h-14 w-auto cursor-pointer"
               />
