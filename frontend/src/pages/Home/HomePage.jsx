@@ -126,8 +126,7 @@ const HomePage = () => {
     <>
       <SEO 
         title="Trang Chủ" 
-        description="Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO." 
-        url="https://thinhphongdo.com"
+        description="Công ty Cổ phần Thương mại và Dịch vụ Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO." 
       />
       {/* Header */}
       <Header />

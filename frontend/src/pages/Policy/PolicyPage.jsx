@@ -23,7 +23,6 @@ const PolicyPage = () => {
       <SEO 
         title="Chính Sách & Quy Định" 
         description="Các chính sách bảo mật, thanh toán, đổi trả và giao hàng của Thịnh Phong Đỗ." 
-        url="https://thinhphongdo.com/policy"
       />
       <div>
         <Header />

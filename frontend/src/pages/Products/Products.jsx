@@ -169,9 +169,9 @@ import SEO from "../../components/SEO";
   return (
     <>
       <SEO 
-        title="Danh Mục Sản Phẩm" 
-        description="Khám phá danh mục sản phẩm đa dạng từ Thịnh Phong Đỗ, được chế biến từ nguồn nguyên liệu sạch, đảm bảo tiêu chuẩn ISO cho mọi bữa ăn." 
-        url="https://thinhphongdo.com/products"
+        title={currentCategory ? `Sản phẩm ${currentCategory.name}` : "Danh Mục Sản Phẩm"} 
+        description={currentCategory ? currentCategory.description : "Khám phá danh mục sản phẩm đa dạng từ Thịnh Phong Đỗ, được chế biến từ nguồn nguyên liệu sạch, đảm bảo tiêu chuẩn ISO cho mọi bữa ăn."} 
+        image={currentCategory ? currentCategory.imageUrl : undefined}
       />
       {/* ── Lớp Phủ Loading (Đợi Data Backend) ── */}
       <div className={`fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center transition-opacity duration-700 ${loading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>

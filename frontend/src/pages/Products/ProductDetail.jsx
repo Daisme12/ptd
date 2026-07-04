@@ -147,7 +147,6 @@ export default function ProductDetail() {
           title={productNow.name} 
           description={productNow.description} 
           image={productNow.imageUrl}
-          url={`https://thinhphongdo.com/products/${slug}`}
         />
       )}
       {/* ── Lớp Phủ Loading (Đợi Data Backend) ── */}

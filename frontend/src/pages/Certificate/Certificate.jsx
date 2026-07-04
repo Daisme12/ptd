@@ -33,7 +33,6 @@ export default function QualityPage() {
             <SEO 
                 title="Chứng Chỉ & Hồ Sơ Năng Lực" 
                 description="Các chứng nhận ISO 22000:2018 và hồ sơ năng lực của Thịnh Phong Đỗ, minh chứng cho chất lượng và sự an toàn." 
-                url="https://thinhphongdo.com/certificate"
             />
             <Header solid />
 

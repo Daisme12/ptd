@@ -46,7 +46,6 @@ export default function Intro() {
       <SEO 
         title="Về Chúng Tôi" 
         description="Tìm hiểu về Thịnh Phong Đỗ - Đơn vị hàng đầu trong việc cung cấp suất ăn công nghiệp và suất ăn trường học với quy trình chuẩn ISO." 
-        url="https://thinhphongdo.com/about"
       />
       <Header solid/>
 
