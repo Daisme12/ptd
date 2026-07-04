@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 import backgroundHome from "../../assets/imgs/background.webp"
 import ISO from "../../assets/imgs/ISO.webp"
@@ -274,12 +274,12 @@ const HomePage = () => {
               chỉ nam phát triển.
             </p>
 
-            <a href="/intro" className="inline-block">
+            <Link to="/about" className="inline-block">
               <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-xl overflow-hidden transition-all hover:shadow-xl hover:bg-red-600">
                 <span>Tìm hiểu thêm về Thịnh Phong Đỗ</span>
                 <ChevronRight size={20} className="transition-transform group-hover:translate-x-1" />
               </button>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
