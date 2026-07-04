@@ -8,7 +8,7 @@ const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
   const defaultDescription = "Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học, và dịch vụ canteen uy tín, chất lượng với quy trình đạt chuẩn ISO 22000:2018.";
   const defaultKeywords = "suất ăn công nghiệp, suất ăn trường học, dịch vụ canteen, thực phẩm sạch, Thịnh Phong Đỗ, cung cấp suất ăn, chứng nhận ISO 22000:2018";
   
-  // Đảm bảo ảnh luôn có URL tuyệt đối để Facebook/Zalo đọc được
+  // Đảm bảo ảnh luôn có URL tuyệt đối để Facebook/Zalo đọc được (Lưu ý: Không dùng đuôi .svg)
   const defaultImage = `${baseUrl}/Logo.svg`; 
   
   // Tự động lấy URL hiện tại của trang
