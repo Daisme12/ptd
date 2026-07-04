@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import SEO from "../../components/SEO";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -141,6 +142,14 @@ export default function ProductDetail() {
 
   return (
     <div className="bg-grey-600">
+      {productNow && (
+        <SEO 
+          title={productNow.name} 
+          description={productNow.description} 
+          image={productNow.imageUrl}
+          url={`https://thinhphongdo.com/products/${slug}`}
+        />
+      )}
       {/* ── Lớp Phủ Loading (Đợi Data Backend) ── */}
       <div className={`fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center transition-opacity duration-700 ${loading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <div className="relative w-20 h-20 mb-6">

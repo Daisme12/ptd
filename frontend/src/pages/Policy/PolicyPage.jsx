@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import SEO from "../../components/SEO";
 import { policiesData } from '../../utils/policies';
 
 const PolicyPage = () => {
@@ -19,6 +20,11 @@ const PolicyPage = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col">
+      <SEO 
+        title="Chính Sách & Quy Định" 
+        description="Các chính sách bảo mật, thanh toán, đổi trả và giao hàng của Thịnh Phong Đỗ." 
+        url="https://thinhphongdo.com/policy"
+      />
       <div>
         <Header />
       </div>

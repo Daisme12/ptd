@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Trash2, Users, Search, RefreshCw, Mail, Phone, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import SEO from "../../components/SEO";
 import api from "../../services/api";
 
 const ContactAdmin = () => {
@@ -67,7 +68,8 @@ const ContactAdmin = () => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+            <SEO title="Quản Lý Liên Hệ" noindex={true} />
             <div className="p-6 border-b border-gray-200 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                 <div className="flex items-center gap-3">
                     <div className="bg-blue-100 p-2 rounded-lg text-blue-600">

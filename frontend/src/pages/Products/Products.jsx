@@ -8,6 +8,7 @@ import { getCategories } from "../../services/categoryService";
 import { createContact } from "../../services/contactService";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
+import SEO from "../../components/SEO";
 
 
   const ProductPage = () => {
@@ -167,6 +168,11 @@ import { LoaderCircle } from "lucide-react";
 
   return (
     <>
+      <SEO 
+        title="Danh Mục Sản Phẩm" 
+        description="Khám phá danh mục sản phẩm đa dạng từ Thịnh Phong Đỗ, được chế biến từ nguồn nguyên liệu sạch, đảm bảo tiêu chuẩn ISO cho mọi bữa ăn." 
+        url="https://thinhphongdo.com/products"
+      />
       {/* ── Lớp Phủ Loading (Đợi Data Backend) ── */}
       <div className={`fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center transition-opacity duration-700 ${loading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           <div className="relative w-20 h-20 mb-6">

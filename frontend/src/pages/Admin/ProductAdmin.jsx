@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, FileText, CheckCircle2, XCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, FileText, CheckCircle2, XCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../../services/api';
+import SEO from "../../components/SEO";
 
 const ProductAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -189,6 +190,7 @@ const ProductAdmin = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+      <SEO title="Quản Lý Sản Phẩm" noindex={true} />
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-100">
         <div>

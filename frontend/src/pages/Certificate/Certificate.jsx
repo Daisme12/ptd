@@ -5,6 +5,7 @@ import { ShieldCheck, Award, Clock, Download, BadgeCheck, FileText, Globe, Leaf,
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import SEO from "../../components/SEO";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -29,6 +30,11 @@ export default function QualityPage() {
 
     return (
         <div className="bg-white">
+            <SEO 
+                title="Chứng Chỉ & Hồ Sơ Năng Lực" 
+                description="Các chứng nhận ISO 22000:2018 và hồ sơ năng lực của Thịnh Phong Đỗ, minh chứng cho chất lượng và sự an toàn." 
+                url="https://thinhphongdo.com/certificate"
+            />
             <Header solid />
 
             {/* ── 1. Hero Banner ── */}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit2, Trash2, X, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../../services/api';
+import SEO from "../../components/SEO";
 
 const CategoryAdmin = () => {
   const [categories, setCategories] = useState([]);
@@ -142,6 +143,7 @@ const CategoryAdmin = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+      <SEO title="Quản Lý Danh Mục" noindex={true} />
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-100">
         <div>

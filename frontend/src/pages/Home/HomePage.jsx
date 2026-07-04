@@ -18,6 +18,7 @@ import "../../assets/styles/Home.css"
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ProductCategory from "./ProductCategory";
+import SEO from "../../components/SEO";
 import { createContact } from "../../services/contactService";
 
 const PRODUCT_IMGS = [
@@ -123,6 +124,11 @@ const HomePage = () => {
 
   return (
     <>
+      <SEO 
+        title="Trang Chủ" 
+        description="Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO." 
+        url="https://thinhphongdo.com"
+      />
       {/* Header */}
       <Header />
       {/* Hero */}

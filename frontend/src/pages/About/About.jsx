@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect, useRef, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import SEO from "../../components/SEO";
 
 import bannerVideo from '../../assets/banner_intro.mp4'
 import video_intro from '../../assets/video_intro.mp4'
@@ -41,8 +42,13 @@ export default function Intro() {
     }, []);
 
     return (
-        <div>
-            <Header solid/>
+    <div className="bg-slate-50 min-h-screen">
+      <SEO 
+        title="Về Chúng Tôi" 
+        description="Tìm hiểu về Thịnh Phong Đỗ - Đơn vị hàng đầu trong việc cung cấp suất ăn công nghiệp và suất ăn trường học với quy trình chuẩn ISO." 
+        url="https://thinhphongdo.com/about"
+      />
+      <Header solid/>
 
             {/* Banner */}
             <div data-aos="fade" className="relative w-full h-[460px] overflow-hidden">

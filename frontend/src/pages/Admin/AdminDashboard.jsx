@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Package, Grid, TrendingUp, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '../../services/api';
+import SEO from "../../components/SEO";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -61,6 +62,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
+      <SEO title="Admin Dashboard" noindex={true} />
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
