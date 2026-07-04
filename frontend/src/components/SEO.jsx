@@ -9,7 +9,7 @@ const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
   const defaultKeywords = "suất ăn công nghiệp, suất ăn trường học, dịch vụ canteen, thực phẩm sạch, Thịnh Phong Đỗ, cung cấp suất ăn, chứng nhận ISO 22000:2018";
   
   // Đảm bảo ảnh luôn có URL tuyệt đối để Facebook/Zalo đọc được
-  const defaultImage = `${baseUrl}/logoAvatar.webp`; 
+  const defaultImage = `${baseUrl}/Logo.svg`; 
   
   // Tự động lấy URL hiện tại của trang
   const currentUrl = url || (typeof window !== 'undefined' ? window.location.href : baseUrl);
