@@ -167,6 +167,19 @@ import { LoaderCircle } from "lucide-react";
 
   return (
     <>
+      {/* ── Lớp Phủ Loading (Đợi Data Backend) ── */}
+      <div className={`fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center transition-opacity duration-700 ${loading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          <div className="relative w-20 h-20 mb-6">
+              <div className="absolute inset-0 border-4 border-red-100 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-red-600 rounded-full border-t-transparent animate-spin"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                  <LoaderCircle size={28} className="text-red-600 animate-pulse" />
+              </div>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Đang tải dữ liệu...</h3>
+          <p className="text-gray-500 text-sm animate-pulse">Đang đồng bộ sản phẩm từ máy chủ</p>
+      </div>
+
       <Header solid/>
 
       {/* Hero */}

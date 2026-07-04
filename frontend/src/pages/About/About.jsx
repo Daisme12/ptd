@@ -297,8 +297,8 @@ export default function Intro() {
                   </div>
                 </div>
             </section>
-        <section data-aos="fade-up" className="bg-red-700 container text-center text-white">
-        <div className="mx-auto px-6">
+        <section data-aos="fade-up" className="bg-red-700 container-app  text-center text-white">
+        <div className="mx-auto px-6 py-15 ">
           <h2 className="text-4xl font-bold mb-4">
            Tin Tưởng Vào Sự Chuyên Nghiệp Của Chúng Tôi
           </h2>

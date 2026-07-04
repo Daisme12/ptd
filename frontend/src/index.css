@@ -114,7 +114,7 @@ body {
 
 .animate-marquee {
   width: max-content;
-  animation: marquee 30s linear infinite;
+  animation: marquee 100s linear infinite;
 }
 
 @keyframes marquee {
