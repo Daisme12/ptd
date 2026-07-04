@@ -14,7 +14,6 @@ const testUpload = async () => {
     console.log("Bắt đầu test upload PDF lên Supabase...");
 
     try {
-        // Đường dẫn tới file thực tế
         const testFilePath = path.resolve(__dirname, '../frontend/public/ISO_Chếbiến.pdf');
 
         if (!fs.existsSync(testFilePath)) {

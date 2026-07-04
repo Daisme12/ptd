@@ -77,8 +77,8 @@ export default function Intro() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-20">
                     {[
                         { title: 'Chất Lượng', desc: '"Tạo lên thương hiệu"', img: chatLuong },
-                        { title: 'Chất Sống', desc: '"Tạo lên sự khác biệt trong sản phẩm"', highlight: true, img: chatSong },
-                        { title: 'Chất Riêng', desc: '"Sống đúng với bản thân"', img: chatRieng },
+                        { title: 'Chất Riêng', desc: '"Sống đúng với bản thân"',  highlight: true ,img: chatRieng },
+                        { title: 'Chất Sống', desc: '"Tạo lên sự khác biệt trong sản phẩm"', img: chatSong },
                     ].map(({ title, desc, highlight, img }, index) => (
                         <div data-aos="fade-up" data-aos-delay={index * 100} key={title} className={`
                             lg:my-10 my-5 flex flex-col items-center 
@@ -253,6 +253,7 @@ export default function Intro() {
                     border-white
                     hover:border-2 hover:border-gray-700
                     transition-all
+                    hover:bg-white/10 
                     "
                 >
                     <Download size={18} />

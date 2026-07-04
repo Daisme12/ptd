@@ -266,7 +266,7 @@ const HomePage = () => {
             <div className="w-20 h-1 bg-primary my-4"></div>
 
             <h2 className="text-[18px] text-gray-400 mb-4">
-              Chất Lượng - Chất Sống - Chất Riêng
+              Chất Lượng - Chất Riêng - Chất Sống
             </h2>
 
             <p className="text-gray-600 leading-8 mb-8">

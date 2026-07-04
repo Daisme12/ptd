@@ -3,7 +3,7 @@ import { getCategories } from "../services/categoryService";
 
 import { Link, useLocation } from "react-router-dom";
 import { Phone, ChevronDown, Menu, X,LoaderCircle } from "lucide-react";
-import logo from "../assets/imgs/Logo.webp";
+import logo from "../assets/imgs/Logo1.png";
 
 import '../assets/styles/Header.css'
 
@@ -105,7 +105,7 @@ const Header = ({ solid = false }) => {
             <Link to="/">
               <img loading="lazy" src={logo}
                 alt="logo"
-                className="h-14 w-auto cursor-pointer"
+                className="h-14 overflow-hidden w-auto cursor-pointer"
               />
             </Link>
           </div>

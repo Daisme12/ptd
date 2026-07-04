@@ -37,7 +37,7 @@ export default function QualityPage() {
         <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
             { icon: ShieldCheck, value: '100%', label: 'Nguyên liệu sạch' },
-            { icon: Award,       value: '05+',  label: 'Chứng chỉ quốc tế' },
+            { icon: Award, value: '05+', label: 'Năm kinh nghiệm' },
             { icon: Clock,       value: '24/7', label: 'Kiểm soát quy trình' },
             { icon: BadgeCheck,  value: 'ISO',  label: 'Đạt chuẩn 22000' },
           ].map(({ icon: Icon, value, label }, index) => (
@@ -123,7 +123,7 @@ export default function QualityPage() {
               <div
             data-aos="fade-up" data-aos-delay={index * 100}
               key={title} 
-              className="bg-white border border-gray-100 hover:border-red-200 hover:shadow-xl transition-all duration-300 rounded-2xl group p-6 flex flex-col items-center text-center gap-3">
+              className="bg-white border border-red-200 hover:shadow-xl transition-all duration-300 rounded-2xl group p-6 flex flex-col items-center text-center gap-3">
                 <div className="w-14 h-14 rounded-xl bg-white shadow-sm group-hover:bg-red-600 transition-all duration-300 flex items-center justify-center">
                     <Icon
                         size={24}
@@ -151,11 +151,12 @@ export default function QualityPage() {
             className="
             inline-flex items-center gap-2
             px-6 py-3
-            bg-yellow-500 text-white
+            border-2 border-white
+            text-white
             font-medium
             rounded-xl
             shadow-md
-            hover:bg-yellow-600
+            hover:border-gray-700 hover:bg-white/10 
             transition-all
             "
         >
