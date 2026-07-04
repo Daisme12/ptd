@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import { ShieldCheck, Award, Clock,Download, BadgeCheck, FileText, Globe, Leaf, X } from 'lucide-react';
+import { ShieldCheck, Award, Clock,Download, BadgeCheck, FileText, Globe, Leaf, X,Eye } from 'lucide-react';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import bgCertificate from '../../assets/imgs/bgCertificate.webp';
@@ -8,7 +9,10 @@ import bgCertificate from '../../assets/imgs/bgCertificate.webp';
 import chungChi from '../../assets/imgs/dongGoi.webp';
 import soChe from '../../assets/imgs/soChe.webp';
 
+import { documents } from '../../data/documents.jsx';
+
 export default function QualityPage() {
+
     const [open, setOpen] = useState(false);
     const [selectedPdf, setSelectedPdf] = useState("");
 
@@ -138,6 +142,74 @@ export default function QualityPage() {
           </div>
         </div>
       </div>
+
+    <div className="bg-gray-50 py-16 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-bold uppercase">
+            Hồ Sơ & Giấy Tờ
+          </h2>
+          <div className="w-12 h-1 bg-red-600 mx-auto mt-2" />
+        </div>
+
+        <div className="space-y-4">
+          {documents.map((doc) => (
+            <div
+              key={doc.id}
+              className="bg-white rounded-xl border shadow-sm px-5 py-4 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                <FileText className="text-red-600" size={22} />
+                <span className="font-medium text-gray-800">
+                  {doc.name}
+                </span>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedPdf(doc.pdf);
+                    setOpen(true);
+                  }}
+                  className="btn btn-primary px-2 py-1 text-white flex items-center gap-2"
+                >
+                  <Eye size={16} className="text-white lg:flex hidden" />
+                  Xem
+                </button>
+
+                <a
+                  href={doc.pdf}
+                  download
+                  className="btn btn-outline px-2 py-1 bg-green-700 text-white flex items-center gap-2"
+                >
+                  <Download size={16} className="text-white lg:flex hidden" />
+                  Tải xuống
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-12 text-center">
+          <h3 className="text-xl font-semibold text-gray-800">
+            Khám phá các sản phẩm của chúng tôi
+          </h3>
+
+          <p className="mt-2 text-gray-500 max-w-2xl mx-auto">
+            Tất cả sản phẩm được sản xuất theo quy trình đạt chuẩn ISO 22000:2018,
+            đảm bảo chất lượng và an toàn thực phẩm.
+          </p>
+
+          <Link
+            to="/products"
+            className="inline-flex items-center mt-6 px-6 py-3 bg-red-600 
+            text-white rounded-lg hover:bg-red-700 transition
+            font-bold"
+          >
+            Xem danh mục sản phẩm
+          </Link>
+        </div>
+      </div>
+    </div>
 
       {/* CTA banner */}
       <div data-aos="fade-up" className="bg-gradient-to-r from-red-700 to-red-500 py-16 px-4 text-center">
