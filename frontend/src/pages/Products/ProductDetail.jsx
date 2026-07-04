@@ -1,9 +1,14 @@
-import { ShieldCheck, FileCheck, FileText, Download, LoaderCircle, Eye, FileQuestion } from 'lucide-react'
+import { ShieldCheck, FileCheck, FileText, Download, LoaderCircle, Eye, FileQuestion, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProductBySlug } from "../../services/productService";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 
 const steps = [
@@ -23,6 +28,14 @@ export default function ProductDetail() {
   const [error, setError] = useState(null);
   const [downloading, setDownloading] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
+  const [fullScreenDoc, setFullScreenDoc] = useState(null);
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+    setPageNumber(1);
+  }
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -206,7 +219,10 @@ export default function ProductDetail() {
                             )}
                           </button>
                           <button
-                            onClick={() => setPreviewDoc(doc)}
+                            onClick={() => {
+                              setPreviewDoc(doc);
+                              setFullScreenDoc(doc);
+                            }}
                             className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-medium px-4 py-2 rounded-lg transition-colors"
                             title="Chuyển đến tài liệu này"
                           >
@@ -228,16 +244,32 @@ export default function ProductDetail() {
             {/* PDF Viewer - Iframe hiển thị luôn */}
             {productNow.documents.some(doc => doc.fileUrl && doc.fileUrl.trim() !== '') && (
               <div className="mt-8 bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-lg">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-200 flex items-center justify-between gap-2">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 lg:px-6 py-3 lg:py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <h3 className="font-semibold text-gray-800 text-sm lg:text-lg truncate">
                     Xem tài liệu: {previewDoc && previewDoc.fileUrl ? previewDoc.title : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')?.title}
                   </h3>
-                  <button
-                    onClick={() => setPreviewDoc(null)}
-                    className="flex-shrink-0 text-gray-500 hover:text-gray-700 transition-colors text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200"
-                  >
-                    ✕
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
+                        handleDownload(currentDoc.fileUrl, `${currentDoc.title}.pdf`);
+                      }}
+                      disabled={downloading}
+                      className="flex items-center justify-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-medium transition-colors text-xs lg:text-sm"
+                    >
+                      <Download size={14} />
+                      {downloading ? 'Đang tải...' : 'Tải xuống'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
+                        setFullScreenDoc(currentDoc);
+                      }}
+                      className="flex items-center justify-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-medium transition-colors text-xs lg:text-sm"
+                    >
+                      <Eye size={14} /> Phóng to
+                    </button>
+                  </div>
                 </div>
 
                 {/* Tabs for switching documents */}
@@ -258,30 +290,52 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Iframe Container */}
-                <div className="bg-gray-50 p-4 lg:p-6">
-                  <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner">
-                    <iframe
-                      src={`${(previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')).fileUrl}#toolbar=1`}
-                      title={previewDoc?.title}
-                      className="w-full h-[400px] sm:h-[500px] lg:h-[600px] lg:h-[800px] border-none"
-                    />
+                <div className="bg-gray-50 p-4 lg:p-6 flex flex-col items-center">
+                  <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner flex flex-col items-center max-w-full">
+                    {(() => {
+                      const fileUrl = (previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')).fileUrl;
+                      return (
+                        <Document
+                          file={fileUrl}
+                          onLoadSuccess={onDocumentLoadSuccess}
+                          className="flex justify-center bg-gray-100 w-full overflow-auto"
+                          loading={<div className="py-10">Đang tải tài liệu...</div>}
+                        >
+                          <Page 
+                            pageNumber={pageNumber} 
+                            renderTextLayer={false}
+                            renderAnnotationLayer={false}
+                            className="shadow-sm max-w-full"
+                            width={Math.min(window.innerWidth * 0.85, 450)}
+                          />
+                        </Document>
+                      );
+                    })()}
                   </div>
+                  {numPages > 1 && (
+                    <div className="flex items-center justify-center gap-4 mt-4">
+                      <button 
+                          onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
+                          disabled={pageNumber <= 1}
+                          className="p-2 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-50"
+                      >
+                          <ChevronLeft size={20} />
+                      </button>
+                      <span className="text-sm font-medium">
+                          Trang {pageNumber} / {numPages}
+                      </span>
+                      <button 
+                          onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
+                          disabled={pageNumber >= numPages}
+                          className="p-2 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-50"
+                      >
+                          <ChevronRight size={20} />
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-                {/* Action Footer */}
-                <div className="px-4 lg:px-6 py-3 lg:py-4 border-t border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-                  <button
-                    onClick={() => {
-                      const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
-                      handleDownload(currentDoc.fileUrl, `${currentDoc.title}.pdf`);
-                    }}
-                    disabled={downloading}
-                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-medium transition-colors text-sm"
-                  >
-                    <Download size={16} />
-                    {downloading ? 'Đang tải...' : 'Tải xuống'}
-                  </button>
-                </div>
+
               </div>
             )}
           </div>
@@ -382,28 +436,69 @@ export default function ProductDetail() {
       <Footer />
 
       {/* PDF Preview Modal - Fullscreen */}
-      {previewDoc && (
-        <div className="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      {fullScreenDoc && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b">
-              <h3 className="font-bold text-lg">{previewDoc.title}</h3>
-              <button onClick={() => setPreviewDoc(null)} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center">
+              <h3 className="font-bold text-lg">{fullScreenDoc.title}</h3>
+              <button onClick={() => setFullScreenDoc(null)} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center">
                 ✕
               </button>
             </div>
 
-            <div className="flex-1">
-              <iframe src={`${previewDoc.fileUrl}#toolbar=1`} title={previewDoc.title} className="w-full h-full" />
+            <div className="flex-1 bg-gray-100 overflow-y-auto flex flex-col items-center py-4">
+              <Document
+                  file={fullScreenDoc.fileUrl}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  className="flex justify-center"
+                  loading={<div className="py-10">Đang tải tài liệu...</div>}
+              >
+                  <Page 
+                      pageNumber={pageNumber} 
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                      className="shadow-sm max-w-full"
+                      width={Math.min(window.innerWidth * 0.85, 450)}
+                  />
+              </Document>
+              
             </div>
 
-            <div className="border-t p-4 flex justify-end gap-3">
-              <button onClick={() => setPreviewDoc(null)} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">
-                Đóng
-              </button>
-              <button onClick={() => handleDownload(previewDoc.fileUrl, `${previewDoc.title}.pdf`)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white flex items-center gap-2">
-                <Download size={16} />
-                Tải xuống
-              </button>
+            <div className="border-t bg-white p-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
+              <div className="hidden sm:block"></div>
+              <div className="flex items-center justify-center gap-4">
+                {numPages > 1 && (
+                  <>
+                    <button 
+                        onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
+                        disabled={pageNumber <= 1}
+                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <span className="text-sm font-medium whitespace-nowrap">
+                        Trang {pageNumber} / {numPages}
+                    </span>
+                    <button 
+                        onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
+                        disabled={pageNumber >= numPages}
+                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                  </>
+                )}
+              </div>
+              
+              <div className="flex items-center justify-center sm:justify-end gap-3">
+                <button onClick={() => setFullScreenDoc(null)} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap">
+                  Đóng
+                </button>
+                <button onClick={() => handleDownload(fullScreenDoc.fileUrl, `${fullScreenDoc.title}.pdf`)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
+                  <Download size={16} />
+                  Tải xuống
+                </button>
+              </div>
             </div>
           </div>
         </div>

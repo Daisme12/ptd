@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -12,10 +12,23 @@ import ly from '../../assets/imgs/ly.webp';
 import GiayTo from '../../assets/imgs/GiayKinhDoanh.webp';
 import profilePdf from "/Profile.pdf";
 
-import { Download,ExternalLink } from "lucide-react";
+import { Download, ExternalLink, ChevronLeft, ChevronRight, FileText } from "lucide-react";
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function Intro() {
     const videoRef = useRef(null);
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [openPdf, setOpenPdf] = useState(false);
+
+    function onDocumentLoadSuccess({ numPages }) {
+      setNumPages(numPages);
+      setPageNumber(1);
+    }
 
     useEffect(() => {
         const video = videoRef.current;
@@ -194,18 +207,95 @@ export default function Intro() {
                     </video>
                 </div>
 
-                {/* Cơ sở pháp lý */}
-                <div className="py-15 border-t bg-red-700 border-gray-100 text-center">
-                    <h1 data-aos="fade-up" className="text-3xl font-bold text-white uppercase mb-8">Cơ Sở Pháp Lý</h1>
-                    <img data-aos="zoom-in" src={GiayTo} alt="Giấy phép kinh doanh" className="mx-auto rounded-2xl shadow-md max-w-lg w-full" loading="lazy" />
+                {/* Hồ sơ năng lực */}
+                <div data-aos="fade-up" className="mt-5 mb-10 w-full max-w-5xl mx-auto px-4">
+                  <div className="text-center mb-12">
+                    <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-900 uppercase tracking-tight mb-4">
+                      Hồ Sơ <span className="text-red-600">Năng Lực</span>
+                    </h1>
+                    <div className="w-16 h-1.5 bg-red-600 mx-auto rounded-full mb-6" />
+                    <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+                      Khám phá năng lực sản xuất, tiêu chuẩn chất lượng và những giá trị mà Thịnh Phong Đỗ đã xây dựng trong suốt quá trình phát triển.
+                    </p>
+                  </div>
+
+                  <div className="relative bg-white rounded-3xl p-6 lg:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 flex flex-col items-center">
+                    
+                    {/* Header Controls for inline viewer */}
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
+                          <FileText size={20} />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-800 text-sm sm:text-base line-clamp-1">Profile_ThinhPhongDo.pdf</h3>
+                          <p className="text-xs text-gray-500">Tài liệu giới thiệu năng lực công ty</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-3 w-full sm:w-auto shrink-0">
+                        <button
+                          onClick={() => setOpenPdf(true)}
+                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-lg"
+                        >
+                          <ExternalLink size={18} /> Phóng to
+                        </button>
+                        <a
+                          href="/Profile.pdf"
+                          download="Ho-so-nang-luc-Thinh-Phong-Do.pdf"
+                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-xl hover:bg-red-700 transition-all shadow-md hover:shadow-lg"
+                        >
+                          <Download size={18} /> Tải về
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* PDF Viewer */}
+                    <div className="w-full bg-gray-100 rounded-2xl p-4 lg:p-8 flex flex-col items-center border border-gray-200 shadow-inner">
+                      <Document
+                          file="/Profile.pdf"
+                          onLoadSuccess={onDocumentLoadSuccess}
+                          className="flex justify-center w-full"
+                          loading={
+                            <div className="py-20 flex flex-col items-center gap-4">
+                              <div className="w-10 h-10 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
+                              <p className="text-gray-500 font-medium">Đang tải hồ sơ năng lực...</p>
+                            </div>
+                          }
+                      >
+                          <Page 
+                              pageNumber={pageNumber} 
+                              renderTextLayer={false}
+                              renderAnnotationLayer={false}
+                              className="shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl max-w-full"
+                              width={Math.min(window.innerWidth * 0.8, 450)}
+                          />
+                      </Document>
+                      
+                      {numPages > 1 && (
+                        <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 bg-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md border border-gray-100">
+                          <button 
+                              onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
+                              disabled={pageNumber <= 1}
+                              className="p-1 sm:p-2 rounded-full hover:bg-gray-100 text-gray-700 disabled:opacity-30 transition-colors"
+                          >
+                              <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
+                          </button>
+                          <span className="text-sm font-bold text-gray-800 min-w-[80px] sm:min-w-[100px] text-center">
+                              Trang {pageNumber} / {numPages}
+                          </span>
+                          <button 
+                              onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
+                              disabled={pageNumber >= numPages}
+                              className="p-1 sm:p-2 rounded-full hover:bg-gray-100 text-gray-700 disabled:opacity-30 transition-colors"
+                          >
+                              <ChevronRight size={20} className="sm:w-6 sm:h-6" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-            <div data-aos="fade-up" className="flex flex-col gap-4 items-center mt-20">
-            <iframe
-                src="/Profile.pdf"
-                className="w-full h-[80vh]"
-                title="Profile"
-            />
-            </div>
             </section>
         <section data-aos="fade-up" className="bg-red-700 container text-center text-white">
         <div className="mx-auto px-6">
@@ -262,6 +352,73 @@ export default function Intro() {
                 </div>
         </div>
       </section>
+
+      {openPdf && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden shadow-2xl relative">
+            <div className="flex items-center justify-between px-5 py-4 border-b">
+              <h3 className="font-bold text-lg">Hồ Sơ Năng Lực</h3>
+              <button onClick={() => setOpenPdf(false)} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center">
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 bg-gray-100 overflow-y-auto flex flex-col items-center py-4">
+              <Document
+                  file="/Profile.pdf"
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  className="flex justify-center"
+                  loading={<div className="py-10">Đang tải tài liệu...</div>}
+              >
+                  <Page 
+                      pageNumber={pageNumber} 
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                      className="shadow-sm max-w-full"
+                      width={Math.min(window.innerWidth * 0.85, 400)}
+                  />
+              </Document>
+            </div>
+
+            <div className="border-t bg-white p-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
+              <div className="hidden sm:block"></div>
+              <div className="flex items-center justify-center gap-4">
+                {numPages > 1 && (
+                  <>
+                    <button 
+                        onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
+                        disabled={pageNumber <= 1}
+                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <span className="text-sm font-medium whitespace-nowrap">
+                        Trang {pageNumber} / {numPages}
+                    </span>
+                    <button 
+                        onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
+                        disabled={pageNumber >= numPages}
+                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                  </>
+                )}
+              </div>
+              
+              <div className="flex items-center justify-center sm:justify-end gap-3">
+                <button onClick={() => setOpenPdf(false)} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap">
+                  Đóng
+                </button>
+                <a href="/Profile.pdf" download="Ho-so-nang-luc-Thinh-Phong-Do.pdf" className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
+                  <Download size={16} />
+                  Tải xuống
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
             <Footer />
         </div>

@@ -18,7 +18,7 @@ export const documents = [
   {
     id: 3,
     name: "Kiểm nghiệm nước sạch",
-    pdf: "/KiểmNghiệmNước_2026.pdf",
+    pdf: "/kiemnghiem.pdf",
   },
   {
     id: 4,

@@ -1,7 +1,13 @@
 import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { ShieldCheck, Award, Clock,Download, BadgeCheck, FileText, Globe, Leaf, X,Eye } from 'lucide-react';
+import { ShieldCheck, Award, Clock,Download, BadgeCheck, FileText, Globe, Leaf, X,Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import bgCertificate from '../../assets/imgs/bgCertificate.webp';
@@ -15,6 +21,13 @@ export default function QualityPage() {
 
     const [open, setOpen] = useState(false);
     const [selectedPdf, setSelectedPdf] = useState("");
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+
+    function onDocumentLoadSuccess({ numPages }) {
+      setNumPages(numPages);
+      setPageNumber(1);
+    }
 
   return (
     <div>
@@ -230,6 +243,7 @@ export default function QualityPage() {
             shadow-md
             hover:border-gray-700 hover:bg-white/10 
             transition-all
+            text-center
             "
         >
             <Download size={18} />
@@ -261,11 +275,63 @@ export default function QualityPage() {
                 <X size={24} />
             </button>
 
-            <iframe
-                src={selectedPdf}
-                title="Certificate"
-                className="w-full h-full rounded-xl"
-            />
+            <div className="w-full h-full flex flex-col rounded-xl overflow-hidden bg-gray-100 pt-12">
+                <div className="flex-1 overflow-y-auto flex justify-center py-4">
+                  {selectedPdf && (
+                    <Document
+                        file={selectedPdf}
+                        onLoadSuccess={onDocumentLoadSuccess}
+                        className="flex justify-center"
+                        loading={<div className="flex items-center justify-center h-full">Đang tải tài liệu...</div>}
+                    >
+                        <Page 
+                            pageNumber={pageNumber} 
+                            renderTextLayer={false}
+                            renderAnnotationLayer={false}
+                            className="shadow-sm max-w-full"
+                            width={Math.min(window.innerWidth * 0.85, 450)}
+                        />
+                    </Document>
+                  )}
+                </div>
+                
+                <div className="border-t bg-white p-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
+                  <div className="hidden sm:block"></div>
+                  <div className="flex items-center justify-center gap-4">
+                    {numPages > 1 && (
+                      <>
+                        <button 
+                            onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
+                            disabled={pageNumber <= 1}
+                            className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                        <span className="text-sm font-medium whitespace-nowrap">
+                            Trang {pageNumber} / {numPages}
+                        </span>
+                        <button 
+                            onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
+                            disabled={pageNumber >= numPages}
+                            className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center justify-center sm:justify-end gap-3">
+                    <button onClick={() => setOpen(false)} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap">
+                      Đóng
+                    </button>
+                    <a href={selectedPdf} download className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
+                      <Download size={16} />
+                      Tải xuống
+                    </a>
+                  </div>
+                </div>
+            </div>
             </div>
         </div>
         )}
