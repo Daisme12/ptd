@@ -5,7 +5,7 @@ const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
   const baseUrl = import.meta.env.VITE_SITE_URL || "https://phong-thinh-do.vercel.app";
   const siteName = "Thịnh Phong Đỗ";
   const defaultTitle = `${siteName} | Dịch Vụ Suất Ăn Chuyên Nghiệp`;
-  const defaultDescription = "Công ty Cổ phần Thương mại và Dịch vụ Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học, và dịch vụ canteen uy tín, chất lượng với quy trình đạt chuẩn ISO 22000:2018.";
+  const defaultDescription = "Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học, và dịch vụ canteen uy tín, chất lượng với quy trình đạt chuẩn ISO 22000:2018.";
   const defaultKeywords = "suất ăn công nghiệp, suất ăn trường học, dịch vụ canteen, thực phẩm sạch, Thịnh Phong Đỗ, cung cấp suất ăn, chứng nhận ISO 22000:2018";
   
   // Đảm bảo ảnh luôn có URL tuyệt đối để Facebook/Zalo đọc được
