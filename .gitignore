@@ -1,0 +1,28 @@
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+**/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and Secrets (CRITICAL)
+.env
+.env.*
+**/.env
+**/.env.*
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# IDE / OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,11 +1,35 @@
-import Product from "../models/Product.js";
-import { uploadImageToCloudinary, uploadPdfToSupabase } from "../utils/uploadHelpers.js";
+import { db, admin } from "../config/firebase.js";
+import { uploadImageToCloudinary } from "../utils/uploadHelpers.js";
+import createSlug from "../utils/slugify.js";
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find()
-            .populate("category", "name slug imageUrl")
-            .lean();
+        const snapshot = await db.collection("products").get();
+        const products = [];
+        const categoryIds = [...new Set(snapshot.docs.map(doc => doc.data().category).filter(Boolean))];
+        const categoryMap = {};
+
+        if (categoryIds.length > 0) {
+            try {
+                const catSnapshot = await db.collection("categories")
+                    .where(admin.firestore.FieldPath.documentId(), 'in', categoryIds.slice(0, 30))
+                    .get();
+                catSnapshot.forEach(doc => {
+                    categoryMap[doc.id] = { _id: doc.id, ...doc.data() };
+                });
+            } catch (e) {
+                console.error("Lỗi populate category cho tất cả sản phẩm:", e);
+            }
+        }
+
+        snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            products.push({
+                _id: doc.id,
+                ...data,
+                category: categoryMap[data.category] || null
+            });
+        });
 
         res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=120");
         res.json(products);
@@ -16,15 +40,31 @@ const getAllProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id)
-            .populate("category")
-            .lean();
+        const doc = await db.collection("products").doc(req.params.id).get();
 
-        if (!product) {
+        if (!doc.exists) {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        res.json(product);
+        const data = doc.data();
+        let categoryData = null;
+
+        if (data.category) {
+            try {
+                const catDoc = await db.collection("categories").doc(data.category).get();
+                if (catDoc.exists) {
+                    categoryData = { _id: catDoc.id, ...catDoc.data() };
+                }
+            } catch (e) {
+                console.error("Lỗi populate category cho sản phẩm theo ID:", e);
+            }
+        }
+
+        res.json({
+            _id: doc.id,
+            ...data,
+            category: categoryData
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -32,49 +72,110 @@ const getProductById = async (req, res) => {
 
 const getProductBySlug = async (req, res) => {
     try {
-        const product = await Product.findOne({
-            slug: req.params.slug,
-            status: true,
-        }).populate("category").lean();
+        const snapshot = await db.collection("products")
+            .where("slug", "==", req.params.slug)
+            .where("status", "==", true)
+            .limit(1)
+            .get();
 
-        if (!product) {
+        if (snapshot.empty) {
             return res.status(404).json({
                 success: false,
                 message: "Không tìm thấy sản phẩm",
             });
         }
 
+        const doc = snapshot.docs[0];
+        const productData = doc.data();
+        let categoryData = null;
+
+        if (productData.category) {
+            try {
+                const catDoc = await db.collection("categories").doc(productData.category).get();
+                if (catDoc.exists) {
+                    categoryData = { _id: catDoc.id, ...catDoc.data() };
+                }
+            } catch (e) {
+                console.error("Lỗi populate category cho sản phẩm theo Slug:", e);
+            }
+        }
+
+        const product = {
+            _id: doc.id,
+            ...productData,
+            category: categoryData
+        };
+
         // Lấy sản phẩm cùng danh mục
-        let relatedProducts = await Product.find({
-            category: product.category._id,
-            _id: { $ne: product._id },
-            status: true,
-        })
-            .limit(4)
-            .populate("category", "name slug")
-            .lean();
+        let relatedProducts = [];
+        if (productData.category) {
+            try {
+                const relatedSnapshot = await db.collection("products")
+                    .where("category", "==", productData.category)
+                    .where("status", "==", true)
+                    .limit(5)
+                    .get();
+
+                relatedSnapshot.forEach(rDoc => {
+                    if (rDoc.id !== doc.id && relatedProducts.length < 4) {
+                        relatedProducts.push({
+                            _id: rDoc.id,
+                            ...rDoc.data()
+                        });
+                    }
+                });
+            } catch (e) {
+                console.error("Lỗi lấy sản phẩm liên quan cùng danh mục:", e);
+            }
+        }
 
         // Nếu không đủ 4 sản phẩm thì lấy thêm sản phẩm khác
         if (relatedProducts.length < 4) {
-            const additionalProducts = await Product.find({
-                _id: {
-                    $nin: [
-                        product._id,
-                        ...relatedProducts.map((item) => item._id),
-                    ],
-                },
-                status: true,
-            })
-                .sort({ createdAt: -1 })
-                .limit(4 - relatedProducts.length)
-                .populate("category", "name slug")
-                .lean();
+            try {
+                const excludeIds = [doc.id, ...relatedProducts.map((item) => item._id)];
+                const additionalSnapshot = await db.collection("products")
+                    .where("status", "==", true)
+                    .limit(10)
+                    .get();
 
-            relatedProducts = [
-                ...relatedProducts,
-                ...additionalProducts,
-            ];
+                additionalSnapshot.forEach(aDoc => {
+                    if (!excludeIds.includes(aDoc.id) && relatedProducts.length < 4) {
+                        relatedProducts.push({
+                            _id: aDoc.id,
+                            ...aDoc.data()
+                        });
+                    }
+                });
+            } catch (e) {
+                console.error("Lỗi lấy thêm sản phẩm liên quan bổ sung:", e);
+            }
         }
+
+        // Populate categories for related products
+        const relatedCatIds = [...new Set(relatedProducts.map(p => p.category).filter(Boolean))];
+        const relatedCatMap = {};
+
+        if (relatedCatIds.length > 0) {
+            try {
+                const rCatSnapshot = await db.collection("categories")
+                    .where(admin.firestore.FieldPath.documentId(), 'in', relatedCatIds.slice(0, 30))
+                    .get();
+                rCatSnapshot.forEach(cDoc => {
+                    relatedCatMap[cDoc.id] = { 
+                        _id: cDoc.id, 
+                        name: cDoc.data().name, 
+                        slug: cDoc.data().slug 
+                    };
+                });
+            } catch (e) {
+                console.error("Lỗi populate categories cho sản phẩm liên quan:", e);
+            }
+        }
+
+        relatedProducts = relatedProducts.map(p => ({
+            ...p,
+            category: relatedCatMap[p.category] || null
+        }));
 
         res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=120");
         res.status(200).json({
@@ -84,7 +185,6 @@ const getProductBySlug = async (req, res) => {
         });
     } catch (error) {
         console.error("Get product by slug error:", error);
-
         res.status(500).json({
             success: false,
             message: "Lỗi server",
@@ -94,39 +194,57 @@ const getProductBySlug = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        // Xử lý documents (PDF) từ upload
         const documents = [];
 
-        if (req.files?.declarationPdf?.[0]) {
-            const file = req.files.declarationPdf[0];
-            const publicUrl = await uploadPdfToSupabase(file.buffer, file.originalname);
+        if (req.body.declarationPdf && req.body.declarationPdf.trim() !== "") {
             documents.push({
                 title: "Bản công bố sản phẩm",
-                fileUrl: publicUrl
+                fileUrl: req.body.declarationPdf.trim()
             });
         }
 
-        if (req.files?.testResultPdf?.[0]) {
-            const file = req.files.testResultPdf[0];
-            const publicUrl = await uploadPdfToSupabase(file.buffer, file.originalname);
+        if (req.body.testResultPdf && req.body.testResultPdf.trim() !== "") {
             documents.push({
                 title: "Phiếu kết quả xét nghiệm",
-                fileUrl: publicUrl
+                fileUrl: req.body.testResultPdf.trim()
             });
         }
 
-        let imageUrl = req.body.imageUrl;
+        let imageUrl = req.body.imageUrl || "";
         if (req.files?.image?.[0]) {
             imageUrl = await uploadImageToCloudinary(req.files.image[0].buffer);
         }
 
-        const product = await Product.create({
+        const data = {
             ...req.body,
             imageUrl: imageUrl,
-            documents: documents.length > 0 ? documents : req.body.documents
-        });
+            documents: documents,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
-        res.status(201).json(product);
+        // Chuyển đổi status sang dạng Boolean nếu là string từ form-data
+        if (typeof data.status === 'string') {
+            data.status = data.status === 'true';
+        }
+
+        // Chuyển đổi price sang dạng Number nếu là string
+        if (data.price) {
+            data.price = Number(data.price);
+        }
+
+        // Tự động tạo slug nếu chưa có
+        if (!data.slug && data.name) {
+            data.slug = createSlug(data.name);
+        }
+
+        const docRef = await db.collection("products").add(data);
+        const newDoc = await docRef.get();
+
+        res.status(201).json({
+            _id: newDoc.id,
+            ...newDoc.data()
+        });
     } catch (error) {
         console.error("Lỗi createProduct:", error);
         res.status(500).json({
@@ -137,49 +255,66 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        const updateData = { ...req.body };
+        const data = { ...req.body };
 
         // Nếu có upload ảnh mới
         if (req.files?.image?.[0]) {
-            updateData.imageUrl = await uploadImageToCloudinary(req.files.image[0].buffer);
+            data.imageUrl = await uploadImageToCloudinary(req.files.image[0].buffer);
         }
 
-        // Nếu có upload PDF mới
-        const newDocs = [];
-        if (req.files?.declarationPdf?.[0]) {
-            const file = req.files.declarationPdf[0];
-            const publicUrl = await uploadPdfToSupabase(file.buffer, file.originalname);
-            newDocs.push({
+        // Xử lý documents từ req.body
+        const documents = [];
+        if (req.body.declarationPdf && req.body.declarationPdf.trim() !== "") {
+            documents.push({
                 title: "Bản công bố sản phẩm",
-                fileUrl: publicUrl
+                fileUrl: req.body.declarationPdf.trim()
             });
         }
-        if (req.files?.testResultPdf?.[0]) {
-            const file = req.files.testResultPdf[0];
-            const publicUrl = await uploadPdfToSupabase(file.buffer, file.originalname);
-            newDocs.push({
+
+        if (req.body.testResultPdf && req.body.testResultPdf.trim() !== "") {
+            documents.push({
                 title: "Phiếu kết quả xét nghiệm",
-                fileUrl: publicUrl
+                fileUrl: req.body.testResultPdf.trim()
             });
         }
-        if (newDocs.length > 0) {
-            updateData.documents = newDocs;
+
+        data.documents = documents;
+        data.updatedAt = new Date().toISOString();
+        delete data._id;
+
+        // Chuyển đổi status sang dạng Boolean nếu là string từ form-data
+        if (typeof data.status === 'string') {
+            data.status = data.status === 'true';
         }
 
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            updateData,
-            {
-                new: true,
-                runValidators: true
-            }
-        );
+        // Chuyển đổi price sang dạng Number nếu là string
+        if (data.price) {
+            data.price = Number(data.price);
+        }
 
-        if (!product) {
+        // Cập nhật slug nếu name đổi và không truyền slug
+        if (data.name && !data.slug) {
+            data.slug = createSlug(data.name);
+        }
+
+        // Clean các key trống để tránh undefined properties trong Firestore
+        delete data.declarationPdf;
+        delete data.testResultPdf;
+
+        const docRef = db.collection("products").doc(req.params.id);
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        res.json(product);
+        await docRef.update(data);
+        const updatedDoc = await docRef.get();
+
+        res.json({
+            _id: updatedDoc.id,
+            ...updatedDoc.data()
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -189,10 +324,14 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const product = await Product.findByIdAndDelete(req.params.id);
-        if (!product) {
+        const docRef = db.collection("products").doc(req.params.id);
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
             return res.status(404).json({ message: "Product not found" });
         }
+
+        await docRef.delete();
         res.json({ message: "Deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });

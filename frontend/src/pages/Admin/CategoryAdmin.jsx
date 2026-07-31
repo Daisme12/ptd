@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit2, Trash2, X, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../services/api';
 import SEO from "../../components/SEO";
+import { getCategories, createCategory, updateCategory, deleteCategory } from '../../services/categoryService';
+import { uploadFileToStorage } from '../../config/firebase';
 
 const CategoryAdmin = () => {
   const [categories, setCategories] = useState([]);
@@ -15,6 +16,7 @@ const CategoryAdmin = () => {
     _id: '',
     name: '',
     description: '',
+    imageUrlText: '',
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
@@ -25,8 +27,8 @@ const CategoryAdmin = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/categories');
-      setCategories(res.data);
+      const data = await getCategories();
+      setCategories(data);
     } catch (error) {
       console.error(error);
       toast.error('Lỗi khi tải danh sách danh mục');
@@ -56,7 +58,7 @@ const CategoryAdmin = () => {
 
   // Open modal for Add
   const handleAdd = () => {
-    setFormData({ _id: '', name: '', description: '' });
+    setFormData({ _id: '', name: '', description: '', imageUrlText: '' });
     setSelectedFile(null);
     setPreviewImage('');
     setIsModalOpen(true);
@@ -68,6 +70,7 @@ const CategoryAdmin = () => {
       _id: category._id,
       name: category.name,
       description: category.description || '',
+      imageUrlText: category.imageUrl || '',
     });
     setSelectedFile(null);
     setPreviewImage(category.imageUrl || '');
@@ -91,29 +94,59 @@ const CategoryAdmin = () => {
     try {
       setIsSubmitting(true);
       
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('description', formData.description);
+      // 1. Lấy hoặc upload hình ảnh
+      let imageUrl = formData.imageUrlText ? formData.imageUrlText.trim() : '';
       if (selectedFile) {
-        submitData.append('image', selectedFile);
+        try {
+          imageUrl = await uploadFileToStorage(selectedFile, "categories");
+        } catch (uploadError) {
+          console.error("Upload error:", uploadError);
+          toast.error("Không thể tải tệp lên. Đang sử dụng link ảnh trực tiếp.");
+        }
       }
+
+      if (!imageUrl && previewImage) {
+        imageUrl = previewImage;
+      }
+
+      if (!imageUrl) {
+        toast.error('Vui lòng chọn tệp ảnh hoặc nhập đường dẫn hình ảnh (URL)');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 2. Tạo slug ở frontend
+      const createSlug = (str) => {
+        if (!str) return '';
+        return str
+          .toLowerCase()
+          .trim()
+          .replace(/[áàảãạăắằẳẵặâấầẩẫậ]/g, 'a')
+          .replace(/[éèẻẽẹêếềểễệ]/g, 'e')
+          .replace(/[íìỉĩị]/g, 'i')
+          .replace(/[óòỏõọôốồổỗộơớờởỡợ]/g, 'o')
+          .replace(/[úùủũụưứừửữự]/g, 'u')
+          .replace(/[ýỳỷỹỵ]/g, 'y')
+          .replace(/đ/g, 'd')
+          .replace(/[^a-z0-9 -]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-');
+      };
+
+      const categoryPayload = {
+        name: formData.name,
+        description: formData.description || '',
+        imageUrl: imageUrl,
+        slug: createSlug(formData.name)
+      };
 
       if (formData._id) {
         // Cập nhật
-        await api.put(`/categories/${formData._id}`, submitData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await updateCategory(formData._id, categoryPayload);
         toast.success('Cập nhật danh mục thành công');
       } else {
         // Thêm mới
-        if (!selectedFile && !previewImage) {
-           toast.error('Vui lòng chọn ảnh cho danh mục');
-           setIsSubmitting(false);
-           return;
-        }
-        await api.post('/categories', submitData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await createCategory(categoryPayload);
         toast.success('Thêm danh mục thành công');
       }
 
@@ -121,7 +154,7 @@ const CategoryAdmin = () => {
       fetchCategories();
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
+      toast.error(error.message || 'Có lỗi xảy ra');
     } finally {
       setIsSubmitting(false);
     }
@@ -131,7 +164,7 @@ const CategoryAdmin = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa danh mục này? Các sản phẩm thuộc danh mục có thể bị ảnh hưởng.')) {
       try {
-        await api.delete(`/categories/${id}`);
+        await deleteCategory(id);
         toast.success('Xóa danh mục thành công');
         fetchCategories();
       } catch (error) {
@@ -280,7 +313,7 @@ const CategoryAdmin = () => {
                       <ImageIcon className="text-gray-400" size={24} />
                     )}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 space-y-2">
                     <input
                       type="file"
                       accept="image/*"
@@ -293,7 +326,20 @@ const CategoryAdmin = () => {
                         file:bg-red-50 file:text-red-700
                         hover:file:bg-red-100 cursor-pointer"
                     />
-                    <p className="text-xs text-gray-500 mt-2">Định dạng JPG, PNG, WEBP (Tối đa 5MB)</p>
+                    <div className="text-xs text-gray-400 font-bold text-center">HOẶC DÁN LINK ẢNH TRỰC TIẾP</div>
+                    <input
+                      type="text"
+                      name="imageUrlText"
+                      value={formData.imageUrlText || ''}
+                      onChange={(e) => {
+                        handleChange(e);
+                        if (e.target.value) {
+                          setPreviewImage(e.target.value);
+                        }
+                      }}
+                      placeholder="https://example.com/image.png"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-600 focus:border-red-600 transition-all outline-none text-xs bg-white"
+                    />
                   </div>
                 </div>
               </div>

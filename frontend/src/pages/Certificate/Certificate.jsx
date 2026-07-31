@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { ShieldCheck, Award, Clock, Download, BadgeCheck, FileText, Globe, Leaf, X, Eye, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Award, Clock, Download, BadgeCheck, FileText, Globe, Leaf, X, Eye, ChevronLeft, ChevronRight, ArrowRight, ExternalLink } from 'lucide-react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import SEO from "../../components/SEO";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+const isGoogleDriveLink = (url) => {
+  return url && (url.includes('drive.google.com') || url.includes('docs.google.com'));
+};
+
+const getGoogleDrivePreviewUrl = (url) => {
+  if (!url) return '';
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    const fileId = match[1];
+    return `https://drive.google.com/file/d/${fileId}/preview`;
+  }
+  return url;
+};
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -123,7 +137,14 @@ export default function QualityPage() {
                                     <p className="text-gray-500 leading-relaxed mb-4 text-sm">{desc}</p>
 
                                     <button
-                                        onClick={() => { setOpen(true); setSelectedPdf(pdf); }}
+                                        onClick={() => {
+                                            if (window.innerWidth < 1024) {
+                                                window.open(pdf, '_blank');
+                                            } else {
+                                                setSelectedPdf(pdf);
+                                                setOpen(true);
+                                            }
+                                        }}
                                         className="inline-flex items-center justify-center sm:justify-start gap-2 px-5 py-2.5 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition-all duration-300 group/btn w-full sm:w-auto"
                                     >
                                         <FileText size={16} />
@@ -209,10 +230,10 @@ export default function QualityPage() {
                                     </span>
                                 </div>
 
-                                <div className="flex gap-3 w-full sm:w-auto">
+                                <div className="hidden md:flex gap-3 w-full sm:w-auto">
                                     <button
                                         onClick={() => { setSelectedPdf(doc.pdf); setOpen(true); }}
-                                        className="flex-1 sm:flex-none px-6 py-3 bg-slate-100 hover:bg-slate-200 text-gray-700 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors"
+                                        className="flex-1 sm:flex-none px-6 py-3 bg-slate-100 hover:bg-slate-200 text-gray-700 rounded-xl font-bold items-center justify-center gap-2 transition-colors"
                                     >
                                         <Eye size={18} />
                                         <span>Xem</span>
@@ -226,6 +247,17 @@ export default function QualityPage() {
                                         <Download size={18} />
                                         <span>Tải về</span>
                                     </a>
+                                </div>
+
+                                {/* Nút to chạy dài ở dưới cho mobile */}
+                                <div className="w-full mt-4 block md:hidden">
+                                    <button
+                                        onClick={() => window.open(doc.pdf, '_blank')}
+                                        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+                                    >
+                                        <ExternalLink size={18} />
+                                        {isGoogleDriveLink(doc.pdf) ? "Mở xem trên Google Drive" : "Mở xem tài liệu"}
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -304,34 +336,46 @@ export default function QualityPage() {
                             </h3>
                             <button
                                 onClick={() => setOpen(false)}
-                                className="bg-gray-100 hover:bg-red-100 hover:text-red-600 text-gray-500 rounded-full p-2 transition-colors"
+                                onTouchEnd={(e) => { e.preventDefault(); setOpen(false); }}
+                                className="bg-gray-100 hover:bg-red-100 hover:text-red-600 text-gray-500 rounded-full p-2 transition-colors cursor-pointer"
                             >
                                 <X size={24} />
                             </button>
                         </div>
 
                         {/* Content Modal */}
-                        <div className="flex-1 overflow-y-auto bg-gray-50/50 flex justify-center py-8 px-4">
+                        <div className={`flex-1 bg-gray-50/50 flex justify-center py-8 px-4 w-full ${isGoogleDriveLink(selectedPdf) ? 'overflow-hidden items-center' : 'overflow-y-auto'}`}>
                             {selectedPdf && (
-                                <Document
-                                    file={selectedPdf}
-                                    onLoadSuccess={onDocumentLoadSuccess}
-                                    className="flex flex-col items-center gap-4"
-                                    loading={
-                                        <div className="flex items-center justify-center h-full gap-3 text-red-600 font-medium">
-                                            <div className="w-6 h-6 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                                            Đang tải tài liệu...
-                                        </div>
-                                    }
-                                >
-                                    <Page
-                                        pageNumber={pageNumber}
-                                        renderTextLayer={false}
-                                        renderAnnotationLayer={false}
-                                        className="shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-xl overflow-hidden bg-white max-w-full"
-                                        width={Math.min(window.innerWidth * 0.85, 800)}
-                                    />
-                                </Document>
+                                isGoogleDriveLink(selectedPdf) ? (
+                                    <div className="w-full max-w-4xl flex justify-center">
+                                        <iframe
+                                            src={getGoogleDrivePreviewUrl(selectedPdf)}
+                                            className="w-full h-[65vh] border-0 rounded-xl shadow-lg bg-white"
+                                            allow="autoplay"
+                                            title="Google Drive Document Viewer"
+                                        />
+                                    </div>
+                                ) : (
+                                    <Document
+                                        file={selectedPdf}
+                                        onLoadSuccess={onDocumentLoadSuccess}
+                                        className="flex flex-col items-center gap-4"
+                                        loading={
+                                            <div className="flex items-center justify-center h-full gap-3 text-red-600 font-medium">
+                                                <div className="w-6 h-6 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                                                Đang tải tài liệu...
+                                            </div>
+                                        }
+                                    >
+                                        <Page
+                                            pageNumber={pageNumber}
+                                            renderTextLayer={false}
+                                            renderAnnotationLayer={false}
+                                            className="shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-xl overflow-hidden bg-white max-w-full"
+                                            width={Math.min(window.innerWidth * 0.85, 800)}
+                                        />
+                                    </Document>
+                                )
                             )}
                         </div>
 
@@ -366,7 +410,11 @@ export default function QualityPage() {
                             </div>
 
                             <div className="w-full sm:w-1/3 flex items-center justify-center sm:justify-end gap-3">
-                                <button onClick={() => setOpen(false)} className="px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors w-full sm:w-auto">
+                                <button 
+                                    onClick={() => setOpen(false)} 
+                                    onTouchEnd={(e) => { e.preventDefault(); setOpen(false); }}
+                                    className="px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors w-full sm:w-auto cursor-pointer"
+                                >
                                     Đóng
                                 </button>
                                 <a href={selectedPdf} download className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-red-600/30 w-full sm:w-auto">

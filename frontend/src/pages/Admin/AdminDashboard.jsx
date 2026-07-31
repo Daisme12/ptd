@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Grid, TrendingUp, Eye } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../services/api';
 import SEO from "../../components/SEO";
+import { getProducts } from '../../services/productService';
+import { getCategories } from '../../services/categoryService';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -21,13 +22,10 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [resProducts, resCategories] = await Promise.all([
-        api.get('/products'),
-        api.get('/categories')
+      const [products, categories] = await Promise.all([
+        getProducts(),
+        getCategories()
       ]);
-
-      const products = resProducts.data;
-      const categories = resCategories.data;
 
       setStats({
         totalProducts: products.length,

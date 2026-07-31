@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -16,8 +16,23 @@ import bgContact from '../../assets/imgs/bgContact.webp';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { createContact } from "../../services/contactService";
+import { getProfileUrl } from "../../services/documentService";
+
+const isGoogleDriveLink = (url) => {
+  return url && (url.includes('drive.google.com') || url.includes('docs.google.com'));
+};
 
 const ContactPage = () => {
+  const [profileUrl, setProfileUrl] = useState("/Profile.pdf");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const url = await getProfileUrl();
+      setProfileUrl(url);
+    };
+    fetchProfile();
+  }, []);
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -266,15 +281,17 @@ const ContactPage = () => {
            <div className="flex flex-wrap justify-center gap-4">
 
           <a
-            href="tel:0385540512"
+            href="tel:0867099978"
             className="inline-block bg-white 
             text-red-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100"
           >
-            📞 038.554.0512
+            📞 086.709.9978
           </a>
           <a
-            href="/Profile.pdf"
-            download="Ho-so-nang-luc-Thinh-Phong-Do.pdf"
+            href={profileUrl}
+            target={isGoogleDriveLink(profileUrl) ? "_blank" : undefined}
+            rel={isGoogleDriveLink(profileUrl) ? "noopener noreferrer" : undefined}
+            download={!isGoogleDriveLink(profileUrl) ? "Ho-so-nang-luc-Thinh-Phong-Do.pdf" : undefined}
             className="
             inline-flex items-center gap-2
             px-6 py-3
@@ -287,7 +304,7 @@ const ContactPage = () => {
             "
         >
             <Download size={18} />
-            Tải hồ sơ năng lực
+            {isGoogleDriveLink(profileUrl) ? 'Xem hồ sơ năng lực' : 'Tải hồ sơ năng lực'}
         </a>
         </div>
         </div>

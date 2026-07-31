@@ -447,7 +447,7 @@ const HomePage = () => {
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-red-700 transition-colors">
                     <Phone size={20} className="shrink-0" />
                   </div>
-                  <span className="font-medium">038 554 0512</span>
+                  <a href="tel:0867099978" className="font-medium hover:underline">086.709.9978</a>
                 </div>
                 <div className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-red-700 transition-colors">

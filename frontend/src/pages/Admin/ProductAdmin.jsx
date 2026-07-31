@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit2, Trash2, X, Image as ImageIcon, FileText, CheckCircle2, XCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../../services/api';
 import SEO from "../../components/SEO";
+import { getProducts, createProduct, updateProduct, deleteProduct } from '../../services/productService';
+import { getCategories } from '../../services/categoryService';
+import { uploadFileToStorage } from '../../config/firebase';
 
 const ProductAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -19,28 +21,25 @@ const ProductAdmin = () => {
     price: '',
     description: '',
     status: true,
+    declarationPdf: '',
+    testResultPdf: '',
   });
   
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
   
-  const [selectedDeclarationPdf, setSelectedDeclarationPdf] = useState(null);
-  const [selectedTestResultPdf, setSelectedTestResultPdf] = useState(null);
-
   const imageInputRef = useRef(null);
-  const declarationInputRef = useRef(null);
-  const testResultInputRef = useRef(null);
 
   // Fetch data
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [resProducts, resCategories] = await Promise.all([
-        api.get('/products'),
-        api.get('/categories')
+      const [productsData, categoriesData] = await Promise.all([
+        getProducts(),
+        getCategories()
       ]);
-      setProducts(resProducts.data);
-      setCategories(resCategories.data);
+      setProducts(productsData);
+      setCategories(categoriesData);
     } catch (error) {
       console.error(error);
       toast.error('Lỗi khi tải dữ liệu');
@@ -71,18 +70,6 @@ const ProductAdmin = () => {
     }
   };
 
-  // Handle PDF select
-  const handlePdfChange = (e, type) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (type === 'declaration') {
-        setSelectedDeclarationPdf(file);
-      } else {
-        setSelectedTestResultPdf(file);
-      }
-    }
-  };
-
   // Open modal for Add
   const handleAdd = () => {
     setFormData({ 
@@ -91,17 +78,21 @@ const ProductAdmin = () => {
       category: categories.length > 0 ? categories[0]._id : '', 
       price: '', 
       description: '',
-      status: true
+      status: true,
+      declarationPdf: '',
+      testResultPdf: '',
+      imageUrlText: '',
     });
     setSelectedImage(null);
     setPreviewImage('');
-    setSelectedDeclarationPdf(null);
-    setSelectedTestResultPdf(null);
     setIsModalOpen(true);
   };
 
   // Open modal for Edit
   const handleEdit = (product) => {
+    const declarationDoc = product.documents?.find(d => d.title === "Bản công bố sản phẩm");
+    const testResultDoc = product.documents?.find(d => d.title === "Phiếu kết quả xét nghiệm");
+
     setFormData({
       _id: product._id,
       name: product.name,
@@ -109,11 +100,12 @@ const ProductAdmin = () => {
       price: product.price || '',
       description: product.description || '',
       status: product.status !== undefined ? product.status : true,
+      declarationPdf: declarationDoc ? declarationDoc.fileUrl : '',
+      testResultPdf: testResultDoc ? testResultDoc.fileUrl : '',
+      imageUrlText: product.imageUrl || '',
     });
     setSelectedImage(null);
     setPreviewImage(product.imageUrl || '');
-    setSelectedDeclarationPdf(null);
-    setSelectedTestResultPdf(null);
     setIsModalOpen(true);
   };
 
@@ -121,8 +113,6 @@ const ProductAdmin = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     if (imageInputRef.current) imageInputRef.current.value = '';
-    if (declarationInputRef.current) declarationInputRef.current.value = '';
-    if (testResultInputRef.current) testResultInputRef.current.value = '';
   };
 
   // Submit form
@@ -135,32 +125,78 @@ const ProductAdmin = () => {
 
     try {
       setIsSubmitting(true);
-      
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('category', formData.category);
-      submitData.append('description', formData.description || '');
-      if (formData.price) submitData.append('price', formData.price);
-      submitData.append('status', formData.status);
-      
-      if (selectedImage) submitData.append('image', selectedImage);
-      if (selectedDeclarationPdf) submitData.append('declarationPdf', selectedDeclarationPdf);
-      if (selectedTestResultPdf) submitData.append('testResultPdf', selectedTestResultPdf);
+
+      // 1. Lấy hoặc upload hình ảnh
+      let imageUrl = formData.imageUrlText ? formData.imageUrlText.trim() : '';
+
+      if (selectedImage) {
+        try {
+          imageUrl = await uploadFileToStorage(selectedImage, "products");
+        } catch (uploadError) {
+          console.error("Upload error:", uploadError);
+          toast.error("Không thể tải tệp lên. Đang sử dụng link ảnh trực tiếp.");
+        }
+      }
+
+      if (!imageUrl && previewImage) {
+        imageUrl = previewImage;
+      }
+
+      if (!imageUrl) {
+        toast.error('Vui lòng chọn tệp ảnh hoặc nhập đường dẫn hình ảnh (URL)');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 2. Chuẩn bị tài liệu PDF
+      const documents = [];
+      if (formData.declarationPdf && formData.declarationPdf.trim() !== "") {
+        documents.push({
+          title: "Bản công bố sản phẩm",
+          fileUrl: formData.declarationPdf.trim()
+        });
+      }
+      if (formData.testResultPdf && formData.testResultPdf.trim() !== "") {
+        documents.push({
+          title: "Phiếu kết quả xét nghiệm",
+          fileUrl: formData.testResultPdf.trim()
+        });
+      }
+
+      // 3. Tạo slug ở frontend
+      const createSlug = (str) => {
+        if (!str) return '';
+        return str
+          .toLowerCase()
+          .trim()
+          .replace(/[áàảãạăắằẳẵặâấầẩẫậ]/g, 'a')
+          .replace(/[éèẻẽẹêếềểễệ]/g, 'e')
+          .replace(/[íìỉĩị]/g, 'i')
+          .replace(/[óòỏõọôốồổỗộơớờởỡợ]/g, 'o')
+          .replace(/[úùủũụưứừửữự]/g, 'u')
+          .replace(/[ýỳỷỹỵ]/g, 'y')
+          .replace(/đ/g, 'd')
+          .replace(/[^a-z0-9 -]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-');
+      };
+
+      const productPayload = {
+        name: formData.name,
+        category: formData.category,
+        description: formData.description || '',
+        price: formData.price ? Number(formData.price) : 0,
+        status: formData.status,
+        imageUrl: imageUrl,
+        documents: documents,
+        slug: createSlug(formData.name)
+      };
 
       if (formData._id) {
-        await api.put(`/products/${formData._id}`, submitData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await updateProduct(formData._id, productPayload);
         toast.success('Cập nhật sản phẩm thành công');
       } else {
-        if (!selectedImage && !previewImage) {
-           toast.error('Vui lòng chọn ảnh sản phẩm');
-           setIsSubmitting(false);
-           return;
-        }
-        await api.post('/products', submitData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await createProduct(productPayload);
         toast.success('Thêm sản phẩm thành công');
       }
 
@@ -168,7 +204,7 @@ const ProductAdmin = () => {
       fetchData();
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
+      toast.error(error.message || 'Có lỗi xảy ra');
     } finally {
       setIsSubmitting(false);
     }
@@ -178,7 +214,7 @@ const ProductAdmin = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
       try {
-        await api.delete(`/products/${id}`);
+        await deleteProduct(id);
         toast.success('Xóa sản phẩm thành công');
         fetchData();
       } catch (error) {
@@ -408,7 +444,21 @@ const ProductAdmin = () => {
                             file:rounded-full file:border-0
                             file:text-sm file:font-semibold
                             file:bg-red-50 file:text-red-700
-                            hover:file:bg-red-100 cursor-pointer"
+                            hover:file:bg-red-100 cursor-pointer mb-3"
+                        />
+                        <div className="text-xs text-gray-400 font-bold mb-1 text-center">HOẶC DÁN LINK ẢNH TRỰC TIẾP</div>
+                        <input
+                          type="text"
+                          name="imageUrlText"
+                          value={formData.imageUrlText || ''}
+                          onChange={(e) => {
+                            handleChange(e);
+                            if (e.target.value) {
+                              setPreviewImage(e.target.value);
+                            }
+                          }}
+                          placeholder="https://example.com/image.png"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-600 focus:border-red-600 transition-all outline-none text-xs bg-white"
                         />
                       </div>
                     </div>
@@ -417,35 +467,35 @@ const ProductAdmin = () => {
                   {/* PDF Uploads */}
                   <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100 space-y-4">
                     <h4 className="text-sm font-bold text-yellow-800 flex items-center gap-2">
-                      <FileText size={16} /> Tài liệu pháp lý (PDF)
+                      <FileText size={16} /> Tài liệu pháp lý (Google Drive Link)
                     </h4>
                     
                     <div>
                       <label className="block text-xs font-medium text-gray-700 mb-1">Bản công bố sản phẩm</label>
                       <input
-                        type="file"
-                        accept="application/pdf"
-                        onChange={(e) => handlePdfChange(e, 'declaration')}
-                        ref={declarationInputRef}
-                        className="block w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-white file:text-gray-700 border border-gray-200 rounded p-1 bg-white cursor-pointer"
+                        type="url"
+                        name="declarationPdf"
+                        value={formData.declarationPdf}
+                        onChange={handleChange}
+                        placeholder="Nhập link Google Drive của bản công bố..."
+                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-xs bg-white"
                       />
-                      {selectedDeclarationPdf && <p className="text-[11px] text-green-600 mt-1">Đã chọn: {selectedDeclarationPdf.name}</p>}
                     </div>
 
                     <div>
                       <label className="block text-xs font-medium text-gray-700 mb-1">Phiếu kết quả xét nghiệm</label>
                       <input
-                        type="file"
-                        accept="application/pdf"
-                        onChange={(e) => handlePdfChange(e, 'testResult')}
-                        ref={testResultInputRef}
-                        className="block w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-white file:text-gray-700 border border-gray-200 rounded p-1 bg-white cursor-pointer"
+                        type="url"
+                        name="testResultPdf"
+                        value={formData.testResultPdf}
+                        onChange={handleChange}
+                        placeholder="Nhập link Google Drive của phiếu xét nghiệm..."
+                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-xs bg-white"
                       />
-                      {selectedTestResultPdf && <p className="text-[11px] text-green-600 mt-1">Đã chọn: {selectedTestResultPdf.name}</p>}
                     </div>
                     
                     <p className="text-[11px] text-yellow-700 leading-relaxed italic">
-                      Nếu để trống, file cũ trên hệ thống (nếu có) sẽ được giữ nguyên. Chỉ hỗ trợ file .pdf.
+                      Dán link tài liệu đã được chia sẻ ở chế độ "Bất kỳ ai có đường liên kết đều có thể xem" trên Google Drive.
                     </p>
                   </div>
                 </div>

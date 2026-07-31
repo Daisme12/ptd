@@ -1,26 +1,42 @@
-import api from "./api";
+import { db } from "../config/firebase";
+import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 
 export const getCategories = async () => {
-  const response = await api.get("/categories");
-  return response.data;
+  const q = query(collection(db, "categories"), orderBy("name", "asc"));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(docSnap => ({ _id: docSnap.id, ...docSnap.data() }));
 };
 
 export const getCategoryById = async (id) => {
-  const response = await api.get(`/categories/${id}`);
-  return response.data;
+  const docRef = doc(db, "categories", id);
+  const snap = await getDoc(docRef);
+  if (!snap.exists()) throw new Error("Category not found");
+  return { _id: snap.id, ...snap.data() };
 };
 
 export const createCategory = async (categoryData) => {
-  const response = await api.post("/categories", categoryData);
-  return response.data;
+  const data = {
+    ...categoryData,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  const docRef = await addDoc(collection(db, "categories"), data);
+  return { _id: docRef.id, ...data };
 };
 
 export const updateCategory = async (id, categoryData) => {
-  const response = await api.put(`/categories/${id}`, categoryData);
-  return response.data;
+  const docRef = doc(db, "categories", id);
+  const data = {
+    ...categoryData,
+    updatedAt: new Date().toISOString()
+  };
+  delete data._id;
+  await updateDoc(docRef, data);
+  return { _id: id, ...data };
 };
 
 export const deleteCategory = async (id) => {
-  const response = await api.delete(`/categories/${id}`);
-  return response.data;
+  const docRef = doc(db, "categories", id);
+  await deleteDoc(docRef);
+  return { message: "Delete category successfully" };
 };

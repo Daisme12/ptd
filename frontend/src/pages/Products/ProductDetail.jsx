@@ -1,4 +1,4 @@
-import { ShieldCheck, FileCheck, FileText, Download, LoaderCircle, Eye, FileQuestion, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ShieldCheck, FileCheck, FileText, Download, LoaderCircle, Eye, FileQuestion, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProductBySlug } from "../../services/productService";
@@ -11,6 +11,20 @@ import SEO from "../../components/SEO";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
+
+const isGoogleDriveLink = (url) => {
+  return url && (url.includes('drive.google.com') || url.includes('docs.google.com'));
+};
+
+const getGoogleDrivePreviewUrl = (url) => {
+  if (!url) return '';
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    const fileId = match[1];
+    return `https://drive.google.com/file/d/${fileId}/preview`;
+  }
+  return url;
+};
 
 const steps = [
   { num: '01', title: 'Tuyển Chọn Nguyên Liệu', desc: 'Gạo Nhật cao cấp và cá ngừ đại dương được kiểm định đầu vào khắt khe.', highlight: false },
@@ -238,16 +252,18 @@ export default function ProductDetail() {
                               </>
                             )}
                           </button>
-                          <button
-                            onClick={() => {
-                              setPreviewDoc(doc);
-                              setFullScreenDoc(doc);
-                            }}
-                            className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-medium px-4 py-2 rounded-lg transition-colors"
-                            title="Chuyển đến tài liệu này"
-                          >
-                            <Eye size={12} /> Xem nhanh
-                          </button>
+                           <button
+                             onClick={() => {
+                               setPreviewDoc(doc);
+                               if (window.innerWidth >= 1024) {
+                                 setFullScreenDoc(doc);
+                               }
+                             }}
+                             className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-medium px-4 py-2 rounded-lg transition-colors"
+                             title="Chuyển đến tài liệu này"
+                           >
+                             <Eye size={12} /> Xem nhanh
+                           </button>
                         </div>
                       ) : (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 inline-block">
@@ -268,7 +284,7 @@ export default function ProductDetail() {
                   <h3 className="font-semibold text-gray-800 text-sm lg:text-lg truncate">
                     Xem tài liệu: {previewDoc && previewDoc.fileUrl ? previewDoc.title : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')?.title}
                   </h3>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="hidden md:flex flex-wrap items-center gap-2">
                     <button
                       onClick={() => {
                         const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
@@ -311,9 +327,24 @@ export default function ProductDetail() {
 
                 {/* Iframe Container */}
                 <div className="bg-gray-50 p-4 lg:p-6 flex flex-col items-center">
-                  <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner flex flex-col items-center max-w-full">
+                  <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner flex flex-col items-center w-full max-w-4xl">
                     {(() => {
-                      const fileUrl = (previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '')).fileUrl;
+                      const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
+                      const fileUrl = currentDoc ? currentDoc.fileUrl : '';
+                      
+                      if (isGoogleDriveLink(fileUrl)) {
+                        return (
+                          <div className="w-full h-[650px] lg:h-[750px]">
+                            <iframe
+                              src={getGoogleDrivePreviewUrl(fileUrl)}
+                              className="w-full h-full border-0 rounded-lg pointer-events-none lg:pointer-events-auto"
+                              allow="autoplay"
+                              title="Google Drive Document Viewer"
+                            />
+                          </div>
+                        );
+                      }
+
                       return (
                         <Document
                           file={fileUrl}
@@ -353,6 +384,24 @@ export default function ProductDetail() {
                       </button>
                     </div>
                   )}
+                  
+                  {/* BIG MOBILE BUTTON UNDERNEATH */}
+                  {(() => {
+                    const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
+                    const fileUrl = currentDoc ? currentDoc.fileUrl : '';
+                    if (!fileUrl) return null;
+                    return (
+                      <div className="w-full mt-6 block md:hidden">
+                        <button
+                          onClick={() => window.open(fileUrl, '_blank')}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+                        >
+                          <ExternalLink size={18} />
+                          {isGoogleDriveLink(fileUrl) ? "Mở xem trên Google Drive" : "Mở xem tài liệu"}
+                        </button>
+                      </div>
+                    );
+                  })()}
                 </div>
 
 
@@ -461,26 +510,41 @@ export default function ProductDetail() {
           <div className="bg-white rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b">
               <h3 className="font-bold text-lg">{fullScreenDoc.title}</h3>
-              <button onClick={() => setFullScreenDoc(null)} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center">
+              <button 
+                onClick={() => setFullScreenDoc(null)} 
+                onTouchEnd={(e) => { e.preventDefault(); setFullScreenDoc(null); }}
+                className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center cursor-pointer"
+              >
                 ✕
               </button>
             </div>
 
-            <div className="flex-1 bg-gray-100 overflow-y-auto flex flex-col items-center py-4">
-              <Document
-                  file={fullScreenDoc.fileUrl}
-                  onLoadSuccess={onDocumentLoadSuccess}
-                  className="flex justify-center"
-                  loading={<div className="py-10">Đang tải tài liệu...</div>}
-              >
-                  <Page 
-                      pageNumber={pageNumber} 
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                      className="shadow-sm max-w-full"
-                      width={Math.min(window.innerWidth * 0.85, 450)}
+            <div className={`flex-1 bg-gray-100 flex flex-col items-center justify-center py-4 ${isGoogleDriveLink(fullScreenDoc.fileUrl) ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+              {isGoogleDriveLink(fullScreenDoc.fileUrl) ? (
+                <div className="w-full max-w-5xl px-4 flex justify-center">
+                  <iframe
+                    src={getGoogleDrivePreviewUrl(fullScreenDoc.fileUrl)}
+                    className="w-full h-[70vh] border-0 rounded-xl shadow-lg bg-white"
+                    allow="autoplay"
+                    title="Google Drive Fullscreen Viewer"
                   />
-              </Document>
+                </div>
+              ) : (
+                <Document
+                    file={fullScreenDoc.fileUrl}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    className="flex justify-center"
+                    loading={<div className="py-10">Đang tải tài liệu...</div>}
+                >
+                    <Page 
+                        pageNumber={pageNumber} 
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                        className="shadow-sm max-w-full"
+                        width={Math.min(window.innerWidth * 0.85, 450)}
+                    />
+                </Document>
+              )}
               
             </div>
 
@@ -511,7 +575,11 @@ export default function ProductDetail() {
               </div>
               
               <div className="flex items-center justify-center sm:justify-end gap-3">
-                <button onClick={() => setFullScreenDoc(null)} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap">
+                <button 
+                  onClick={() => setFullScreenDoc(null)} 
+                  onTouchEnd={(e) => { e.preventDefault(); setFullScreenDoc(null); }}
+                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap cursor-pointer"
+                >
                   Đóng
                 </button>
                 <button onClick={() => handleDownload(fullScreenDoc.fileUrl, `${fullScreenDoc.title}.pdf`)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">

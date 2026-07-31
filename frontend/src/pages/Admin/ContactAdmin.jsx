@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Trash2, Users, Search, RefreshCw, Mail, Phone, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import SEO from "../../components/SEO";
-import api from "../../services/api";
+import { getContacts, deleteContact } from "../../services/contactService";
 
 const ContactAdmin = () => {
     const [contacts, setContacts] = useState([]);
@@ -12,8 +12,8 @@ const ContactAdmin = () => {
     const fetchContacts = async () => {
         try {
             setLoading(true);
-            const response = await api.get("/contacts");
-            setContacts(response.data);
+            const data = await getContacts();
+            setContacts(data);
         } catch (error) {
             toast.error("Lỗi khi tải danh sách liên hệ");
             console.error(error);
@@ -29,7 +29,7 @@ const ContactAdmin = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Bạn có chắc chắn muốn xóa liên hệ này?")) return;
         try {
-            await api.delete(`/contacts/${id}`);
+            await deleteContact(id);
             toast.success("Đã xóa liên hệ");
             fetchContacts();
         } catch (error) {

@@ -1,13 +1,14 @@
-import Category from "../models/Category.js";
+import { db } from "../config/firebase.js";
 import { uploadImageToCloudinary } from "../utils/uploadHelpers.js";
 
 // GET ALL
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await Category
-            .find()
-            .sort({ name: 1 })
-            .lean();
+        const snapshot = await db.collection("categories").orderBy("name", "asc").get();
+        const categories = snapshot.docs.map(doc => ({
+            _id: doc.id,
+            ...doc.data()
+        }));
 
         res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=300");
         res.status(200).json(categories);
@@ -21,15 +22,18 @@ const getAllCategories = async (req, res) => {
 // GET BY ID
 const getCategoryById = async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id).lean();
+        const doc = await db.collection("categories").doc(req.params.id).get();
 
-        if (!category) {
+        if (!doc.exists) {
             return res.status(404).json({
                 message: "Category not found"
             });
         }
 
-        res.status(200).json(category);
+        res.status(200).json({
+            _id: doc.id,
+            ...doc.data()
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -46,12 +50,20 @@ const createCategory = async (req, res) => {
             imageUrl = await uploadImageToCloudinary(req.file.buffer, 'ptd_project/categories');
         }
 
-        const category = await Category.create({
+        const data = {
             ...req.body,
-            imageUrl
-        });
+            imageUrl,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
-        res.status(201).json(category);
+        const docRef = await db.collection("categories").add(data);
+        const newDoc = await docRef.get();
+
+        res.status(201).json({
+            _id: newDoc.id,
+            ...newDoc.data()
+        });
     } catch (error) {
         res.status(400).json({
             message: error.message
@@ -62,28 +74,33 @@ const createCategory = async (req, res) => {
 // UPDATE
 const updateCategory = async (req, res) => {
     try {
-        const updateData = { ...req.body };
+        const updateData = { 
+            ...req.body,
+            updatedAt: new Date().toISOString()
+        };
 
         if (req.file) {
             updateData.imageUrl = await uploadImageToCloudinary(req.file.buffer, 'ptd_project/categories');
         }
 
-        const category = await Category.findByIdAndUpdate(
-            req.params.id,
-            updateData,
-            {
-                new: true,
-                runValidators: true
-            }
-        );
+        // Xóa trường _id khỏi dữ liệu update để tránh lưu _id vào trong document data
+        delete updateData._id;
 
-        if (!category) {
+        const docRef = db.collection("categories").doc(req.params.id);
+        const doc = await docRef.get();
+        if (!doc.exists) {
             return res.status(404).json({
                 message: "Category not found"
             });
         }
 
-        res.status(200).json(category);
+        await docRef.update(updateData);
+        const updatedDoc = await docRef.get();
+
+        res.status(200).json({
+            _id: updatedDoc.id,
+            ...updatedDoc.data()
+        });
     } catch (error) {
         res.status(400).json({
             message: error.message
@@ -94,15 +111,16 @@ const updateCategory = async (req, res) => {
 // DELETE
 const deleteCategory = async (req, res) => {
     try {
-        const category = await Category.findByIdAndDelete(
-            req.params.id
-        );
+        const docRef = db.collection("categories").doc(req.params.id);
+        const doc = await docRef.get();
 
-        if (!category) {
+        if (!doc.exists) {
             return res.status(404).json({
                 message: "Category not found"
             });
         }
+
+        await docRef.delete();
 
         res.status(200).json({
             message: "Delete category successfully"

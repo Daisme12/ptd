@@ -1,15 +1,19 @@
-import Contact from "../models/Contact.js";
+import { db } from "../config/firebase.js";
 
-const getAllContacts = async (req,res)=>{
+const getAllContacts = async (req, res) => {
     try {
-        const contacts = await Contact.find().sort({ createdAt: -1 }).lean();
+        const snapshot = await db.collection("contacts").orderBy("createdAt", "desc").get();
+        const contacts = snapshot.docs.map(doc => ({
+            _id: doc.id,
+            ...doc.data()
+        }));
         res.json(contacts);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const createContact = async (req,res)=>{
+const createContact = async (req, res) => {
     try {
         const {
             fullName,
@@ -25,18 +29,26 @@ const createContact = async (req,res)=>{
             content
         } = req.body;
 
-        const contact = await Contact.create({
-            fullName: fullName || name,
-            phone,
-            email,
-            service,
+        const data = {
+            fullName: fullName || name || "",
+            phone: phone || "",
+            email: email || "",
+            service: service || "",
             requestType: requestType || "partner_consultation",
-            source,
-            status,
-            message: message || note || content
-        });
+            source: source || "",
+            status: status || "new",
+            message: message || note || content || "",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
-        res.status(201).json(contact);
+        const docRef = await db.collection("contacts").add(data);
+        const newDoc = await docRef.get();
+
+        res.status(201).json({
+            _id: newDoc.id,
+            ...newDoc.data()
+        });
     } catch (error) {
         res.status(400).json({
             message: error.message
@@ -44,16 +56,20 @@ const createContact = async (req,res)=>{
     }
 };
 
-const deleteContact = async (req,res)=>{
+const deleteContact = async (req, res) => {
     try {
-        const contact = await Contact.findByIdAndDelete(req.params.id);
-        if (!contact) {
+        const docRef = db.collection("contacts").doc(req.params.id);
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
             return res.status(404).json({ message: "Contact not found" });
         }
-        res.json({ message:"Deleted successfully" });
+
+        await docRef.delete();
+        res.json({ message: "Deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-export {getAllContacts, createContact, deleteContact};
+export { getAllContacts, createContact, deleteContact };

@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
-  const baseUrl = import.meta.env.VITE_SITE_URL || "https://phong-thinh-do.vercel.app";
+  const baseUrl = import.meta.env.VITE_SITE_URL || "https://thinhphongdo-vn.web.app";
   const siteName = "Thịnh Phong Đỗ";
   const defaultTitle = `${siteName} | Dịch Vụ Suất Ăn Chuyên Nghiệp`;
   const defaultDescription = "Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học, và dịch vụ canteen uy tín, chất lượng với quy trình đạt chuẩn ISO 22000:2018.";

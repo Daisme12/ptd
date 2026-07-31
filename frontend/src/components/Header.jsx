@@ -93,13 +93,12 @@ const Header = ({ solid = false }) => {
     <div
     ref={menuRef}
     className={`
-      fixed top-0 left-0 w-full z-50
-      transition-all duration-300
+      fixed top-0 left-0 w-full z-50 group
+      transition-all duration-300 hover:bg-white
       ${showHeader ? "translate-y-0" : "-translate-y-full"}
       ${headerClasses}
     `}>
-      <div className="container-app group hover:bg-white 
-      lg:transition-colors duration-100">
+      <div className="container-app lg:transition-colors duration-100">
         <div className="flex items-center justify-between w-full">
           <div>
             <Link to="/">
@@ -118,7 +117,7 @@ const Header = ({ solid = false }) => {
 
               ${menuOpen ? "flex" : "hidden"}
               lg:flex
-              flex-col gap-4 p-4 lg:p-0
+              flex-col gap-0 p-5 lg:p-0
               bg-white lg:bg-transparent
 
               ${
@@ -130,33 +129,53 @@ const Header = ({ solid = false }) => {
           >
             <Link
               to="/"
-              className={`hover:text-primary hover:underline 
+              onClick={() => setMenuOpen(false)}
+              className={`hover:text-primary hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all
                 ${isActive("/")
                   ? "font-bold text-primary "
-                  : "font-medium"
+                  : "font-medium text-gray-800 lg:text-inherit"
                 }`}
             >
               Trang Chủ
             </Link>
 
             <div
-              className="dropdown-wrapper"
-              onMouseEnter={() => setDropdownOpen(true)}
-              onMouseLeave={() => setDropdownOpen(false)}
+              className="dropdown-wrapper w-full lg:w-auto"
+              onMouseEnter={() => window.innerWidth >= 1024 && setDropdownOpen(true)}
+              onMouseLeave={() => window.innerWidth >= 1024 && setDropdownOpen(false)}
             >
               <Link
                 to="/products"
-                className={`flex items-center gap-1 hover:text-primary hover:underline ${isActive("/products")
+                onClick={(e) => {
+                  if (window.innerWidth < 1024) {
+                    e.preventDefault();
+                    setDropdownOpen(!dropdownOpen);
+                  } else {
+                    setDropdownOpen(false);
+                  }
+                }}
+                className={`flex items-center justify-between lg:justify-start gap-1 hover:text-primary hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all ${isActive("/products")
                     ? "font-bold text-primary"
-                    : "font-medium"
+                    : "font-medium text-gray-800 lg:text-inherit"
                   }`}
               >
-                Sản Phẩm
-                <ChevronDown size={16} />
+                <span>Sản Phẩm</span>
+                <ChevronDown size={16} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
               </Link>
 
               {dropdownOpen && (
                 <div className="dropdown-menu">
+                  {/* Option for all products on mobile */}
+                  <Link
+                    to="/products"
+                    className="dropdown-item lg:hidden hover:bg-red-100 text-gray-700 font-semibold"
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    Tất cả sản phẩm
+                  </Link>
                   {categories.map((item) => (
                     <Link
                       key={item._id}
@@ -166,9 +185,12 @@ const Header = ({ solid = false }) => {
                         selectedCategory === item.slug
                           ? "bg-red-300 text-white"
                           : "hover:bg-red-100 text-gray-700" 
-                      }`
-                      }                    
-                      >
+                      }`}
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        setMenuOpen(false);
+                      }}
+                    >
                       {item.name}
                     </Link>
                   ))}
@@ -178,10 +200,11 @@ const Header = ({ solid = false }) => {
 
             <Link
               to="/certificate"
-              className={`hover:text-primary hover:underline 
+              onClick={() => setMenuOpen(false)}
+              className={`hover:text-primary hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all
                 ${isActive("/certificate")
                   ? "font-bold text-primary"
-                  : "font-medium"
+                  : "font-medium text-gray-800 lg:text-inherit"
                 }`}
             >
               Chứng chỉ
@@ -189,23 +212,23 @@ const Header = ({ solid = false }) => {
 
             <Link
               to="/about"
-              className={`hover:text-primary hover:underline 
+              onClick={() => setMenuOpen(false)}
+              className={`hover:text-primary hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all
                 ${isActive("/about")
                   ? "font-bold text-primary"
-                  : "font-medium"
+                  : "font-medium text-gray-800 lg:text-inherit"
                 }`}
             >
               Về Chúng Tôi
             </Link>
 
-
-
             <Link
               to="/contact"
-              className={`hover:text-primary  hover:underline 
+              onClick={() => setMenuOpen(false)}
+              className={`hover:text-primary hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all
                 ${isActive("/contact")
                   ? "font-bold text-primary"
-                  : "font-medium"
+                  : "font-medium text-gray-800 lg:text-inherit"
                 }`}
             >
               Liên Hệ

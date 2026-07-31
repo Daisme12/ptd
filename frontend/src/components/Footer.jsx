@@ -42,7 +42,7 @@ export default function Footer() {
                 <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-red-600/20 group-hover:text-red-500 transition-colors">
                   <Phone size={14} />
                 </div>
-                <p className="group-hover:text-gray-200 transition-colors"><strong className="text-white">SĐT:</strong> <a href="tel:0385540512" className="hover:text-red-400 transition-colors">038.554.0512</a></p>
+                <p className="group-hover:text-gray-200 transition-colors"><strong className="text-white">SĐT:</strong> <a href="tel:0867099978" className="hover:text-red-400 transition-colors">086.709.9978</a></p>
               </div>
 
               <div className="flex items-center gap-3 group cursor-default">
