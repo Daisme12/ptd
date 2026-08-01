@@ -304,14 +304,14 @@ export default function QualityPage() {
                         <a
                             href="/Profile.pdf"
                             download="Ho-so-nang-luc-Thinh-Phong-Do.pdf"
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 border-2 border-white text-white font-bold rounded-xl hover:bg-white/10 transition-all duration-300"
+                            className="w-[240px] inline-flex items-center justify-center gap-2 px-6 py-3.5 border-2 border-white text-white font-bold rounded-xl hover:bg-white/10 transition-all duration-300"
                         >
                             <Download size={18} />
                             Tải hồ sơ năng lực
                         </a>
                         <a
                             href="tel:0385540512"
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-red-700 font-bold px-8 py-3.5 rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg"
+                            className="w-[240px] inline-flex items-center justify-center gap-2 bg-white text-red-700 font-bold px-8 py-3.5 rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg"
                         >
                             📞 038.554.0512
                         </a>

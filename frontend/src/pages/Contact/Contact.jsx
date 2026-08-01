@@ -278,12 +278,12 @@ const ContactPage = () => {
             nghiệp, trường học hoặc chuỗi bán lẻ.
           </p>
 
-           <div className="flex flex-wrap justify-center gap-4">
+           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
 
           <a
             href="tel:0867099978"
-            className="inline-block bg-white 
-            text-red-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100"
+            className="w-[240px] inline-flex items-center justify-center gap-2 bg-white 
+            text-red-700 font-bold px-6 py-3 rounded-xl hover:bg-gray-50 transition-all shadow-md"
           >
             📞 086.709.9978
           </a>
@@ -293,10 +293,10 @@ const ContactPage = () => {
             rel={isGoogleDriveLink(profileUrl) ? "noopener noreferrer" : undefined}
             download={!isGoogleDriveLink(profileUrl) ? "Ho-so-nang-luc-Thinh-Phong-Do.pdf" : undefined}
             className="
-            inline-flex items-center gap-2
+            w-[240px] inline-flex items-center justify-center gap-2
             px-6 py-3
             bg-red-600 text-white
-            font-medium
+            font-bold
             rounded-xl
             shadow-md
             hover:bg-red-700
