@@ -207,7 +207,7 @@ export default function Intro() {
                 </div>
 
                 {/* Sứ mệnh */}
-                <div className="py-15 border-t border-gray-100">
+                <div className="py-16 lg:py-24 border-t border-gray-100">
                     <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-4">Sứ Mệnh</h1>
                     <p data-aos="fade-up" className="text-gray-600 mb-10 max-w-2xl">
                         Thịnh Phong Đỗ ra đời với sứ mệnh mang đến những sản phẩm chất lượng cao với giá thành hợp lý,
@@ -229,7 +229,7 @@ export default function Intro() {
                 </div>
 
                 {/* Video */}
-                <div className="py-15 border-t border-gray-100 text-center">
+                <div className="py-16 lg:py-24 border-t border-gray-100 text-center">
                     <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-8">Hành Trình Đến Tới Ước Mơ</h1>
                     <video data-aos="fade-up" ref={videoRef} autoPlay controls muted playsInline loop className="w-full rounded-2xl shadow-md">
                         <source src={video_intro} type="video/mp4" />
@@ -362,7 +362,7 @@ export default function Intro() {
                 </div>
             </section>
         <section data-aos="fade-up" className="bg-red-700 w-full text-center text-white">
-        <div className="container-app py-15 ">
+        <div className="container-app py-16 lg:py-24 ">
           <h2 className="text-4xl font-bold mb-4">
            Tin Tưởng Vào Sự Chuyên Nghiệp Của Chúng Tôi
           </h2>
