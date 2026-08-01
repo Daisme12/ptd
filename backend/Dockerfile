@@ -1,5 +1,5 @@
-# Sử dụng NodeJS phiên bản LTS nhẹ
-FROM node:20-alpine
+# Sử dụng NodeJS phiên bản LTS nhẹ (Node 24)
+FROM node:24-alpine
 
 # Thiết lập thư mục làm việc trong container
 WORKDIR /app

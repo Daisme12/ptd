@@ -1,5 +1,5 @@
 # Stage 1: Build ứng dụng React với Node
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -9,7 +9,12 @@ RUN npm ci
 
 COPY . .
 
+# Khai báo các đối số Build-time cho Vite
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN npm run build
+
 
 # Stage 2: Serve với Nginx
 FROM nginx:alpine
