@@ -130,7 +130,7 @@ const ContactPage = () => {
                     <FaPhoneAlt className="text-red-600 mt-1" />
                     <div>
                       <h4 className="font-semibold">Điện thoại</h4>
-                      <p className="text-gray-600">035.854.5062</p>
+                      <p className="text-gray-600">086.709.9978</p>
                     </div>
                   </div>
 

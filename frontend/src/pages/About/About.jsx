@@ -361,8 +361,8 @@ export default function Intro() {
                   </div>
                 </div>
             </section>
-        <section data-aos="fade-up" className="bg-red-700 container-app  text-center text-white">
-        <div className="mx-auto px-6 py-15 ">
+        <section data-aos="fade-up" className="bg-red-700 w-full text-center text-white">
+        <div className="container-app py-15 ">
           <h2 className="text-4xl font-bold mb-4">
            Tin Tưởng Vào Sự Chuyên Nghiệp Của Chúng Tôi
           </h2>
@@ -378,8 +378,8 @@ export default function Intro() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="
-                    inline-flex items-center gap-2
-                    px-6 py-3
+                    inline-flex items-center justify-center gap-2
+                    w-[220px] px-6 py-3
                     bg-white text-red-600
                     border border-red-600
                     font-medium
@@ -397,8 +397,8 @@ export default function Intro() {
                     href="/Profile.pdf"
                     download="Ho-so-nang-luc-Thinh-Phong-Do.pdf"
                     className="
-                    inline-flex items-center gap-2
-                    px-6 py-3
+                    inline-flex items-center justify-center gap-2
+                    w-[220px] px-6 py-3
                     text-white
                     font-medium
                     rounded-xl
