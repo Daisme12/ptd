@@ -28,26 +28,11 @@ jobs:
       - name: Deploy to Firebase Hosting
         env:
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account.json
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > service-account.json
-          node -e "
-            const fs = require('fs');
-            try {
-              const content = fs.readFileSync('service-account.json', 'utf8').trim();
-              console.log('File length:', content.length);
-              if (content.length === 0) {
-                console.log('WARNING: The secret is completely EMPTY!');
-              } else {
-                const data = JSON.parse(content);
-                console.log('Keys in JSON:', Object.keys(data));
-                console.log('Project ID in JSON:', data.project_id);
-              }
-            } catch (e) {
-              console.error('Failed to parse JSON:', e.message);
-            }
-          "
-          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/service-account.json
           npx -y firebase-tools@latest deploy --only hosting --project thinhphongdo-58625 --non-interactive
+
 
 
 
