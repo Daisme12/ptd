@@ -26,8 +26,11 @@ jobs:
           npm run build
 
       - name: Deploy to Firebase Hosting
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > service-account.json
-          export GOOGLE_APPLICATION_CREDENTIALS=service-account.json
+          echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/service-account.json
           npx -y firebase-tools@latest deploy --only hosting --project thinhphongdo-58625 --non-interactive
+
 
