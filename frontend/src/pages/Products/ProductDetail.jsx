@@ -180,7 +180,7 @@ export default function ProductDetail() {
         <Header solid />
       </div>
       {/* Hero */}
-      <div className="container-app mt-25">
+      <div className="container-app mt-[100px] lg:mt-[130px]">
         <div className="flex flex-col lg:flex-row gap-10 items-center">
           <div data-aos="fade-right" className="flex-1">
             <span className="inline-block bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
