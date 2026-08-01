@@ -32,3 +32,5 @@ coverage
 # Firebase Service Account Credentials Key
 serviceAccountKey.json
 
+# Backups
+backups/

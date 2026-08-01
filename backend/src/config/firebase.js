@@ -11,6 +11,9 @@ try {
   
   if (fs.existsSync(keyPath)) {
     const serviceAccount = JSON.parse(fs.readFileSync(keyPath, "utf8"));
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+    }
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       storageBucket: `${serviceAccount.project_id}.appspot.com`
@@ -20,6 +23,9 @@ try {
   // 2. Kiểm tra chuỗi JSON từ biến môi trường (Rất hữu ích khi deploy lên Koyeb/Render để bảo mật)
   else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+    }
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       storageBucket: `${serviceAccount.project_id}.appspot.com`
