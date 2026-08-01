@@ -35,11 +35,21 @@ jobs:
             const fs = require("fs");
             const data = JSON.parse(fs.readFileSync("service-account.json", "utf8"));
             if (data.private_key) {
-              data.private_key = data.private_key.replace(/\\n/g, "\n");
+              console.log("Key type:", typeof data.private_key);
+              console.log("Key length:", data.private_key.length);
+              const lines = data.private_key.split("\n");
+              console.log("Number of lines:", lines.length);
+              console.log("First line:", lines[0]);
+              console.log("Last line:", lines[lines.length - 1] || lines[lines.length - 2]);
+              console.log("Contains \\r:", data.private_key.includes("\r"));
+              console.log("Contains literal \\\\n:", data.private_key.includes("\\n"));
+              console.log("Raw char codes of first 30 chars:", Array.from(data.private_key.substring(0, 30)).map(c => c.charCodeAt(0)));
+            } else {
+              console.log("ERROR: private_key is missing in JSON!");
             }
-            fs.writeFileSync("service-account.json", JSON.stringify(data, null, 2));
           '
           npx -y firebase-tools@latest deploy --only hosting --project thinhphongdo-58625 --non-interactive --debug
+
 
 
 
