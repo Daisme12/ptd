@@ -31,7 +31,16 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account.json
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > service-account.json
+          node -e '
+            const fs = require("fs");
+            const data = JSON.parse(fs.readFileSync("service-account.json", "utf8"));
+            if (data.private_key) {
+              data.private_key = data.private_key.replace(/\\n/g, "\n");
+            }
+            fs.writeFileSync("service-account.json", JSON.stringify(data, null, 2));
+          '
           npx -y firebase-tools@latest deploy --only hosting --project thinhphongdo-58625 --non-interactive --debug
+
 
 
 
