@@ -262,32 +262,31 @@ const ProductAdmin = () => {
     <div className="bg-white rounded-lg shadow-sm border border-gray-100">
       <SEO title="Quản Lý Sản Phẩm" noindex={true} />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-b border-gray-100 gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-gray-800">Quản lý Sản phẩm</h2>
-          <p className="text-sm text-gray-500 mt-1">Thêm, sửa, xóa danh sách sản phẩm</p>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          {/* Search bar */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full sm:w-64 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all"
-            />
-            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+      <div className="p-6 border-b border-gray-100 flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Quản lý Sản phẩm</h2>
+            <p className="text-sm text-gray-500 mt-1">Thêm, sửa, xóa danh sách sản phẩm</p>
           </div>
-
           <button
             onClick={handleAdd}
-            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer"
+            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer shrink-0"
           >
             <Plus size={20} />
             <span>Thêm sản phẩm</span>
           </button>
+        </div>
+        
+        {/* Search bar (Full-width row) */}
+        <div className="relative w-full">
+          <input
+            type="text"
+            placeholder="Tìm kiếm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-4 py-2.5 w-full bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all shadow-inner"
+          />
+          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
       </div>
 
