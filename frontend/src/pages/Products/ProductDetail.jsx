@@ -560,24 +560,33 @@ export default function ProductDetail() {
               </button>
             </div>
 
-            <div className="flex-1 bg-gray-100 flex flex-col items-center justify-center py-6 gap-6 overflow-y-auto">
-              <Document
-                  file={getPdfFileUrl(fullScreenDoc.fileUrl)}
-                  onLoadSuccess={onDocumentLoadSuccess}
-                  className="flex flex-col items-center gap-6 w-full"
-                  loading={<div className="py-10">Đang tải tài liệu...</div>}
-              >
-                  {Array.from(new Array(numPages || 0), (el, index) => (
-                    <Page 
-                        key={`modal_page_${index + 1}`}
-                        pageNumber={index + 1} 
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                        className="shadow-md rounded-lg max-w-full bg-white"
-                        width={Math.min(window.innerWidth * 0.85, 650)}
-                    />
-                  ))}
-              </Document>
+            <div className="flex-1 bg-gray-100 flex flex-col items-center justify-center py-6 gap-6 overflow-y-auto w-full">
+              {isGoogleDriveLink(fullScreenDoc.fileUrl) ? (
+                <iframe
+                  src={getGoogleDrivePreviewUrl(fullScreenDoc.fileUrl)}
+                  className="w-full h-full border-0"
+                  title={fullScreenDoc.title}
+                  allow="autoplay"
+                />
+              ) : (
+                <Document
+                    file={getPdfFileUrl(fullScreenDoc.fileUrl)}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    className="flex flex-col items-center gap-6 w-full"
+                    loading={<div className="py-10">Đang tải tài liệu...</div>}
+                >
+                    {Array.from(new Array(numPages || 0), (el, index) => (
+                      <Page 
+                          key={`modal_page_${index + 1}`}
+                          pageNumber={index + 1} 
+                          renderTextLayer={false}
+                          renderAnnotationLayer={false}
+                          className="shadow-md rounded-lg max-w-full bg-white"
+                          width={Math.min(window.innerWidth * 0.85, 650)}
+                      />
+                    ))}
+                </Document>
+              )}
             </div>
 
             <div className="border-t bg-white p-4 flex items-center justify-end gap-3">
