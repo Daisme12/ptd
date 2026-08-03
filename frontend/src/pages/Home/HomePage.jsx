@@ -172,10 +172,12 @@ const HomePage = () => {
           <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300" className="mb-10">
             <button
               onClick={() => navigate("/contact")}
-              className="relative overflow-hidden group inline-flex items-center justify-center gap-3 px-8 py-4 lg:px-10 lg:py-5 bg-red-600 text-white font-bold text-sm lg:text-lg rounded-full hover:bg-red-700 transition-all duration-300 hover:shadow-[0_0_40px_rgba(220,38,38,0.4)] hover:-translate-y-1"
+              className="relative overflow-hidden group inline-flex items-center justify-center gap-3 px-8 py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white font-bold text-sm lg:text-lg rounded-full transition-all duration-300 shadow-md hover:scale-[1.03] active:scale-[0.97] animate-glow-red cursor-pointer"
             >
-              <span className="uppercase tracking-wider">Nhận tư vấn & báo giá</span>
-              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              {/* Ray of light sweep effect (loops automatically every 3 seconds) */}
+              <span className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/25 to-transparent animate-shine-loop" />
+              <span className="relative z-10 uppercase tracking-wider">Nhận tư vấn & báo giá</span>
+              <svg className="w-5 h-5 relative z-10 transition-transform group-hover:translate-x-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
           </div>
 
@@ -275,9 +277,11 @@ const HomePage = () => {
             </p>
 
             <Link to="/about" className="inline-block">
-              <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-[length:200%_auto] bg-gradient-to-r from-black via-gray-950 to-red-700 hover:bg-right text-white font-bold rounded-xl transition-all duration-500 shadow-md hover:shadow-[0_8px_25px_rgba(220,38,38,0.35)] hover:scale-[1.03] active:scale-[0.97] cursor-pointer">
-                <span>Tìm hiểu thêm về Thịnh Phong Đỗ</span>
-                <ChevronRight size={20} className="transition-transform group-hover:translate-x-1.5" />
+              <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-slate-950 via-red-900 to-red-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:scale-[1.03] active:scale-[0.97] animate-glow-red cursor-pointer">
+                {/* Ray of light sweep effect (loops automatically every 4 seconds) */}
+                <span className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine-loop" />
+                <span className="relative z-10">Tìm hiểu thêm về Thịnh Phong Đỗ</span>
+                <ChevronRight size={20} className="relative z-10 transition-transform group-hover:translate-x-1.5" />
               </button>
             </Link>
           </div>
