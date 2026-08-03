@@ -172,7 +172,7 @@ const HomePage = () => {
           <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300" className="mb-10">
             <button
               onClick={() => navigate("/contact")}
-              className="relative overflow-hidden group inline-flex items-center justify-center gap-3 px-8 py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white font-bold text-sm lg:text-lg rounded-full transition-all duration-300 shadow-md hover:scale-[1.03] active:scale-[0.97] animate-glow-red cursor-pointer"
+              className="relative overflow-hidden group inline-flex items-center justify-center gap-3 px-8 py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white font-bold text-sm lg:text-lg rounded-full transition-all duration-300 shadow-[0_4px_15px_rgba(220,38,38,0.25)] hover:shadow-[0_8px_30px_rgba(220,38,38,0.45)] hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
             >
               {/* Ray of light sweep effect (loops automatically every 3 seconds) */}
               <span className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/25 to-transparent animate-shine-loop" />
@@ -277,7 +277,7 @@ const HomePage = () => {
             </p>
 
             <Link to="/about" className="inline-block">
-              <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-slate-950 via-red-900 to-red-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:scale-[1.03] active:scale-[0.97] animate-glow-red cursor-pointer">
+              <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-slate-950 via-red-900 to-red-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 shadow-[0_4px_15px_rgba(220,38,38,0.2)] hover:shadow-[0_8px_30px_rgba(220,38,38,0.4)] hover:scale-[1.03] active:scale-[0.97] cursor-pointer">
                 {/* Ray of light sweep effect (loops automatically every 4 seconds) */}
                 <span className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine-loop" />
                 <span className="relative z-10">Tìm hiểu thêm về Thịnh Phong Đỗ</span>
