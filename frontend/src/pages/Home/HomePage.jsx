@@ -275,9 +275,9 @@ const HomePage = () => {
             </p>
 
             <Link to="/about" className="inline-block">
-              <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-xl overflow-hidden transition-all hover:shadow-xl hover:bg-red-600">
+              <button className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-[length:200%_auto] bg-gradient-to-r from-black via-gray-950 to-red-700 hover:bg-right text-white font-bold rounded-xl transition-all duration-500 shadow-md hover:shadow-[0_8px_25px_rgba(220,38,38,0.35)] hover:scale-[1.03] active:scale-[0.97] cursor-pointer">
                 <span>Tìm hiểu thêm về Thịnh Phong Đỗ</span>
-                <ChevronRight size={20} className="transition-transform group-hover:translate-x-1" />
+                <ChevronRight size={20} className="transition-transform group-hover:translate-x-1.5" />
               </button>
             </Link>
           </div>
