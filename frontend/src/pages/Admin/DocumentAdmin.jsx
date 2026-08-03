@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, X, FileText, Settings, Link as LinkIcon, Save } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, FileText, Settings, Link as LinkIcon, Save, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import SEO from "../../components/SEO";
 import { 
@@ -20,6 +20,12 @@ const DocumentAdmin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredCertificates = certificates.filter(cert => 
+    cert.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (cert.pdf && cert.pdf.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   // Form states
   const [formData, setFormData] = useState({
@@ -225,24 +231,43 @@ const DocumentAdmin = () => {
 
       {/* 2. Certificates List CRUD */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-4 border-b border-gray-100 gap-4">
           <div className="flex items-center gap-3">
             <FileText className="text-red-600" size={20} />
             <h2 className="text-lg font-bold text-gray-800">Danh sách Chứng chỉ & Giấy tờ (Kho lưu trữ)</h2>
           </div>
-          <button
-            onClick={handleAdd}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm"
-          >
-            <Plus size={16} />
-            <span>Thêm tài liệu</span>
-          </button>
+          
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Search bar */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Tìm kiếm tài liệu..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full sm:w-60 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all"
+              />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            </div>
+
+            <button
+              onClick={handleAdd}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg text-sm transition-colors shadow-sm cursor-pointer"
+            >
+              <Plus size={16} />
+              <span>Thêm tài liệu</span>
+            </button>
+          </div>
         </div>
 
         {loading ? (
           <div className="py-8 text-center text-gray-500">Đang tải danh sách tài liệu...</div>
-        ) : certificates.length === 0 ? (
-          <div className="py-8 text-center text-gray-500">Chưa có tài liệu nào trong kho. Nhấn "Thêm tài liệu" để bắt đầu.</div>
+        ) : filteredCertificates.length === 0 ? (
+          <div className="py-8 text-center text-gray-500">
+            {certificates.length === 0 
+              ? 'Chưa có tài liệu nào trong kho. Nhấn "Thêm tài liệu" để bắt đầu.' 
+              : 'Không tìm thấy tài liệu phù hợp.'}
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -255,7 +280,7 @@ const DocumentAdmin = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
-                {certificates.map((cert) => (
+                {filteredCertificates.map((cert) => (
                   <tr key={cert.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 w-20">{cert.order}</td>
                     <td className="px-6 py-4 font-bold text-gray-800">{cert.name}</td>

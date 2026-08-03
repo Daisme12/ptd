@@ -12,6 +12,7 @@ const ProductAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   
   // Form state
   const [formData, setFormData] = useState({
@@ -34,6 +35,11 @@ const ProductAdmin = () => {
   
   const imageInputRef = useRef(null);
   const qrImageInputRef = useRef(null);
+
+  const filteredProducts = products.filter(product => 
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (product.category && product.category.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   // Fetch data
   const fetchData = async () => {
@@ -256,18 +262,33 @@ const ProductAdmin = () => {
     <div className="bg-white rounded-lg shadow-sm border border-gray-100">
       <SEO title="Quản Lý Sản Phẩm" noindex={true} />
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-b border-gray-100 gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-800">Quản lý Sản phẩm</h2>
           <p className="text-sm text-gray-500 mt-1">Thêm, sửa, xóa danh sách sản phẩm</p>
         </div>
-        <button
-          onClick={handleAdd}
-          className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
-        >
-          <Plus size={20} />
-          <span>Thêm sản phẩm</span>
-        </button>
+        
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Search bar */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2 w-full sm:w-64 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all"
+            />
+            <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          </div>
+
+          <button
+            onClick={handleAdd}
+            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer"
+          >
+            <Plus size={20} />
+            <span>Thêm sản phẩm</span>
+          </button>
+        </div>
       </div>
 
       {/* Table */}
@@ -290,14 +311,14 @@ const ProductAdmin = () => {
                   Đang tải dữ liệu...
                 </td>
               </tr>
-            ) : products.length === 0 ? (
+            ) : filteredProducts.length === 0 ? (
               <tr>
                 <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
-                  Chưa có sản phẩm nào.
+                  {products.length === 0 ? 'Chưa có sản phẩm nào.' : 'Không tìm thấy sản phẩm phù hợp.'}
                 </td>
               </tr>
             ) : (
-              products.map((product) => (
+              filteredProducts.map((product) => (
                 <tr key={product._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white">
