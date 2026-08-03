@@ -390,8 +390,20 @@ export default function ProductDetail() {
                     {(() => {
                       const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
                       const fileUrl = currentDoc ? currentDoc.fileUrl : '';
-                      const proxiedUrl = getPdfFileUrl(fileUrl);
                       
+                      if (isGoogleDriveLink(fileUrl)) {
+                        const previewUrl = getGoogleDrivePreviewUrl(fileUrl);
+                        return (
+                          <iframe
+                            src={previewUrl}
+                            className="w-full h-[550px] border-0 rounded-lg shadow-inner"
+                            title={currentDoc ? currentDoc.title : 'PDF Preview'}
+                            allow="autoplay"
+                          />
+                        );
+                      }
+                      
+                      const proxiedUrl = getPdfFileUrl(fileUrl);
                       return (
                         <Document
                           file={proxiedUrl}

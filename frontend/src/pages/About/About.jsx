@@ -346,28 +346,37 @@ export default function Intro() {
 
                     {/* PDF Viewer */}
                     <div className="w-full bg-gray-100 rounded-2xl p-4 lg:p-8 flex flex-col items-center border border-gray-200 shadow-inner max-h-[650px] overflow-y-auto">
-                      <Document
-                          file={getPdfFileUrl(profileUrl)}
-                          onLoadSuccess={onDocumentLoadSuccess}
-                          className="flex flex-col items-center gap-6 w-full"
-                          loading={
-                            <div className="py-20 flex flex-col items-center gap-4">
-                              <div className="w-10 h-10 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
-                              <p className="text-gray-500 font-medium">Đang tải hồ sơ năng lực...</p>
-                            </div>
-                          }
-                      >
-                          {Array.from(new Array(numPages || 0), (el, index) => (
-                            <Page 
-                                key={`page_${index + 1}`}
-                                pageNumber={index + 1} 
-                                renderTextLayer={false}
-                                renderAnnotationLayer={false}
-                                className="shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl max-w-full bg-white"
-                                width={Math.min(window.innerWidth * 0.8, 550)}
-                            />
-                          ))}
-                      </Document>
+                      {isGoogleDriveLink(profileUrl) ? (
+                        <iframe
+                          src={getGoogleDrivePreviewUrl(profileUrl)}
+                          className="w-full h-[550px] border-0 rounded-lg shadow-inner bg-white"
+                          title="Hồ Sơ Năng Lực"
+                          allow="autoplay"
+                        />
+                      ) : (
+                        <Document
+                            file={getPdfFileUrl(profileUrl)}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                            className="flex flex-col items-center gap-6 w-full"
+                            loading={
+                              <div className="py-20 flex flex-col items-center gap-4">
+                                <div className="w-10 h-10 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
+                                <p className="text-gray-500 font-medium">Đang tải hồ sơ năng lực...</p>
+                              </div>
+                            }
+                        >
+                            {Array.from(new Array(numPages || 0), (el, index) => (
+                              <Page 
+                                  key={`page_${index + 1}`}
+                                  pageNumber={index + 1} 
+                                  renderTextLayer={false}
+                                  renderAnnotationLayer={false}
+                                  className="shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl max-w-full bg-white"
+                                  width={Math.min(window.innerWidth * 0.8, 550)}
+                              />
+                            ))}
+                        </Document>
+                      )}
                     </div>
                       
                     {/* BIG MOBILE BUTTON UNDERNEATH */}
