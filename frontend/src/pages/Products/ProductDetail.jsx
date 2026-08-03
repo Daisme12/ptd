@@ -40,7 +40,7 @@ const getPdfFileUrl = (url) => {
   if (!url) return '';
   if (isGoogleDriveLink(url)) {
     const directLink = getGoogleDriveDirectLink(url);
-    const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+    const backendBaseUrl = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:5001/api" : "/api");
     return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
   }
   return url;
