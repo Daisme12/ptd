@@ -23,12 +23,17 @@ const ProductAdmin = () => {
     status: true,
     declarationPdf: '',
     testResultPdf: '',
+    qrImageUrlText: '',
+    qrLink: '',
   });
   
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
+  const [selectedQrImage, setSelectedQrImage] = useState(null);
+  const [previewQrImage, setPreviewQrImage] = useState('');
   
   const imageInputRef = useRef(null);
+  const qrImageInputRef = useRef(null);
 
   // Fetch data
   const fetchData = async () => {
@@ -82,9 +87,13 @@ const ProductAdmin = () => {
       declarationPdf: '',
       testResultPdf: '',
       imageUrlText: '',
+      qrImageUrlText: '',
+      qrLink: '',
     });
     setSelectedImage(null);
     setPreviewImage('');
+    setSelectedQrImage(null);
+    setPreviewQrImage('');
     setIsModalOpen(true);
   };
 
@@ -103,9 +112,13 @@ const ProductAdmin = () => {
       declarationPdf: declarationDoc ? declarationDoc.fileUrl : '',
       testResultPdf: testResultDoc ? testResultDoc.fileUrl : '',
       imageUrlText: product.imageUrl || '',
+      qrImageUrlText: product.qrImageUrl || '',
+      qrLink: product.qrLink || '',
     });
     setSelectedImage(null);
     setPreviewImage(product.imageUrl || '');
+    setSelectedQrImage(null);
+    setPreviewQrImage(product.qrImageUrl || '');
     setIsModalOpen(true);
   };
 
@@ -113,6 +126,7 @@ const ProductAdmin = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     if (imageInputRef.current) imageInputRef.current.value = '';
+    if (qrImageInputRef.current) qrImageInputRef.current.value = '';
   };
 
   // Submit form
@@ -146,6 +160,18 @@ const ProductAdmin = () => {
         toast.error('Vui lòng chọn tệp ảnh hoặc nhập đường dẫn hình ảnh (URL)');
         setIsSubmitting(false);
         return;
+      }
+
+      // 1b. Lấy hoặc upload mã QR Code (nếu có)
+      let qrImageUrl = formData.qrImageUrlText ? formData.qrImageUrlText.trim() : '';
+
+      if (selectedQrImage) {
+        try {
+          qrImageUrl = await uploadFileToStorage(selectedQrImage, "products");
+        } catch (uploadError) {
+          console.error("QR Code Upload error:", uploadError);
+          toast.error("Không thể tải ảnh QR Code lên.");
+        }
       }
 
       // 2. Chuẩn bị tài liệu PDF
@@ -188,6 +214,8 @@ const ProductAdmin = () => {
         price: formData.price ? Number(formData.price) : 0,
         status: formData.status,
         imageUrl: imageUrl,
+        qrImageUrl: qrImageUrl,
+        qrLink: formData.qrLink ? formData.qrLink.trim() : '',
         documents: documents,
         slug: createSlug(formData.name)
       };
@@ -459,6 +487,85 @@ const ProductAdmin = () => {
                           }}
                           placeholder="https://example.com/image.png"
                           className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-600 focus:border-red-600 transition-all outline-none text-xs bg-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* QR Code Section */}
+                  <div className="bg-purple-50/50 p-4 rounded-xl border border-purple-100 space-y-4">
+                    <h4 className="text-sm font-bold text-purple-800 flex items-center gap-2">
+                      <ImageIcon size={16} /> Mã QR & Liên Kết (Không bắt buộc)
+                    </h4>
+                    <div className="flex flex-col gap-4">
+                      {previewQrImage ? (
+                        <div className="w-full h-32 rounded-lg overflow-hidden border border-purple-200 relative bg-white flex items-center justify-center bg-white">
+                          <img loading="lazy" src={previewQrImage} alt="QR Preview" className="h-full object-contain" />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewQrImage('');
+                              setSelectedQrImage(null);
+                              setFormData(prev => ({ ...prev, qrImageUrlText: '' }));
+                              if (qrImageInputRef.current) qrImageInputRef.current.value = '';
+                            }}
+                            className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="w-full h-24 rounded-lg border-2 border-dashed border-purple-200 flex items-center justify-center bg-white text-gray-400">
+                          <ImageIcon size={24} />
+                          <span className="text-xs ml-2">Chưa có mã QR</span>
+                        </div>
+                      )}
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              setSelectedQrImage(file);
+                              setPreviewQrImage(URL.createObjectURL(file));
+                            }
+                          }}
+                          ref={qrImageInputRef}
+                          className="block w-full text-xs text-gray-500
+                            file:mr-4 file:py-1.5 file:px-3
+                            file:rounded-full file:border-0
+                            file:text-xs file:font-semibold
+                            file:bg-purple-50 file:text-purple-700
+                            hover:file:bg-purple-100 cursor-pointer mb-2"
+                        />
+                        <div className="text-[10px] text-purple-600 font-bold mb-1 text-center">HOẶC DÁN LINK ẢNH QR TRỰC TIẾP</div>
+                        <input
+                          type="text"
+                          name="qrImageUrlText"
+                          value={formData.qrImageUrlText || ''}
+                          onChange={(e) => {
+                            handleChange(e);
+                            if (e.target.value) {
+                              setPreviewQrImage(e.target.value);
+                            } else {
+                              setPreviewQrImage('');
+                            }
+                          }}
+                          placeholder="https://example.com/qr-image.png"
+                          className="w-full px-3 py-2 rounded-lg border border-purple-200 focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-all outline-none text-xs bg-white"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Đường dẫn liên kết (Link trang đích)</label>
+                        <input
+                          type="url"
+                          name="qrLink"
+                          value={formData.qrLink || ''}
+                          onChange={handleChange}
+                          placeholder="https://example.com/target-page"
+                          className="w-full px-3 py-2 rounded-lg border border-purple-200 focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-xs bg-white"
                         />
                       </div>
                     </div>

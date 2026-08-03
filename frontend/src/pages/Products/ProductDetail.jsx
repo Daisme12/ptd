@@ -190,9 +190,43 @@ export default function ProductDetail() {
             <p className="text-gray-500 leading-relaxed mb-4">{productNow?.description}</p>
 
             {/* Trạng thái */}
-            <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${productNow?.status ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
-              {productNow?.status ? 'Đang kinh doanh' : 'Ngừng kinh doanh'}
-            </span>
+            <div>
+              <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${productNow?.status ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
+                {productNow?.status ? 'Đang kinh doanh' : 'Ngừng kinh doanh'}
+              </span>
+            </div>
+
+            {/* QR Code and Navigation Button */}
+            {(productNow?.qrImageUrl || productNow?.qrLink) && (
+              <div className="mt-8 p-5 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col sm:flex-row items-center gap-6 max-w-lg shadow-sm">
+                {productNow?.qrImageUrl && (
+                  <div className="w-36 h-36 sm:w-44 sm:h-44 shrink-0 bg-white p-2 rounded-2xl border border-gray-200 flex items-center justify-center shadow-inner">
+                    <img 
+                      src={productNow.qrImageUrl} 
+                      alt="Mã QR" 
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 text-center sm:text-left space-y-4">
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-base">Thông tin mở rộng</h4>
+                    <p className="text-sm text-gray-500 mt-1 leading-relaxed">Quét mã QR hoặc click nút bên dưới để chuyển đến trang liên kết.</p>
+                  </div>
+                  {productNow?.qrLink && (
+                    <a
+                      href={productNow.qrLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95"
+                    >
+                      <ExternalLink size={16} />
+                      Xem liên kết
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <div data-aos="fade-left" className="flex-1 flex justify-center">

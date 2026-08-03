@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import SEO from "../../components/SEO";
@@ -12,6 +13,7 @@ import chatRieng from '../../assets/imgs/chatRieng.webp';
 import ly from '../../assets/imgs/ly.webp';
 import GiayTo from '../../assets/imgs/GiayKinhDoanh.webp';
 import profilePdf from "/Profile.pdf";
+import qrCodeImg from '../../assets/imgs/QR.png';
 
 import { Download, ExternalLink, ChevronLeft, ChevronRight, FileText, Eye } from "lucide-react";
 import { Document, Page, pdfjs } from 'react-pdf';
@@ -88,25 +90,58 @@ export default function Intro() {
                 </div>
             </div>
 
-            <section className="container">
-                <div data-aos="fade-left" className="text-left">
-                    <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-6">
-                        Giới thiệu
-                    </h1>
+            <section className="container py-12 lg:py-16">
+                <div className="flex flex-col lg:flex-row gap-12 items-center justify-between">
+                    {/* Cột trái: Text & Nút chuyển trang */}
+                    <div data-aos="fade-right" className="flex-1 text-left space-y-6">
+                        <h2 className="text-3xl font-bold text-red-600 uppercase">
+                            Giới thiệu
+                        </h2>
 
-                    <p className="text-gray-600 leading-relaxed text-xl mb-4">
-                        <strong>Công ty Thịnh Phong Đỗ</strong> là đơn vị sản xuất, sơ chế và chế biến sản phẩm thực phẩm,
-                        cam kết mang đến những sản phẩm <strong>chất lượng cao, an toàn và bền vững.</strong> Với phương châm
-                        <strong> "3 Chất" – Chất Lượng, Chất Riêng và Chất Sống,</strong> chúng tôi không chỉ đảm bảo chất lượng
-                        vượt trội mà còn tạo nên dấu ấn khác biệt, nâng tầm trải nghiệm và giá trị sống cho khách hàng.
-                    </p>
+                        <p className="text-gray-600 leading-relaxed text-lg">
+                            <strong>Công ty Thịnh Phong Đỗ</strong> là đơn vị sản xuất, sơ chế và chế biến sản phẩm thực phẩm,
+                            cam kết mang đến những sản phẩm <strong>chất lượng cao, an toàn và bền vững.</strong> Với phương châm
+                            <strong> "3 Chất" – Chất Lượng, Chất Riêng và Chất Sống,</strong> chúng tôi không chỉ đảm bảo chất lượng
+                            vượt trội mà còn tạo nên dấu ấn khác biệt, nâng tầm trải nghiệm và giá trị sống cho khách hàng.
+                        </p>
 
-                    <p className="text-gray-600 leading-relaxed text-xl">
-                        Đầu tư vào <strong>công nghệ hiện đại, quy trình khép kín và nguyên liệu chọn lọc,</strong> Thịnh Phong Đỗ
-                        luôn đặt <strong>uy tín và sự hài lòng của khách hàng</strong> làm trọng tâm, đồng thời khẳng định trách
-                        nhiệm đối với cộng đồng và môi trường.
-                    </p>
+                        <p className="text-gray-600 leading-relaxed text-lg">
+                            Đầu tư vào <strong>công nghệ hiện đại, quy trình khép kín và nguyên liệu chọn lọc,</strong> Thịnh Phong Đỗ
+                            luôn đặt <strong>uy tín và sự hài lòng của khách hàng</strong> làm trọng tâm, đồng thời khẳng định trách
+                            nhiệm đối với cộng đồng và môi trường.
+                        </p>
+
+                        <div className="pt-4">
+                            <a 
+                                href="https://check.hanoi.gov.vn/chi-tiet-doanh-nghiep/4453" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 text-xs uppercase tracking-wider"
+                            >
+                                <ExternalLink size={16} />
+                                Kiểm chứng doanh nghiệp
+                            </a>
+                        </div>
                     </div>
+
+                    {/* Cột phải: Mã QR Code */}
+                    <div data-aos="fade-left" className="w-full lg:w-auto flex justify-center shrink-0">
+                        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center gap-4 max-w-[280px]">
+                            <div className="w-48 h-48 bg-slate-50 p-2.5 rounded-2xl border border-gray-100 flex items-center justify-center shadow-inner">
+                                <img 
+                                    src={qrCodeImg} 
+                                    alt="Mã QR" 
+                                    className="w-full h-full object-contain"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div className="text-center">
+                                <p className="font-bold text-gray-800 text-sm">Quét mã nhanh</p>
+                                <p className="text-[11px] text-gray-400 mt-0.5">Truy cập website trên thiết bị di động</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div className="mt-10">
 

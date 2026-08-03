@@ -53,6 +53,14 @@ const productSchema = new mongoose.Schema(
     status: {
         type: Boolean,
         default: true
+    },
+
+    qrImageUrl: {
+        type: String
+    },
+
+    qrLink: {
+        type: String
     }
 },
 {

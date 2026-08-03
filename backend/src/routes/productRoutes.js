@@ -17,7 +17,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 const productUpload = upload.fields([
     { name: "image", maxCount: 1 },
     { name: "declarationPdf", maxCount: 1 },
-    { name: "testResultPdf", maxCount: 1 }
+    { name: "testResultPdf", maxCount: 1 },
+    { name: "qrImage", maxCount: 1 }
 ]);
 
 router.route("/")

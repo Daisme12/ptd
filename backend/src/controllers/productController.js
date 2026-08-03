@@ -215,9 +215,16 @@ const createProduct = async (req, res) => {
             imageUrl = await uploadImageToCloudinary(req.files.image[0].buffer);
         }
 
+        let qrImageUrl = req.body.qrImageUrl || "";
+        if (req.files?.qrImage?.[0]) {
+            qrImageUrl = await uploadImageToCloudinary(req.files.qrImage[0].buffer);
+        }
+
         const data = {
             ...req.body,
             imageUrl: imageUrl,
+            qrImageUrl: qrImageUrl,
+            qrLink: req.body.qrLink || "",
             documents: documents,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
@@ -260,6 +267,11 @@ const updateProduct = async (req, res) => {
         // Nếu có upload ảnh mới
         if (req.files?.image?.[0]) {
             data.imageUrl = await uploadImageToCloudinary(req.files.image[0].buffer);
+        }
+
+        // Nếu có upload ảnh QR mới
+        if (req.files?.qrImage?.[0]) {
+            data.qrImageUrl = await uploadImageToCloudinary(req.files.qrImage[0].buffer);
         }
 
         // Xử lý documents từ req.body
