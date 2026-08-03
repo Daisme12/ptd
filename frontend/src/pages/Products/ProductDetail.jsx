@@ -291,6 +291,18 @@ export default function ProductDetail() {
                       
                       {hasUrl ? (
                         <div className="flex gap-2">
+                           <button
+                             onClick={() => {
+                               setPreviewDoc(doc);
+                               if (window.innerWidth >= 1024) {
+                                 setFullScreenDoc(doc);
+                               }
+                             }}
+                             className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-medium px-4 py-2 rounded-lg transition-colors"
+                             title="Chuyển đến tài liệu này"
+                           >
+                             <Eye size={12} /> Xem nhanh
+                           </button>
                           <button
                             onClick={() => handleDownload(doc.fileUrl, `${doc.title}.pdf`)}
                             disabled={downloading === doc.fileUrl}
@@ -306,18 +318,6 @@ export default function ProductDetail() {
                               </>
                             )}
                           </button>
-                           <button
-                             onClick={() => {
-                               setPreviewDoc(doc);
-                               if (window.innerWidth >= 1024) {
-                                 setFullScreenDoc(doc);
-                               }
-                             }}
-                             className="flex items-center gap-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-medium px-4 py-2 rounded-lg transition-colors"
-                             title="Chuyển đến tài liệu này"
-                           >
-                             <Eye size={12} /> Xem nhanh
-                           </button>
                         </div>
                       ) : (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 inline-block">
@@ -342,6 +342,15 @@ export default function ProductDetail() {
                     <button
                       onClick={() => {
                         const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
+                        setFullScreenDoc(currentDoc);
+                      }}
+                      className="flex items-center justify-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-medium transition-colors text-xs lg:text-sm"
+                    >
+                      <Eye size={14} /> Phóng to
+                    </button>
+                    <button
+                      onClick={() => {
+                        const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
                         handleDownload(currentDoc.fileUrl, `${currentDoc.title}.pdf`);
                       }}
                       disabled={downloading}
@@ -349,15 +358,6 @@ export default function ProductDetail() {
                     >
                       <Download size={14} />
                       {downloading ? 'Đang tải...' : 'Tải xuống'}
-                    </button>
-                    <button
-                      onClick={() => {
-                        const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
-                        setFullScreenDoc(currentDoc);
-                      }}
-                      className="flex items-center justify-center gap-2 px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-medium transition-colors text-xs lg:text-sm"
-                    >
-                      <Eye size={14} /> Phóng to
                     </button>
                   </div>
                 </div>
