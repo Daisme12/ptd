@@ -2,13 +2,14 @@ import React, { useState, useEffect,useRef } from "react";
 import { getCategories } from "../services/categoryService";
 
 import { Link, useLocation } from "react-router-dom";
-import { Phone, ChevronDown, Menu, X,LoaderCircle } from "lucide-react";
+import { Phone, ChevronDown, Menu, X, LoaderCircle, ShieldCheck } from "lucide-react";
 import logo from "../assets/imgs/Logo1.png";
 
 import '../assets/styles/Header.css'
 
 
 const Header = ({ solid = false }) => {
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showHeader, setShowHeader] = useState(true);
@@ -17,8 +18,12 @@ const Header = ({ solid = false }) => {
   const [loading, setLoading] = useState(true);
   
   const menuRef = useRef(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const location = useLocation();
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem('admin_authenticated') === 'true';
+    setIsAdmin(authStatus);
+  }, [location]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -233,9 +238,32 @@ const Header = ({ solid = false }) => {
             >
               Liên Hệ
             </Link>
+
+            {isAdmin && (
+              <Link
+                to="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="hover:text-red-600 hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all font-bold text-red-600 lg:text-red-600 flex items-center gap-2"
+              >
+                <ShieldCheck size={18} />
+                Quản Trị
+              </Link>
+            )}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            {isAdmin && (
+              <div className="hidden lg:block">
+                <Link
+                  to="/admin"
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition-all border border-slate-800 shadow-md hover:shadow-lg transform active:scale-95 cursor-pointer"
+                >
+                  <ShieldCheck size={16} className="text-red-500" />
+                  <span>VÀO ADMIN</span>
+                </Link>
+              </div>
+            )}
+
             <div className="hidden lg:block">
               <Link
               to="/contact"
