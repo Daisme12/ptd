@@ -238,17 +238,6 @@ const Header = ({ solid = false }) => {
             >
               Liên Hệ
             </Link>
-
-            {isAdmin && (
-              <Link
-                to="/admin"
-                onClick={() => setMenuOpen(false)}
-                className="hover:text-red-600 hover:underline w-full py-3 border-b border-gray-100 lg:w-auto lg:py-0 lg:border-none text-[17px] lg:text-base transition-all font-bold text-red-600 lg:text-red-600 flex items-center gap-2"
-              >
-                <ShieldCheck size={18} />
-                Quản Trị
-              </Link>
-            )}
           </nav>
 
           <div className="flex items-center gap-3">
