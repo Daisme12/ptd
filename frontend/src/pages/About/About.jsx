@@ -363,20 +363,20 @@ export default function Intro() {
                             />
                           ))}
                       </Document>
-                      
-                      {/* BIG MOBILE BUTTON UNDERNEATH */}
-                      {profileUrl && (
-                        <div className="w-full mt-6 block md:hidden">
-                          <button
-                            onClick={() => window.open(profileUrl, '_blank')}
-                            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
-                          >
-                            <ExternalLink size={18} />
-                            {isGoogleDriveLink(profileUrl) ? "Mở xem trên Google Drive" : "Mở xem tài liệu"}
-                          </button>
-                        </div>
-                      )}
                     </div>
+                      
+                    {/* BIG MOBILE BUTTON UNDERNEATH */}
+                    {profileUrl && (
+                      <div className="w-full mt-6 block md:hidden">
+                        <button
+                          onClick={() => window.open(profileUrl, '_blank')}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+                        >
+                          <ExternalLink size={18} />
+                          {isGoogleDriveLink(profileUrl) ? "Mở xem trên Google Drive" : "Mở xem tài liệu"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
             </section>
