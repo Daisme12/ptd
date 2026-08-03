@@ -252,26 +252,24 @@ const Header = ({ solid = false }) => {
           </nav>
 
           <div className="flex items-center gap-3">
-            {isAdmin && (
-              <div className="hidden lg:block">
+            <div className="hidden lg:block">
+              {isAdmin ? (
                 <Link
                   to="/admin"
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition-all border border-slate-800 shadow-md hover:shadow-lg transform active:scale-95 cursor-pointer"
+                  className="btn btn-primary px-3.5 py-2 text-white flex items-center gap-2 hover:bg-primary-dark transition-colors duration-300"
                 >
-                  <ShieldCheck size={16} className="text-red-500" />
+                  <ShieldCheck size={16} />
                   <span>VÀO ADMIN</span>
                 </Link>
-              </div>
-            )}
-
-            <div className="hidden lg:block">
-              <Link
-              to="/contact"
-                className="btn btn-primary px-3 py-2 text-white flex items-center gap-2 hover:bg-primary-dark transition-colors duration-300"
-              >
-                <Phone size={16} />
-                <span>TƯ VẤN NGAY</span>
-              </Link>
+              ) : (
+                <Link
+                  to="/contact"
+                  className="btn btn-primary px-3.5 py-2 text-white flex items-center gap-2 hover:bg-primary-dark transition-colors duration-300"
+                >
+                  <Phone size={16} />
+                  <span>TƯ VẤN NGAY</span>
+                </Link>
+              )}
             </div>
 
             <button
