@@ -1,10 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, FileText, CheckCircle2, XCircle, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, FileText, CheckCircle2, XCircle, Search, FileDown, FileUp } from 'lucide-react';
 import { toast } from 'sonner';
+import * as XLSX from 'xlsx';
 import SEO from "../../components/SEO";
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../../services/productService';
 import { getCategories } from '../../services/categoryService';
 import { uploadFileToStorage } from '../../config/firebase';
+
+const createSlug = (str) => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[áàảãạăắằẳẵặâấầẩẫậ]/g, 'a')
+    .replace(/[éèẻẽẹêếềểễệ]/g, 'e')
+    .replace(/[íìỉĩị]/g, 'i')
+    .replace(/[óòỏõọôốồổỗộơớờởỡợ]/g, 'o')
+    .replace(/[úùủũụưứừửữự]/g, 'u')
+    .replace(/[ýỳỷỹỵ]/g, 'y')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9 -]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+};
 
 const ProductAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -57,6 +75,160 @@ const ProductAdmin = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Excel Export Handler
+  const handleExportExcel = () => {
+    try {
+      const data = products.map(product => {
+        const declaration = product.documents?.find(doc => doc.title === 'Bản công bố sản phẩm')?.fileUrl || '';
+        const testResult = product.documents?.find(doc => doc.title === 'Phiếu kết quả xét nghiệm')?.fileUrl || '';
+
+        return {
+          'ID sản phẩm': product._id || '',
+          'Tên sản phẩm': product.name || '',
+          'Danh mục': product.category?.name || '',
+          'Đơn giá': product.price || 0,
+          'Mô tả': product.description || '',
+          'Trạng thái': product.status ? 'Đang bán' : 'Tạm ngưng',
+          'Đường dẫn hình ảnh': product.imageUrl || '',
+          'Đường dẫn hình ảnh QR': product.qrImageUrl || '',
+          'Đường dẫn mã QR': product.qrLink || '',
+          'Đường dẫn Bản công bố PDF': declaration,
+          'Đường dẫn Phiếu xét nghiệm PDF': testResult,
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sản phẩm');
+      
+      worksheet['!cols'] = [
+        { wch: 25 }, // ID sản phẩm
+        { wch: 30 }, // Tên sản phẩm
+        { wch: 20 }, // Danh mục
+        { wch: 12 }, // Đơn giá
+        { wch: 40 }, // Mô tả
+        { wch: 12 }, // Trạng thái
+        { wch: 30 }, // Đường dẫn hình ảnh
+        { wch: 30 }, // Đường dẫn hình ảnh QR
+        { wch: 30 }, // Đường dẫn mã QR
+        { wch: 30 }, // Đường dẫn Bản công bố PDF
+        { wch: 30 }, // Đường dẫn Phiếu xét nghiệm PDF
+      ];
+
+      XLSX.writeFile(workbook, `Danh_sach_san_pham_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      toast.success('Xuất file Excel thành công!');
+    } catch (error) {
+      console.error('Lỗi khi xuất Excel:', error);
+      toast.error('Có lỗi xảy ra khi xuất file Excel');
+    }
+  };
+
+  // Excel Import Handler
+  const handleImportExcel = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const bstr = evt.target.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const data = XLSX.utils.sheet_to_json(ws);
+
+        if (data.length === 0) {
+          toast.error('File Excel không có dữ liệu!');
+          return;
+        }
+
+        toast.info(`Đang xử lý nhập ${data.length} sản phẩm...`);
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (const row of data) {
+          try {
+            const id = row['ID sản phẩm'];
+            const name = row['Tên sản phẩm'];
+            const categoryName = row['Danh mục'];
+            const price = Number(row['Đơn giá']) || 0;
+            const description = row['Mô tả'] || '';
+            const statusText = String(row['Trạng thái'] || '').trim().toLowerCase();
+            const status = !(statusText === 'tạm ngưng' || statusText === 'tạm dừng' || statusText === 'false' || statusText === '0');
+            
+            const imageUrl = row['Đường dẫn hình ảnh'] || '';
+            const qrImageUrl = row['Đường dẫn hình ảnh QR'] || '';
+            const qrLink = row['Đường dẫn mã QR'] || '';
+            const declarationPdf = row['Đường dẫn Bản công bố PDF'] || '';
+            const testResultPdf = row['Đường dẫn Phiếu xét nghiệm PDF'] || '';
+
+            if (!name) {
+              errorCount++;
+              continue;
+            }
+
+            let categoryId = '';
+            if (categoryName) {
+              const foundCat = categories.find(c => c.name.toLowerCase() === categoryName.toLowerCase());
+              if (foundCat) {
+                categoryId = foundCat._id;
+              } else {
+                console.warn(`Không tìm thấy danh mục: ${categoryName}`);
+              }
+            }
+
+            const documents = [];
+            if (declarationPdf && declarationPdf.trim() !== '') {
+              documents.push({ title: 'Bản công bố sản phẩm', fileUrl: declarationPdf.trim() });
+            }
+            if (testResultPdf && testResultPdf.trim() !== '') {
+              documents.push({ title: 'Phiếu kết quả xét nghiệm', fileUrl: testResultPdf.trim() });
+            }
+
+            const payload = {
+              name,
+              category: categoryId,
+              price,
+              description,
+              status,
+              imageUrl,
+              qrImageUrl,
+              qrLink,
+              documents,
+              slug: createSlug(name)
+            };
+
+            let existingProduct = null;
+            if (id) {
+              existingProduct = products.find(p => p._id === id);
+            } else {
+              existingProduct = products.find(p => p.name.toLowerCase() === name.toLowerCase());
+            }
+
+            if (existingProduct) {
+              await updateProduct(existingProduct._id, payload);
+            } else {
+              await createProduct(payload);
+            }
+            successCount++;
+          } catch (err) {
+            console.error('Lỗi khi nhập dòng: ', row, err);
+            errorCount++;
+          }
+        }
+
+        toast.success(`Nhập Excel hoàn tất! Thành công: ${successCount}, Thất bại: ${errorCount}`);
+        fetchData();
+      } catch (err) {
+        console.error(err);
+        toast.error('Lỗi định dạng file Excel!');
+      }
+    };
+
+    reader.readAsBinaryString(file);
+    e.target.value = '';
   };
 
   useEffect(() => {
@@ -195,23 +367,7 @@ const ProductAdmin = () => {
         });
       }
 
-      // 3. Tạo slug ở frontend
-      const createSlug = (str) => {
-        if (!str) return '';
-        return str
-          .toLowerCase()
-          .trim()
-          .replace(/[áàảãạăắằẳẵặâấầẩẫậ]/g, 'a')
-          .replace(/[éèẻẽẹêếềểễệ]/g, 'e')
-          .replace(/[íìỉĩị]/g, 'i')
-          .replace(/[óòỏõọôốồổỗộơớờởỡợ]/g, 'o')
-          .replace(/[úùủũụưứừửữự]/g, 'u')
-          .replace(/[ýỳỷỹỵ]/g, 'y')
-          .replace(/đ/g, 'd')
-          .replace(/[^a-z0-9 -]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-');
-      };
+      // 3. Tạo slug ở frontend (sử dụng hàm createSlug chung bên ngoài)
 
       const productPayload = {
         name: formData.name,
@@ -298,18 +454,45 @@ const ProductAdmin = () => {
 
       {/* Header */}
       <div className="p-6 border-b border-gray-100 flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-gray-800">Quản lý Sản phẩm</h2>
             <p className="text-sm text-gray-500 mt-1">Thêm, sửa, xóa danh sách sản phẩm</p>
           </div>
-          <button
-            onClick={handleAdd}
-            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer shrink-0"
-          >
-            <Plus size={20} />
-            <span>Thêm sản phẩm</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Hidden Input for Import */}
+            <input 
+              type="file" 
+              accept=".xlsx, .xls" 
+              onChange={handleImportExcel} 
+              className="hidden" 
+              id="excel-import-input" 
+            />
+            
+            <label 
+              htmlFor="excel-import-input" 
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer text-sm shrink-0"
+            >
+              <FileDown size={18} />
+              <span>Nhập từ Excel</span>
+            </label>
+
+            <button
+              onClick={handleExportExcel}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer text-sm shrink-0"
+            >
+              <FileUp size={18} />
+              <span>Xuất Excel</span>
+            </button>
+
+            <button
+              onClick={handleAdd}
+              className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm cursor-pointer shrink-0 text-sm"
+            >
+              <Plus size={18} />
+              <span>Thêm sản phẩm</span>
+            </button>
+          </div>
         </div>
         
         {/* Search bar (Full-width row) */}
