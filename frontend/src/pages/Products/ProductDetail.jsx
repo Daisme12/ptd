@@ -40,8 +40,12 @@ const getPdfFileUrl = (url) => {
   if (!url) return '';
   if (isGoogleDriveLink(url)) {
     const directLink = getGoogleDriveDirectLink(url);
-    const backendBaseUrl = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:5001/api" : "/api");
-    return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
+    if (window.location.hostname === "localhost") {
+      const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+      return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
+    } else {
+      return `https://api.allorigins.win/raw?url=${encodeURIComponent(directLink)}`;
+    }
   }
   return url;
 };
