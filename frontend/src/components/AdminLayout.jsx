@@ -10,6 +10,7 @@ const AdminLayout = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -117,12 +118,18 @@ const AdminLayout = () => {
 
       {/* Sidebar */}
       <div 
-        className={`fixed md:static inset-y-0 left-0 z-50 w-64 bg-white shadow-md flex flex-col transform transition-transform duration-300 ease-in-out md:translate-x-0 ${
+        className={`fixed md:static inset-y-0 left-0 z-50 bg-white shadow-md flex flex-col transform transition-all duration-300 ease-in-out md:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } ${
+          isCollapsed ? 'md:w-20' : 'md:w-64 w-64'
         }`}
       >
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 shrink-0">
-          <h1 className="text-xl font-bold text-red-600">PTD Admin</h1>
+          {!isCollapsed ? (
+            <h1 className="text-xl font-bold text-red-600 transition-all duration-300">PTD Admin</h1>
+          ) : (
+            <h1 className="text-xl font-bold text-red-600 transition-all duration-300 mx-auto">PTD</h1>
+          )}
           <button 
             onClick={() => setIsSidebarOpen(false)}
             className="md:hidden p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer"
@@ -141,14 +148,17 @@ const AdminLayout = () => {
                 onClick={() => setIsSidebarOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
+                    isCollapsed ? 'justify-center px-2' : ''
+                  } ${
                     isActive 
                       ? 'bg-red-50 text-red-600' 
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`
                 }
+                title={isCollapsed ? item.name : ''}
               >
-                <item.icon size={20} />
-                {item.name}
+                <item.icon size={20} className="shrink-0" />
+                {!isCollapsed && <span className="transition-opacity duration-300">{item.name}</span>}
               </NavLink>
             ))}
           </nav>
@@ -157,17 +167,23 @@ const AdminLayout = () => {
         <div className="p-4 border-t border-gray-200 flex flex-col gap-2 shrink-0">
           <NavLink
             to="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors ${
+              isCollapsed ? 'justify-center px-2' : ''
+            }`}
+            title={isCollapsed ? "Về trang chủ" : ""}
           >
-            <LogOut size={20} />
-            Về trang chủ
+            <LogOut size={20} className="shrink-0" />
+            {!isCollapsed && <span>Về trang chủ</span>}
           </NavLink>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left"
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left ${
+              isCollapsed ? 'justify-center px-2' : ''
+            }`}
+            title={isCollapsed ? "Đăng xuất" : ""}
           >
-            <LogOut size={20} className="rotate-180 animate-pulse" />
-            Đăng xuất
+            <LogOut size={20} className="rotate-180 animate-pulse shrink-0" />
+            {!isCollapsed && <span>Đăng xuất</span>}
           </button>
         </div>
       </div>
@@ -177,8 +193,14 @@ const AdminLayout = () => {
         <header className="h-16 bg-white shadow-sm flex items-center justify-between px-6 shrink-0 border-b">
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => setIsSidebarOpen(true)}
-              className="md:hidden p-2 -ml-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer"
+              onClick={() => {
+                if (window.innerWidth >= 768) {
+                  setIsCollapsed(!isCollapsed);
+                } else {
+                  setIsSidebarOpen(true);
+                }
+              }}
+              className="p-2 -ml-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors cursor-pointer"
             >
               <Menu size={20} />
             </button>

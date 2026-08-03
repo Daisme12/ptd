@@ -261,6 +261,41 @@ const ProductAdmin = () => {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-100">
       <SEO title="Quản Lý Sản Phẩm" noindex={true} />
+      
+      {/* Quick Stats Bar */}
+      <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-xs">
+          <div>
+            <p className="text-xs text-gray-500 font-semibold">Tổng sản phẩm</p>
+            <p className="text-xl font-bold text-blue-600 mt-0.5">{products.length}</p>
+          </div>
+          <span className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">📦</span>
+        </div>
+        <div className="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-xs">
+          <div>
+            <p className="text-xs text-gray-500 font-semibold">Đang bán</p>
+            <p className="text-xl font-bold text-green-600 mt-0.5">{products.filter(p => p.status).length}</p>
+          </div>
+          <span className="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center font-bold text-sm">✓</span>
+        </div>
+        <div className="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-xs">
+          <div>
+            <p className="text-xs text-gray-500 font-semibold">Tạm ngưng</p>
+            <p className="text-xl font-bold text-gray-500 mt-0.5">{products.filter(p => !p.status).length}</p>
+          </div>
+          <span className="w-8 h-8 rounded-lg bg-gray-150 text-gray-600 flex items-center justify-center font-bold text-sm">⏸</span>
+        </div>
+        <div className="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-xs">
+          <div>
+            <p className="text-xs text-gray-500 font-semibold">Thiếu tài liệu</p>
+            <p className="text-xl font-bold text-red-600 mt-0.5">
+              {products.filter(p => !p.documents || p.documents.length === 0 || p.documents.filter(d => d.fileUrl && d.fileUrl.trim() !== '').length === 0).length}
+            </p>
+          </div>
+          <span className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold text-sm">⚠️</span>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="p-6 border-b border-gray-100 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">

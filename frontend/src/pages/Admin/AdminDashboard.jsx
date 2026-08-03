@@ -13,7 +13,8 @@ const AdminDashboard = () => {
     inactiveProducts: 0,
     missingDocsProducts: 0,
   });
-  const [recentProducts, setRecentProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [filterType, setFilterType] = useState('all'); // 'all', 'active', 'inactive', 'missingDocs'
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,8 +37,7 @@ const AdminDashboard = () => {
         missingDocsProducts: products.filter(p => !p.documents || p.documents.length === 0 || p.documents.filter(d => d.fileUrl && d.fileUrl.trim() !== '').length === 0).length,
       });
 
-      // Get recent 5 products
-      setRecentProducts(products.slice(0, 5));
+      setAllProducts(products);
     } catch (error) {
       console.error(error);
       toast.error('Lỗi khi tải dữ liệu dashboard');
@@ -46,18 +46,37 @@ const AdminDashboard = () => {
     }
   };
 
-  const StatCard = ({ icon: Icon, title, value, color }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+  const filteredProducts = allProducts.filter(p => {
+    if (filterType === 'active') return p.status === true;
+    if (filterType === 'inactive') return p.status === false;
+    if (filterType === 'missingDocs') return !p.documents || p.documents.length === 0 || p.documents.filter(d => d.fileUrl && d.fileUrl.trim() !== '').length === 0;
+    return true;
+  });
+
+  const displayedProducts = filteredProducts.slice(0, 10);
+
+  const StatCard = ({ icon: Icon, title, value, color, active, onClick }) => (
+    <button
+      onClick={onClick}
+      disabled={onClick === null}
+      className={`w-full text-left bg-white rounded-xl border p-6 transition-all shadow-sm hover:shadow-md ${
+        onClick !== null ? 'cursor-pointer' : 'cursor-default'
+      } ${
+        active 
+          ? 'border-red-500 ring-2 ring-red-500/15 scale-[1.02]' 
+          : 'border-gray-100 hover:scale-[1.01]'
+      }`}
+    >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+          <p className="text-sm font-semibold text-gray-500 mb-1">{title}</p>
           <p className="text-3xl font-bold text-gray-800">{value}</p>
         </div>
         <div className={`p-3 rounded-lg ${color}`}>
           <Icon size={24} className="text-white" />
         </div>
       </div>
-    </div>
+    </button>
   );
 
   return (
@@ -66,7 +85,7 @@ const AdminDashboard = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Xin chào! Đây là tổng quan hệ thống quản lý của bạn.</p>
+        <p className="text-gray-600 mt-1">Xin chào! Đây là tổng quan hệ thống quản lý của bạn. Nhấp vào các thẻ để xem danh sách tương ứng.</p>
       </div>
 
       {/* Statistics Cards */}
@@ -76,37 +95,52 @@ const AdminDashboard = () => {
           title="Tổng sản phẩm" 
           value={stats.totalProducts}
           color="bg-blue-600"
+          active={filterType === 'all'}
+          onClick={() => setFilterType('all')}
         />
         <StatCard 
           icon={Grid} 
           title="Danh mục" 
           value={stats.totalCategories}
           color="bg-purple-600"
+          active={false}
+          onClick={null}
         />
         <StatCard 
           icon={TrendingUp} 
           title="Đang bán" 
           value={stats.activeProducts}
           color="bg-green-600"
+          active={filterType === 'active'}
+          onClick={() => setFilterType('active')}
         />
         <StatCard 
           icon={Eye} 
           title="Tạm ngưng" 
           value={stats.inactiveProducts}
           color="bg-gray-600"
+          active={filterType === 'inactive'}
+          onClick={() => setFilterType('inactive')}
         />
         <StatCard 
           icon={FileText} 
           title="Thiếu tài liệu" 
           value={stats.missingDocsProducts}
-          color="bg-red-600 animate-pulse"
+          color="bg-red-600"
+          active={filterType === 'missingDocs'}
+          onClick={() => setFilterType('missingDocs')}
         />
       </div>
 
       {/* Recent Products */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-800">Sản phẩm gần đây</h2>
+          <h2 className="text-lg font-bold text-gray-800">
+            {filterType === 'all' && "Sản phẩm gần đây (Tất cả)"}
+            {filterType === 'active' && "Sản phẩm đang bán"}
+            {filterType === 'inactive' && "Sản phẩm tạm ngưng"}
+            {filterType === 'missingDocs' && "Sản phẩm thiếu tài liệu pháp lý"}
+          </h2>
           <a href="/admin/products" className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors">
             Xem tất cả →
           </a>
@@ -116,13 +150,13 @@ const AdminDashboard = () => {
           <div className="px-6 py-8 text-center text-gray-500">
             Đang tải dữ liệu...
           </div>
-        ) : recentProducts.length === 0 ? (
+        ) : displayedProducts.length === 0 ? (
           <div className="px-6 py-8 text-center text-gray-500">
-            Chưa có sản phẩm nào
+            Không tìm thấy sản phẩm nào phù hợp
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {recentProducts.map((product) => (
+            {displayedProducts.map((product) => (
               <div key={product._id} className="px-6 py-4 hover:bg-gray-50 transition-colors flex items-center gap-4">
                 {/* Image */}
                 <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-white flex-shrink-0">
