@@ -26,6 +26,26 @@ const getGoogleDrivePreviewUrl = (url) => {
   return url;
 };
 
+const getGoogleDriveDirectLink = (url) => {
+  if (!url) return '';
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    const fileId = match[1];
+    return `https://docs.google.com/uc?export=download&id=${fileId}`;
+  }
+  return url;
+};
+
+const getPdfFileUrl = (url) => {
+  if (!url) return '';
+  if (isGoogleDriveLink(url)) {
+    const directLink = getGoogleDriveDirectLink(url);
+    const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+    return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
+  }
+  return url;
+};
+
 const steps = [
   { num: '01', title: 'Tuyển Chọn Nguyên Liệu', desc: 'Gạo Nhật cao cấp và cá ngừ đại dương được kiểm định đầu vào khắt khe.', highlight: false },
   { num: '02', title: 'Sơ Chế Vô Trùng', desc: 'Hệ thống phòng sạch class 10.000 đảm bảo môi trường không nhiễm khuẩn.', highlight: false },
@@ -361,63 +381,33 @@ export default function ProductDetail() {
 
                 {/* Iframe Container */}
                 <div className="bg-gray-50 p-4 lg:p-6 flex flex-col items-center">
-                  <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner flex flex-col items-center w-full max-w-4xl">
+                  <div className="bg-white rounded-lg border border-gray-300 overflow-hidden shadow-inner flex flex-col items-center w-full max-w-4xl max-h-[650px] overflow-y-auto p-4 gap-6">
                     {(() => {
                       const currentDoc = previewDoc && previewDoc.fileUrl ? previewDoc : productNow.documents.find(d => d.fileUrl && d.fileUrl.trim() !== '');
                       const fileUrl = currentDoc ? currentDoc.fileUrl : '';
+                      const proxiedUrl = getPdfFileUrl(fileUrl);
                       
-                      if (isGoogleDriveLink(fileUrl)) {
-                        return (
-                          <div className="w-full h-[650px] lg:h-[750px]">
-                            <iframe
-                              src={getGoogleDrivePreviewUrl(fileUrl)}
-                              className="w-full h-full border-0 rounded-lg pointer-events-none lg:pointer-events-auto"
-                              allow="autoplay"
-                              title="Google Drive Document Viewer"
-                            />
-                          </div>
-                        );
-                      }
-
                       return (
                         <Document
-                          file={fileUrl}
+                          file={proxiedUrl}
                           onLoadSuccess={onDocumentLoadSuccess}
-                          className="flex justify-center bg-gray-100 w-full overflow-auto"
+                          className="flex flex-col items-center gap-6 w-full"
                           loading={<div className="py-10">Đang tải tài liệu...</div>}
                         >
-                          <Page 
-                            pageNumber={pageNumber} 
-                            renderTextLayer={false}
-                            renderAnnotationLayer={false}
-                            className="shadow-sm max-w-full"
-                            width={Math.min(window.innerWidth * 0.85, 450)}
-                          />
+                          {Array.from(new Array(numPages || 0), (el, index) => (
+                            <Page 
+                              key={`prod_page_${index + 1}`}
+                              pageNumber={index + 1} 
+                              renderTextLayer={false}
+                              renderAnnotationLayer={false}
+                              className="shadow-md rounded-lg max-w-full bg-white"
+                              width={Math.min(window.innerWidth * 0.85, 600)}
+                            />
+                          ))}
                         </Document>
                       );
                     })()}
                   </div>
-                  {numPages > 1 && (
-                    <div className="flex items-center justify-center gap-4 mt-4">
-                      <button 
-                          onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
-                          disabled={pageNumber <= 1}
-                          className="p-2 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-50"
-                      >
-                          <ChevronLeft size={20} />
-                      </button>
-                      <span className="text-sm font-medium">
-                          Trang {pageNumber} / {numPages}
-                      </span>
-                      <button 
-                          onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
-                          disabled={pageNumber >= numPages}
-                          className="p-2 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-50"
-                      >
-                          <ChevronRight size={20} />
-                      </button>
-                    </div>
-                  )}
                   
                   {/* BIG MOBILE BUTTON UNDERNEATH */}
                   {(() => {
@@ -553,74 +543,38 @@ export default function ProductDetail() {
               </button>
             </div>
 
-            <div className={`flex-1 bg-gray-100 flex flex-col items-center justify-center py-4 ${isGoogleDriveLink(fullScreenDoc.fileUrl) ? 'overflow-hidden' : 'overflow-y-auto'}`}>
-              {isGoogleDriveLink(fullScreenDoc.fileUrl) ? (
-                <div className="w-full max-w-5xl px-4 flex justify-center">
-                  <iframe
-                    src={getGoogleDrivePreviewUrl(fullScreenDoc.fileUrl)}
-                    className="w-full h-[70vh] border-0 rounded-xl shadow-lg bg-white"
-                    allow="autoplay"
-                    title="Google Drive Fullscreen Viewer"
-                  />
-                </div>
-              ) : (
-                <Document
-                    file={fullScreenDoc.fileUrl}
-                    onLoadSuccess={onDocumentLoadSuccess}
-                    className="flex justify-center"
-                    loading={<div className="py-10">Đang tải tài liệu...</div>}
-                >
+            <div className="flex-1 bg-gray-100 flex flex-col items-center justify-center py-6 gap-6 overflow-y-auto">
+              <Document
+                  file={getPdfFileUrl(fullScreenDoc.fileUrl)}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  className="flex flex-col items-center gap-6 w-full"
+                  loading={<div className="py-10">Đang tải tài liệu...</div>}
+              >
+                  {Array.from(new Array(numPages || 0), (el, index) => (
                     <Page 
-                        pageNumber={pageNumber} 
+                        key={`modal_page_${index + 1}`}
+                        pageNumber={index + 1} 
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="shadow-sm max-w-full"
-                        width={Math.min(window.innerWidth * 0.85, 450)}
+                        className="shadow-md rounded-lg max-w-full bg-white"
+                        width={Math.min(window.innerWidth * 0.85, 650)}
                     />
-                </Document>
-              )}
-              
+                  ))}
+              </Document>
             </div>
 
-            <div className="border-t bg-white p-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
-              <div className="hidden sm:block"></div>
-              <div className="flex items-center justify-center gap-4">
-                {numPages > 1 && (
-                  <>
-                    <button 
-                        onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
-                        disabled={pageNumber <= 1}
-                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
-                    >
-                        <ChevronLeft size={20} />
-                    </button>
-                    <span className="text-sm font-medium whitespace-nowrap">
-                        Trang {pageNumber} / {numPages}
-                    </span>
-                    <button 
-                        onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
-                        disabled={pageNumber >= numPages}
-                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
-                    >
-                        <ChevronRight size={20} />
-                    </button>
-                  </>
-                )}
-              </div>
-              
-              <div className="flex items-center justify-center sm:justify-end gap-3">
-                <button 
-                  onClick={() => setFullScreenDoc(null)} 
-                  onTouchEnd={(e) => { e.preventDefault(); setFullScreenDoc(null); }}
-                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap cursor-pointer"
-                >
-                  Đóng
-                </button>
-                <button onClick={() => handleDownload(fullScreenDoc.fileUrl, `${fullScreenDoc.title}.pdf`)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
-                  <Download size={16} />
-                  Tải xuống
-                </button>
-              </div>
+            <div className="border-t bg-white p-4 flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setFullScreenDoc(null)} 
+                onTouchEnd={(e) => { e.preventDefault(); setFullScreenDoc(null); }}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap cursor-pointer"
+              >
+                Đóng
+              </button>
+              <button onClick={() => handleDownload(fullScreenDoc.fileUrl, `${fullScreenDoc.title}.pdf`)} className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
+                <Download size={16} />
+                Tải xuống
+              </button>
             </div>
           </div>
         </div>

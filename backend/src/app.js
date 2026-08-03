@@ -36,6 +36,25 @@ app.get("/api/health", (_req, res) => {
     });
 });
 
+app.get("/api/proxy-pdf", async (req, res) => {
+    try {
+        const { url } = req.query;
+        if (!url) {
+            return res.status(400).json({ message: "URL is required" });
+        }
+        const response = await fetch(url);
+        if (!response.ok) {
+            return res.status(response.status).json({ message: "Failed to fetch PDF" });
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        res.setHeader("Content-Type", "application/pdf");
+        res.send(Buffer.from(arrayBuffer));
+    } catch (error) {
+        console.error("Proxy PDF error:", error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/certificates", certificateRoutes);

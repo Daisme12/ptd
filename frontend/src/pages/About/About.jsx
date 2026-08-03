@@ -37,6 +37,26 @@ const getGoogleDrivePreviewUrl = (url) => {
   return url;
 };
 
+const getGoogleDriveDirectLink = (url) => {
+  if (!url) return '';
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    const fileId = match[1];
+    return `https://docs.google.com/uc?export=download&id=${fileId}`;
+  }
+  return url;
+};
+
+const getPdfFileUrl = (url) => {
+  if (!url) return '';
+  if (isGoogleDriveLink(url)) {
+    const directLink = getGoogleDriveDirectLink(url);
+    const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+    return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
+  }
+  return url;
+};
+
 export default function Intro() {
     const videoRef = useRef(null);
     const [numPages, setNumPages] = useState(null);
@@ -300,16 +320,12 @@ export default function Intro() {
                       <div className="hidden md:flex gap-3 w-full sm:w-auto shrink-0">
                         <button
                           onClick={() => {
-                            if (isGoogleDriveLink(profileUrl)) {
-                              window.open(profileUrl, '_blank');
-                            } else {
-                              setOpenPdf(true);
-                            }
+                            setOpenPdf(true);
                           }}
                           className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-lg"
                         >
-                          {isGoogleDriveLink(profileUrl) ? <ExternalLink size={18} /> : <Eye size={18} />}
-                          {isGoogleDriveLink(profileUrl) ? "Mở Drive" : "Phóng to"}
+                          <Eye size={18} />
+                          Phóng to
                         </button>
                         <a
                           href={profileUrl}
@@ -324,61 +340,29 @@ export default function Intro() {
                     </div>
 
                     {/* PDF Viewer */}
-                    <div className="w-full bg-gray-100 rounded-2xl p-4 lg:p-8 flex flex-col items-center border border-gray-200 shadow-inner">
-                      {isGoogleDriveLink(profileUrl) ? (
-                        <div className="w-full h-[700px] lg:h-[800px] border border-gray-300 rounded-2xl overflow-hidden shadow-md">
-                          <iframe
-                            src={getGoogleDrivePreviewUrl(profileUrl)}
-                            className="w-full h-full border-0 pointer-events-none lg:pointer-events-auto"
-                            allow="autoplay"
-                            title="Google Drive Profile Viewer"
-                          />
-                        </div>
-                      ) : (
-                        <>
-                          <Document
-                              file={profileUrl}
-                              onLoadSuccess={onDocumentLoadSuccess}
-                              className="flex justify-center w-full"
-                              loading={
-                                <div className="py-20 flex flex-col items-center gap-4">
-                                  <div className="w-10 h-10 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
-                                  <p className="text-gray-500 font-medium">Đang tải hồ sơ năng lực...</p>
-                                </div>
-                              }
-                          >
-                              <Page 
-                                  pageNumber={pageNumber} 
-                                  renderTextLayer={false}
-                                  renderAnnotationLayer={false}
-                                  className="shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl max-w-full"
-                                  width={Math.min(window.innerWidth * 0.8, 450)}
-                              />
-                          </Document>
-                          
-                          {numPages > 1 && (
-                            <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 bg-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-md border border-gray-100">
-                              <button 
-                                  onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
-                                  disabled={pageNumber <= 1}
-                                  className="p-1 sm:p-2 rounded-full hover:bg-gray-100 text-gray-700 disabled:opacity-30 transition-colors"
-                              >
-                                  <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
-                              </button>
-                              <span className="text-sm font-bold text-gray-800 min-w-[80px] sm:min-w-[100px] text-center">
-                                  Trang {pageNumber} / {numPages}
-                              </span>
-                              <button 
-                                  onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
-                                  disabled={pageNumber >= numPages}
-                                  className="p-1 sm:p-2 rounded-full hover:bg-gray-100 text-gray-700 disabled:opacity-30 transition-colors"
-                              >
-                                  <ChevronRight size={20} className="sm:w-6 sm:h-6" />
-                              </button>
+                    <div className="w-full bg-gray-100 rounded-2xl p-4 lg:p-8 flex flex-col items-center border border-gray-200 shadow-inner max-h-[650px] overflow-y-auto">
+                      <Document
+                          file={getPdfFileUrl(profileUrl)}
+                          onLoadSuccess={onDocumentLoadSuccess}
+                          className="flex flex-col items-center gap-6 w-full"
+                          loading={
+                            <div className="py-20 flex flex-col items-center gap-4">
+                              <div className="w-10 h-10 border-4 border-red-200 border-t-red-600 rounded-full animate-spin"></div>
+                              <p className="text-gray-500 font-medium">Đang tải hồ sơ năng lực...</p>
                             </div>
-                          )}
-                        </>
-                      )}
+                          }
+                      >
+                          {Array.from(new Array(numPages || 0), (el, index) => (
+                            <Page 
+                                key={`page_${index + 1}`}
+                                pageNumber={index + 1} 
+                                renderTextLayer={false}
+                                renderAnnotationLayer={false}
+                                className="shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl max-w-full bg-white"
+                                width={Math.min(window.innerWidth * 0.8, 550)}
+                            />
+                          ))}
+                      </Document>
                       
                       {/* BIG MOBILE BUTTON UNDERNEATH */}
                       {profileUrl && (
@@ -466,62 +450,38 @@ export default function Intro() {
               </button>
             </div>
 
-            <div className="flex-1 bg-gray-100 overflow-y-auto flex flex-col items-center py-4">
+            <div className="flex-1 bg-gray-100 overflow-y-auto flex flex-col items-center py-6 gap-6">
               <Document
-                  file="/Profile.pdf"
+                  file={getPdfFileUrl(profileUrl)}
                   onLoadSuccess={onDocumentLoadSuccess}
-                  className="flex justify-center"
+                  className="flex flex-col items-center gap-6 w-full"
                   loading={<div className="py-10">Đang tải tài liệu...</div>}
               >
-                  <Page 
-                      pageNumber={pageNumber} 
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                      className="shadow-sm max-w-full"
-                      width={Math.min(window.innerWidth * 0.85, 400)}
-                  />
+                  {Array.from(new Array(numPages || 0), (el, index) => (
+                    <Page 
+                        key={`modal_page_${index + 1}`}
+                        pageNumber={index + 1} 
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                        className="shadow-md rounded-lg max-w-full bg-white"
+                        width={Math.min(window.innerWidth * 0.85, 650)}
+                    />
+                  ))}
               </Document>
             </div>
 
-            <div className="border-t bg-white p-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
-              <div className="hidden sm:block"></div>
-              <div className="flex items-center justify-center gap-4">
-                {numPages > 1 && (
-                  <>
-                    <button 
-                        onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
-                        disabled={pageNumber <= 1}
-                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
-                    >
-                        <ChevronLeft size={20} />
-                    </button>
-                    <span className="text-sm font-medium whitespace-nowrap">
-                        Trang {pageNumber} / {numPages}
-                    </span>
-                    <button 
-                        onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages))}
-                        disabled={pageNumber >= numPages}
-                        className="p-2 rounded-full border hover:bg-gray-50 disabled:opacity-50"
-                    >
-                        <ChevronRight size={20} />
-                    </button>
-                  </>
-                )}
-              </div>
-              
-              <div className="flex items-center justify-center sm:justify-end gap-3">
-                <button 
-                  onClick={() => setOpenPdf(false)} 
-                  onTouchEnd={(e) => { e.preventDefault(); setOpenPdf(false); }}
-                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap cursor-pointer"
-                >
-                  Đóng
-                </button>
-                <a href="/Profile.pdf" download="Ho-so-nang-luc-Thinh-Phong-Do.pdf" className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
-                  <Download size={16} />
-                  Tải xuống
-                </a>
-              </div>
+            <div className="border-t bg-white p-4 flex items-center justify-end gap-3">
+              <button 
+                onClick={() => setOpenPdf(false)} 
+                onTouchEnd={(e) => { e.preventDefault(); setOpenPdf(false); }}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 font-medium whitespace-nowrap cursor-pointer"
+              >
+                Đóng
+              </button>
+              <a href={profileUrl} download="Ho-so-nang-luc-Thinh-Phong-Do.pdf" className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium flex items-center gap-2 whitespace-nowrap">
+                <Download size={16} />
+                Tải xuống
+              </a>
             </div>
           </div>
         </div>
