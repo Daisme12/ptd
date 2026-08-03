@@ -55,11 +55,12 @@ const getPdfFileUrl = (url) => {
       const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
       return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
     } else {
-      return `https://api.allorigins.win/raw?url=${encodeURIComponent(directLink)}`;
+      return `https://corsproxy.io/?url=${encodeURIComponent(directLink)}`;
     }
   }
   return url;
 };
+
 
 export default function Intro() {
     const videoRef = useRef(null);

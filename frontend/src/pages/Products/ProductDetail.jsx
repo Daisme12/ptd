@@ -44,11 +44,12 @@ const getPdfFileUrl = (url) => {
       const backendBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
       return `${backendBaseUrl}/proxy-pdf?url=${encodeURIComponent(directLink)}`;
     } else {
-      return `https://api.allorigins.win/raw?url=${encodeURIComponent(directLink)}`;
+      return `https://corsproxy.io/?url=${encodeURIComponent(directLink)}`;
     }
   }
   return url;
 };
+
 
 const steps = [
   { num: '01', title: 'Tuyển Chọn Nguyên Liệu', desc: 'Gạo Nhật cao cấp và cá ngừ đại dương được kiểm định đầu vào khắt khe.', highlight: false },
