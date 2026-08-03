@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Grid, TrendingUp, Eye } from 'lucide-react';
+import { Package, Grid, TrendingUp, Eye, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import SEO from "../../components/SEO";
 import { getProducts } from '../../services/productService';
@@ -11,6 +11,7 @@ const AdminDashboard = () => {
     totalCategories: 0,
     activeProducts: 0,
     inactiveProducts: 0,
+    missingDocsProducts: 0,
   });
   const [recentProducts, setRecentProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,7 @@ const AdminDashboard = () => {
         totalCategories: categories.length,
         activeProducts: products.filter(p => p.status === true).length,
         inactiveProducts: products.filter(p => p.status === false).length,
+        missingDocsProducts: products.filter(p => !p.documents || p.documents.length === 0 || p.documents.filter(d => d.fileUrl && d.fileUrl.trim() !== '').length === 0).length,
       });
 
       // Get recent 5 products
@@ -68,7 +70,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         <StatCard 
           icon={Package} 
           title="Tổng sản phẩm" 
@@ -92,6 +94,12 @@ const AdminDashboard = () => {
           title="Tạm ngưng" 
           value={stats.inactiveProducts}
           color="bg-gray-600"
+        />
+        <StatCard 
+          icon={FileText} 
+          title="Thiếu tài liệu" 
+          value={stats.missingDocsProducts}
+          color="bg-red-600 animate-pulse"
         />
       </div>
 
