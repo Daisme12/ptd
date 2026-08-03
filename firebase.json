@@ -29,13 +29,6 @@
         }
       },
       {
-        "source": "/products/**",
-        "function": {
-          "id": "api",
-          "region": "asia-east1"
-        }
-      },
-      {
         "source": "**",
         "destination": "/index.html"
       }
