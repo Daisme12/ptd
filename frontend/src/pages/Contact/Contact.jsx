@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import bgContact from '../../assets/imgs/bgContact.webp';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import SEO from "../../components/SEO";
 import { createContact } from "../../services/contactService";
 import { getProfileUrl } from "../../services/documentService";
 
@@ -76,6 +77,11 @@ const ContactPage = () => {
 
   return (
     <>
+      <SEO
+        title="Liên Hệ & Tư Vấn Báo Giá"
+        description="Liên hệ Công ty TNHH Thịnh Phong Đỗ để nhận tư vấn và báo giá suất ăn công nghiệp, suất ăn trường học tiêu chuẩn ISO 22000:2018 tại Hà Nội."
+        keywords="liên hệ Thịnh Phong Đỗ, báo giá suất ăn công nghiệp, tư vấn suất ăn trường học, số điện thoại Thịnh Phong Đỗ"
+      />
       <Header />
       {/* Hero */}
       <section

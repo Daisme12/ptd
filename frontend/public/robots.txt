@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /admin-dashboard/
 
-Sitemap: https://phong-thinh-do.vercel.app/sitemap.xml
+Sitemap: https://thinhphongdo-vn.web.app/sitemap.xml

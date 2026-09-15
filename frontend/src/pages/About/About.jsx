@@ -102,7 +102,7 @@ export default function Intro() {
 
             {/* Banner */}
             <div data-aos="fade" className="relative w-full h-[460px] overflow-hidden">
-                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+                <video autoPlay loop muted playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover">
                     <source src={bannerVideo} type="video/mp4" />
                 </video>
                 <div className="absolute inset-0 h-[90px] bg-black/20 flex items-center justify-center z-20" />
@@ -291,7 +291,7 @@ export default function Intro() {
                 {/* Video */}
                 <div className="py-16 lg:py-24 border-t border-gray-100 text-center">
                     <h1 data-aos="fade-up" className="text-3xl font-bold text-red-600 uppercase mb-8">Hành Trình Đến Tới Ước Mơ</h1>
-                    <video data-aos="fade-up" ref={videoRef} autoPlay controls muted playsInline loop className="w-full rounded-2xl shadow-md">
+                    <video data-aos="fade-up" ref={videoRef} preload="none" controls muted playsInline loop className="w-full rounded-2xl shadow-md">
                         <source src={video_intro} type="video/mp4" />
                     </video>
                 </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
+const SEO = ({ title, description, keywords, image, url, noindex = false, schema }) => {
   const baseUrl = import.meta.env.VITE_SITE_URL || "https://thinhphongdo-vn.web.app";
   const siteName = "Thịnh Phong Đỗ";
   const defaultTitle = `${siteName} | Dịch Vụ Suất Ăn Chuyên Nghiệp`;
@@ -28,6 +28,9 @@ const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
         <meta name="robots" content="index, follow" />
       )}
 
+      {/* Canonical Link */}
+      <link rel="canonical" href={currentUrl} />
+
       {/* Cấu hình Open Graph cho Facebook, Zalo */}
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title ? `${title} | ${siteName}` : defaultTitle} />
@@ -41,6 +44,13 @@ const SEO = ({ title, description, keywords, image, url, noindex = false }) => {
       <meta name="twitter:title" content={title ? `${title} | ${siteName}` : defaultTitle} />
       <meta name="twitter:description" content={description || defaultDescription} />
       <meta name="twitter:image" content={image || defaultImage} />
+
+      {/* Structured Data (JSON-LD) */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
     </Helmet>
   );
 };
