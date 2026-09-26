@@ -1,68 +1,115 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/webp" href="/Logo.svg" />
+    <!-- Favicon & Icon cho Google Search & Trình duyệt -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/Logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/Logo.png" />
+    <link rel="shortcut icon" href="/Logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/Logo.png" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thịnh Phong Đỗ | Dịch Vụ Suất Ăn Chuyên Nghiệp</title>
-    <meta name="description" content="Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO 22000:2018." />
+    <meta name="theme-color" content="#dc2626" />
+
+    <title>Thịnh Phong Đỗ - Dịch Vụ Suất Ăn Công Nghiệp & Canteen Chuẩn ISO</title>
+    <meta name="description" content="Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học và dịch vụ canteen uy tín hàng đầu, quy trình khép kín đạt tiêu chuẩn vệ sinh ATTP ISO 22000:2018." />
     
     <!-- Canonical Link -->
     <link rel="canonical" href="https://thinhphongdo-vn.web.app/" />
 
     <!-- Open Graph for Social Media (Facebook, Zalo) -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Thịnh Phong Đỗ | Dịch Vụ Suất Ăn Chuyên Nghiệp" />
-    <meta property="og:description" content="Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO 22000:2018." />
+    <meta property="og:title" content="Thịnh Phong Đỗ - Dịch Vụ Suất Ăn Công Nghiệp & Canteen Chuẩn ISO" />
+    <meta property="og:description" content="Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học và dịch vụ canteen uy tín hàng đầu, quy trình khép kín đạt tiêu chuẩn vệ sinh ATTP ISO 22000:2018." />
     <meta property="og:image" content="https://thinhphongdo-vn.web.app/Logo.png" />
     <meta property="og:url" content="https://thinhphongdo-vn.web.app/" />
     <meta property="og:site_name" content="Thịnh Phong Đỗ" />
+    <meta property="og:locale" content="vi_VN" />
+
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Thịnh Phong Đỗ | Dịch Vụ Suất Ăn Chuyên Nghiệp" />
-    <meta name="twitter:description" content="Công ty TNHH Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO 22000:2018." />
+    <meta name="twitter:title" content="Thịnh Phong Đỗ - Dịch Vụ Suất Ăn Công Nghiệp & Canteen Chuẩn ISO" />
+    <meta name="twitter:description" content="Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học và dịch vụ canteen uy tín hàng đầu, quy trình khép kín đạt tiêu chuẩn vệ sinh ATTP ISO 22000:2018." />
     <meta name="twitter:image" content="https://thinhphongdo-vn.web.app/Logo.png" />
 
     <!-- Google Structured Data (Schema.org / JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "Công ty TNHH Thịnh Phong Đỗ",
-      "image": "https://thinhphongdo-vn.web.app/Logo.png",
-      "@id": "https://thinhphongdo-vn.web.app/#organization",
-      "url": "https://thinhphongdo-vn.web.app",
-      "telephone": "+84867099978",
-      "email": "phongthinhphat2024@gmail.com",
-      "priceRange": "$$",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Số 215 Ngõ 264 Ngọc Thuỵ, P.Bồ Đề",
-        "addressLocality": "Long Biên",
-        "addressRegion": "Hà Nội",
-        "addressCountry": "VN"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 21.049389,
-        "longitude": 105.873421
-      },
-      "openingHoursSpecification": [
+      "@graph": [
         {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Sunday"
+          "@type": "WebSite",
+          "@id": "https://thinhphongdo-vn.web.app/#website",
+          "url": "https://thinhphongdo-vn.web.app/",
+          "name": "Thịnh Phong Đỗ",
+          "alternateName": [
+            "Công ty TNHH Thịnh Phong Đỗ",
+            "Thinh Phong Do Catering",
+            "Suất Ăn Thịnh Phong Đỗ"
           ],
-          "opens": "05:00",
-          "closes": "23:00"
+          "publisher": {
+            "@id": "https://thinhphongdo-vn.web.app/#organization"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://thinhphongdo-vn.web.app/#organization",
+          "name": "Công ty TNHH Thịnh Phong Đỗ",
+          "url": "https://thinhphongdo-vn.web.app/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://thinhphongdo-vn.web.app/Logo.png",
+            "width": 512,
+            "height": 512
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+84867099978",
+            "contactType": "customer service",
+            "areaServed": "VN",
+            "availableLanguage": "Vietnamese"
+          }
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://thinhphongdo-vn.web.app/#localbusiness",
+          "name": "Công ty TNHH Thịnh Phong Đỗ",
+          "image": "https://thinhphongdo-vn.web.app/Logo.png",
+          "url": "https://thinhphongdo-vn.web.app",
+          "telephone": "+84867099978",
+          "email": "phongthinhphat2024@gmail.com",
+          "priceRange": "$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Số 215 Ngõ 264 Ngọc Thuỵ, P.Bồ Đề",
+            "addressLocality": "Long Biên",
+            "addressRegion": "Hà Nội",
+            "addressCountry": "VN"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 21.049389,
+            "longitude": 105.873421
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Sunday"
+              ],
+              "opens": "05:00",
+              "closes": "23:00"
+            }
+          ],
+          "sameAs": [
+            "https://thinhphongdo-vn.web.app"
+          ]
         }
-      ],
-      "sameAs": [
-        "https://thinhphongdo-vn.web.app"
       ]
     }
     </script>

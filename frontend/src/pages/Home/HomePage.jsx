@@ -125,8 +125,9 @@ const HomePage = () => {
   return (
     <>
       <SEO 
-        title="Trang Chủ" 
-        description="Công ty Cổ phần Thương mại và Dịch vụ Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học với quy trình đạt chuẩn ISO." 
+        title="Thịnh Phong Đỗ - Dịch Vụ Suất Ăn Công Nghiệp & Canteen Chuẩn ISO" 
+        exactTitle={true}
+        description="Thịnh Phong Đỗ chuyên cung cấp suất ăn công nghiệp, suất ăn trường học và dịch vụ canteen uy tín hàng đầu, quy trình khép kín đạt tiêu chuẩn vệ sinh ATTP ISO 22000:2018." 
       />
       {/* Header */}
       <Header />
